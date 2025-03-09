@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MUN Hub App Features
 
-## Getting Started
+## Features to Include:
 
-First, run the development server:
+1. **Conference Schedule**
+    - Detailed agenda with session times and locations.
+    - Push notifications for upcoming events.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. **Committee Overview**
+    - Overview of each delegate's committee, including topics and key issues.
+    - Profiles of committee chairs and other delegates.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. **Speech Repository**
+    - Store and organize specific speeches against specific countries.
+    - Easy access to past speeches for reference and preparation.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4. **Document Repository**
+    - Access to all necessary documents, such as position papers and resolutions.
+    - Ability to upload and share documents.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+5. **Maps and Navigation**
+    - Interactive maps of the conference venue.
+    - Directions to different rooms and facilities.
 
-## Learn More
+6. **Announcements**
+    - Real-time updates and announcements from organizers.
+    - Push notifications for important updates.
 
-To learn more about Next.js, take a look at the following resources:
+7. **Social Media Integration**
+    - Share updates and photos on social media.
+    - Follow conference hashtags and accounts.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+8. **Emergency Information**
+    - Contact information for emergency services.
+    - Safety guidelines and procedures.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+By incorporating these features, the MUN Hub app will streamline the conference experience for delegates, making it easier to manage all aspects of the event.
