@@ -1,4 +1,4 @@
-interface Delegate {
+export interface Delegate {
     id: string;
     firstname: string;
     delegation: string;
@@ -8,14 +8,21 @@ interface Delegate {
     password?: string;
 }
 
-const delegates: Delegate[] = [
+export interface Committee {
+    id: string;
+    name: string;
+    description: string;
+    delegates: Delegate[];
+}
+
+export const delegates: Delegate[] = [
     {
         id: '0001',
         firstname: 'John',
         delegation: 'USA',
         contactno: '123-456-7890',
         flag: '🇺🇸',
-        committee: 'Security Council',
+        committee: 'UNSC',
         password: 'TESTING'
     },
     {
@@ -24,7 +31,7 @@ const delegates: Delegate[] = [
         delegation: 'UK',
         contactno: '098-765-4321',
         flag: '🇬🇧',
-        committee: 'General Assembly',
+        committee: 'ECOSOC',
         password: 'TESTING'
     },
     {
@@ -33,7 +40,7 @@ const delegates: Delegate[] = [
         delegation: 'Mexico',
         contactno: '111-222-3333',
         flag: '🇲🇽',
-        committee: 'Human Rights Council',
+        committee: 'UNODC',
         password: 'TESTING'
     },
     {
@@ -42,7 +49,7 @@ const delegates: Delegate[] = [
         delegation: 'China',
         contactno: '444-555-6666',
         flag: '🇨🇳',
-        committee: 'Economic and Social Council',
+        committee: 'ECOSOC',
         password: 'TESTING'
     },
     {
@@ -51,7 +58,7 @@ const delegates: Delegate[] = [
         delegation: 'Germany',
         contactno: '777-888-9999',
         flag: '🇩🇪',
-        committee: 'Security Council',
+        committee: 'UNSC',
         password: 'TESTING'
     },
     {
@@ -60,7 +67,7 @@ const delegates: Delegate[] = [
         delegation: 'India',
         contactno: '101-112-1314',
         flag: '🇮🇳',
-        committee: 'General Assembly',
+        committee: 'UNODC',
         password: 'TESTING'
     },
     {
@@ -69,7 +76,7 @@ const delegates: Delegate[] = [
         delegation: 'Saudi Arabia',
         contactno: '151-617-1819',
         flag: '🇸🇦',
-        committee: 'Human Rights Council',
+        committee: 'ECOSOC',
         password: 'TESTING'
     },
     {
@@ -78,7 +85,7 @@ const delegates: Delegate[] = [
         delegation: 'South Korea',
         contactno: '202-122-2324',
         flag: '🇰🇷',
-        committee: 'Economic and Social Council',
+        committee: 'UNODC',
         password: 'TESTING'
     },
     {
@@ -87,7 +94,7 @@ const delegates: Delegate[] = [
         delegation: 'France',
         contactno: '252-627-2829',
         flag: '🇫🇷',
-        committee: 'Security Council',
+        committee: 'UNSC',
         password: 'TESTING'
     },
     {
@@ -96,9 +103,29 @@ const delegates: Delegate[] = [
         delegation: 'Nigeria',
         contactno: '303-132-3334',
         flag: '🇳🇬',
-        committee: 'General Assembly',
+        committee: 'ECOSOC',
         password: 'TESTING'
     }
 ];
 
-export default delegates;
+export const committees: Committee[] = [
+    {
+        id: '1',
+        name: 'ECOSOC',
+        description: 'Economic and Social Council',
+        delegates: delegates.filter(delegate => delegate.committee === 'ECOSOC')
+    },
+    {
+        id: '2',
+        name: 'UNODC',
+        description: 'United Nations Office on Drugs and Crime',
+        delegates: delegates.filter(delegate => delegate.committee === 'UNODC')
+    },
+    {
+        id: '3',
+        name: 'UNSC',
+        description: 'United Nations Security Council',
+        delegates: delegates.filter(delegate => delegate.committee === 'UNSC')
+    }
+];
+

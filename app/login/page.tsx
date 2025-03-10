@@ -3,18 +3,21 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { authenticate } from '../utils/auth';
 import { useRouter } from 'next/navigation';
+import { useUser } from '../context/usercontext';
 
 const Login = () => {
   const [participantId, setParticipantId] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [error, setError] = React.useState('');
   const router = useRouter();
+  const { setCurrentUser } = useUser();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const delegate = authenticate(participantId, password);
     
     if (delegate) {
+      setCurrentUser(delegate)
       router.push("/home");
     } else {
       setError("Invalid Participant ID or Password");
@@ -22,9 +25,9 @@ const Login = () => {
   };
 
   return (
-    <div className='h-screen flex items-center justify-center'>
+    <div className='h-screen flex items-center justify-center bg-black'>
       <motion.div 
-        className="w-1/2 flex flex-col justify-center font-serif shadow-md bg-gray-900 h-screen"
+        className="w-1/2 flex flex-col justify-center font-serif shadow-md bg-gray-900 h-screen border-r-2 border-gray-700"
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
@@ -37,14 +40,14 @@ const Login = () => {
         />
       </motion.div>
       <motion.div 
-        className="w-1/2 flex flex-col justify-center font-serif shadow-md"
+        className=" bg-black w-1/2 flex flex-col justify-center font-serif shadow-md h-full border-gray-700"
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="p-3 items-center justify-center flex flex-col font-extrabold text-2xl mb-4">Access your Delegation</h1>
+        <h1 className="p-3 items-center justify-center flex flex-col font-extrabold text-2xl mb-4 text-white">Access your Delegation</h1>
         
-        <form className="flex flex-col items-center justify-center" onSubmit={handleSubmit}>
+        <form className="flex flex-col items-center justify-center text-white" onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="Participant ID"
