@@ -14,6 +14,17 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+} from "@/components/ui/navigation-menu";
+
 interface Announcement {
   title: string;
   externallink: string;
@@ -103,10 +114,31 @@ export default function Home() {
         >
           MUN Hub - Welcome {currentUser.firstname} {currentUser.flag} !
         </motion.h1>
+
+        <motion.h2
+        className="text-xl font-light"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        You are the delegate of {currentUser.delegation} in the committee {currentUser.committee}.
+      </motion.h2>
+
       </header>
 
       <main className="flex-grow w-full max-w-4xl mx-auto mt-8">
         {/* dis is da beginning of da page content ya feel me */}
+        <section className="w-full block mb-8">
+            <NavigationMenu className="w-full">
+                <NavigationMenuList className="w-full flex justify-center gap-4">
+                    <NavigationMenuItem><NavigationMenuTrigger>Home</NavigationMenuTrigger></NavigationMenuItem>
+                    <NavigationMenuItem><NavigationMenuTrigger>Speech Repo</NavigationMenuTrigger></NavigationMenuItem>
+                    <NavigationMenuItem><NavigationMenuTrigger>Committee Overview</NavigationMenuTrigger></NavigationMenuItem>
+                    <NavigationMenuItem><NavigationMenuTrigger>MUN Glossary</NavigationMenuTrigger></NavigationMenuItem>
+                    <NavigationMenuItem><NavigationMenuTrigger>Global Affairs</NavigationMenuTrigger></NavigationMenuItem>
+                </NavigationMenuList>
+            </NavigationMenu>
+        </section>
         <section className="w-full block mb-8">
           <div className="flex flex-wrap">
             <section className="w-full md:w-1/2 text-white mb-4 p-2 flex flex-wrap">
@@ -177,6 +209,11 @@ export default function Home() {
                   </p>
                 </div>
               </motion.div>
+              <img 
+          className="max-w-90 mr-auto ml-auto block p-4"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/UN_emblem_blue.svg/1024px-UN_emblem_blue.svg.png?20230920050537"
+          alt="UN Emblem"
+        />
             </section>
           </div>
         </section>
