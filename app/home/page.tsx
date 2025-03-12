@@ -25,6 +25,8 @@ import {
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 
+import { CustomNav } from "@/components/ui/customnav";
+
 interface Announcement {
   title: string;
   externallink: string;
@@ -129,15 +131,7 @@ export default function Home() {
       <main className="flex-grow w-full max-w-4xl mx-auto mt-8">
         {/* dis is da beginning of da page content ya feel me */}
         <section className="w-full block mb-8">
-            <NavigationMenu className="w-full">
-                <NavigationMenuList className="w-full flex justify-center gap-4">
-                    <NavigationMenuItem><NavigationMenuTrigger>Home</NavigationMenuTrigger></NavigationMenuItem>
-                    <NavigationMenuItem><NavigationMenuTrigger>Speech Repo</NavigationMenuTrigger></NavigationMenuItem>
-                    <NavigationMenuItem><NavigationMenuTrigger>Committee Overview</NavigationMenuTrigger></NavigationMenuItem>
-                    <NavigationMenuItem><NavigationMenuTrigger>MUN Glossary</NavigationMenuTrigger></NavigationMenuItem>
-                    <NavigationMenuItem><NavigationMenuTrigger>Global Affairs</NavigationMenuTrigger></NavigationMenuItem>
-                </NavigationMenuList>
-            </NavigationMenu>
+            <CustomNav/>
         </section>
         <section className="w-full block mb-8">
           <div className="flex flex-wrap">
