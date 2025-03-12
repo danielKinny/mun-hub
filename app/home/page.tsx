@@ -106,7 +106,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col items-start justify-center bg-black font-serif text-white">
+    <div className="min-h-screen flex flex-col items-start justify-center bg-black text-white">
       <header className="w-full text-center py-8 bg-black text-white border-b-3 border-gray-900">
         <motion.h1
           className="text-4xl font-bold"
@@ -231,7 +231,7 @@ export default function Home() {
                   <Link href="/login">
                     <Card className="bg-gray-800 text-white shadow-md rounded-lg hover:shadow-xl transition-all duration-300 border-2 border-gray-900 hover:scale-105 h-40">
                       <CardHeader>
-                        <CardTitle>{card.title}</CardTitle>
+                        <CardTitle className="font-2xl">{card.title}</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <p>{card.description}</p>

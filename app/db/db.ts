@@ -9,6 +9,23 @@ export interface Delegate {
     password?: string;
 }
 
+interface Commitee {
+    name: string;
+    description: string;
+    href: string;
+    delegates: Delegate[];
+}
+
+interface Country {
+    name: string;
+    description: string;
+    href: string;
+    delegates: Delegate[];
+    flag: string;
+}
+
+
+
 export const delegates: Delegate[] = [
     { id: '0001', firstname: 'John', lastname: 'Doe', delegation: 'USA', committee: 'ECOSOC', flag: '🇺🇸', password: 'TESTING' },
     { id: '0002', firstname: 'Jane', lastname: 'Smith', delegation: 'USA', committee: 'UNODC', flag: '🇺🇸', password: 'TESTING' },
@@ -30,11 +47,11 @@ export const delegates: Delegate[] = [
     { id: '0018', firstname: 'Anna', lastname: 'Sokolova', delegation: 'Russia', committee: 'UNSC', flag: '🇷🇺', password: 'TESTING' },
     { id: '0019', firstname: 'Ivan', lastname: 'Smirnov', delegation: 'Russia', committee: 'UNHRC', flag: '🇷🇺', password: 'TESTING' },
     { id: '0020', firstname: 'Nina', lastname: 'Volkova', delegation: 'Russia', committee: 'UNESCO', flag: '🇷🇺', password: 'TESTING' },
-    { id: '0021', firstname: 'Carlos', lastname: 'Garcia', delegation: 'Mexico', committee: 'ECOSOC', flag: '🇲🇽', password: 'TESTING' },
-    { id: '0022', firstname: 'Maria', lastname: 'Lopez', delegation: 'Mexico', committee: 'UNODC', flag: '🇲🇽', password: 'TESTING' },
-    { id: '0023', firstname: 'Jose', lastname: 'Martinez', delegation: 'Mexico', committee: 'UNSC', flag: '🇲🇽', password: 'TESTING' },
-    { id: '0024', firstname: 'Luis', lastname: 'Hernandez', delegation: 'Mexico', committee: 'UNHRC', flag: '🇲🇽', password: 'TESTING' },
-    { id: '0025', firstname: 'Ana', lastname: 'Gonzalez', delegation: 'Mexico', committee: 'UNESCO', flag: '🇲🇽', password: 'TESTING' },
+    { id: '0021', firstname: 'Carlos', lastname: 'Garcia', delegation: 'UK', committee: 'ECOSOC', flag: '🇬🇧', password: 'TESTING' },
+    { id: '0022', firstname: 'Maria', lastname: 'Lopez', delegation: 'UK', committee: 'UNODC', flag: '🇬🇧', password: 'TESTING' },
+    { id: '0023', firstname: 'Jose', lastname: 'Martinez', delegation: 'UK', committee: 'UNSC', flag: '🇬🇧', password: 'TESTING' },
+    { id: '0024', firstname: 'Luis', lastname: 'Hernandez', delegation: 'UK', committee: 'UNHRC', flag: '🇬🇧', password: 'TESTING' },
+    { id: '0025', firstname: 'Ana', lastname: 'Gonzalez', delegation: 'UK', committee: 'UNESCO', flag: '🇬🇧', password: 'TESTING' },
     { id: '0026', firstname: 'Ahmed', lastname: 'Hassan', delegation: 'Egypt', committee: 'ECOSOC', flag: '🇪🇬', password: 'TESTING' },
     { id: '0027', firstname: 'Fatima', lastname: 'Ali', delegation: 'Egypt', committee: 'UNODC', flag: '🇪🇬', password: 'TESTING' },
     { id: '0028', firstname: 'Omar', lastname: 'Youssef', delegation: 'Egypt', committee: 'UNSC', flag: '🇪🇬', password: 'TESTING' },
@@ -61,32 +78,109 @@ export const delegates: Delegate[] = [
     { id: '0049', firstname: 'Francesca', lastname: 'Ricci', delegation: 'Italy', committee: 'UNHRC', flag: '🇮🇹', password: 'TESTING' },
     { id: '0050', firstname: 'Alessandro', lastname: 'Conti', delegation: 'Italy', committee: 'UNESCO', flag: '🇮🇹', password: 'TESTING' }
 ];
-export interface Committee {
-    id: string;
-    name: string;
-    description: string;
-    delegates: Delegate[];
-}
 
-    
-export const committees: Committee[] = [
+export const countries : Country[] = [
     {
-        id: '1',
-        name: 'ECOSOC',
-        description: 'Economic and Social Council',
-        delegates: delegates.filter(delegate => delegate.committee === 'ECOSOC')
+        name: "USA",
+        description: "United States of America",
+        href: "/committee-overview/USA",
+        delegates: delegates.filter(delegate => delegate.delegation === "USA"),
+        flag: '🇺🇸'
     },
     {
-        id: '2',
-        name: 'UNODC',
-        description: 'United Nations Office on Drugs and Crime',
-        delegates: delegates.filter(delegate => delegate.committee === 'UNODC')
+        name: "China",
+        description: "People's Republic of China",
+        href: "/committee-overview/China",
+        delegates: delegates.filter(delegate => delegate.delegation === "China"),
+        flag: '🇨🇳'
     },
     {
-        id: '3',
-        name: 'UNSC',
-        description: 'United Nations Security Council',
-        delegates: delegates.filter(delegate => delegate.committee === 'UNSC')
+        name: "India",
+        description: "Republic of India",
+        href: "/committee-overview/India",
+        delegates: delegates.filter(delegate => delegate.delegation === "India"),
+        flag: '🇮🇳'
+    },
+    {
+        name: "Russia",
+        description: "Russian Federation",
+        href: "/committee-overview/Russia",
+        delegates: delegates.filter(delegate => delegate.delegation === "Russia"),
+        flag: '🇷🇺'
+    },
+    {
+        name: "UK",
+        description: "United Kingdom of Great Britain and Northern Ireland",
+        href: "/committee-overview/UK",
+        delegates: delegates.filter(delegate => delegate.delegation === "Mexico"),
+        flag: '🇬🇧'
+    },
+    {
+        name: "Egypt",
+        description: "Arab Republic of Egypt",
+        href: "/committee-overview/Egypt",
+        delegates: delegates.filter(delegate => delegate.delegation === "Egypt"),
+        flag: '🇪🇬'
+    },
+    {
+        name: "Japan",
+        description: "Japan",
+        href: "/committee-overview/Japan",
+        delegates: delegates.filter(delegate => delegate.delegation === "Japan"),
+        flag: '🇯🇵'
+    },
+    {
+        name: "Germany",
+        description: "Federal Republic of Germany",
+        href: "/committee-overview/Germany",
+        delegates: delegates.filter(delegate => delegate.delegation === "Germany"),
+        flag: '🇩🇪'
+    },
+    {
+        name: "France",
+        description: "French Republic",
+        href: "/committee-overview/France",
+        delegates: delegates.filter(delegate => delegate.delegation === "France"),
+        flag: '🇫🇷'
+    },
+    {
+        name: "Italy",
+        description: "Italian Republic",
+        href: "/committee-overview/Italy",
+        delegates: delegates.filter(delegate => delegate.delegation === "Italy"),
+        flag: '🇮🇹'
     }
 ];
 
+export const committees : Commitee[] = [
+    {
+        name: "UNODC",
+        description: "United Nations Office on Drugs and Crime",
+        href: "/committee-overview/UNODC",
+        delegates: delegates.filter(delegate => delegate.committee === "UNODC")
+    },
+    {
+        name: "UNSC",
+        description: "United Nations Security Council",
+        href: "/committee-overview/UNSC",
+        delegates: delegates.filter(delegate => delegate.committee === "UNSC")
+    },
+    {
+        name: "UNHRC",
+        description: "United Nations Human Rights Council",
+        href: "/committee-overview/UNHRC",
+        delegates: delegates.filter(delegate => delegate.committee === "UNHRC")
+    },
+    {
+        name: "UNESCO",
+        description: "United Nations Educational, Scientific and Cultural Organization",
+        href: "/committee-overview/UNESCO",
+        delegates: delegates.filter(delegate => delegate.committee === "UNESCO")
+    },
+    {
+        name: "ECOSOC",
+        description: "Economic and Social Council",
+        href: "/committee-overview/ECOSOC",
+        delegates:  delegates.filter(delegate => delegate.committee === "ECOSOC")
+    }
+];
