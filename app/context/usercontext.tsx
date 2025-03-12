@@ -1,7 +1,17 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Delegate } from '../db/db';
+import delegates from '../db/data.json';
+
+interface Delegate {
+  id: number;
+  firstname: string;
+  lastname: string;
+  delegation: string;
+  committee: string;
+  flag: string;
+  password: string;
+};
 
 interface UserContextType {
   currentUser: Delegate | null;
