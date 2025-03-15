@@ -17,7 +17,7 @@ const Login = () => {
     const delegate = authenticate(participantId, password);
     
     if (delegate) {
-      setCurrentUser({...delegate, id: parseInt(delegate.id)})
+      setCurrentUser({...delegate, id: delegate.id});
       router.push("/home");
     } else {
       setError("Invalid Participant ID or Password");

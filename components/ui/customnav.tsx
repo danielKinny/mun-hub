@@ -28,11 +28,17 @@ export function CustomNav() {
                 <NavigationMenuList className="w-full flex justify-center gap-4">
                     
                     <NavigationMenuItem>
-                        <NavigationMenuTrigger className="text-xl"><Link href="/home">Home</Link></NavigationMenuTrigger>
+                        <NavigationMenuTrigger className="text-xl">Home</NavigationMenuTrigger>
+                        <NavigationMenuContent className="min-w-[200px]">
+                            <NavigationMenuLink href="/home">Your Dashboard</NavigationMenuLink>
+                        </NavigationMenuContent>
                     </NavigationMenuItem>
 
                     <NavigationMenuItem>
                         <NavigationMenuTrigger className="text-xl">Speech Repo</NavigationMenuTrigger>
+                        <NavigationMenuContent className="min-w-[200px]">
+                            <NavigationMenuLink href="/speechrepo">Access and store speeches</NavigationMenuLink>
+                        </NavigationMenuContent>
                     </NavigationMenuItem>
 
                     <NavigationMenuItem>

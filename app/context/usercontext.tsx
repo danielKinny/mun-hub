@@ -2,16 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import delegates from '../db/data.json';
-
-interface Delegate {
-  id: number;
-  firstname: string;
-  lastname: string;
-  delegation: string;
-  committee: string;
-  flag: string;
-  password: string;
-};
+import { Delegate } from '../db/types';
 
 interface UserContextType {
   currentUser: Delegate | null;
