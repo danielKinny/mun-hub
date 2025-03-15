@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "../../context/usercontext";
+import { useSession } from "../../context/sessionContext";
 import { CustomNav, CountryNav } from "@/components/ui/customnav";
 import {
     Card,
@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 
 const Page = () => {
-    const { currentUser } = useUser();
+    const { user: currentUser } = useSession();
     const router = useRouter();
 
     return (
