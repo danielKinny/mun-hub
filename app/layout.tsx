@@ -26,8 +26,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-black antialiased`}
       >
+
+        {/* entire thingy is wrapped with session provider */}
         <SessionProvider>
         {children}
         </SessionProvider>

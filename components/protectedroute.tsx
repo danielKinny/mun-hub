@@ -1,19 +1,21 @@
-import React from 'react';
-import { useRouter } from 'next/navigation';
+"use client";
+import React, { useEffect } from 'react';
 import { useSession } from '../app/context/sessionContext';
+import { useRouter } from "next/navigation";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useSession();
+  const { user: currentUser } = useSession();
   const router = useRouter();
 
-  React.useEffect(() => {
-    if (!user) {
-      router.push('/login');
+  useEffect(() => {
+    // this should be redirecting to the login page if the user is not logged in
+    if (currentUser === null) {
+      router.push("/login");
     }
-  }, [user, router]);
+  }, [currentUser, router]);
 
-  if (!user) {
-    return null; // or a loading spinner
+  if (currentUser === null) {
+    return null;
   }
 
   return <>{children}</>;

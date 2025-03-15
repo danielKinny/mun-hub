@@ -9,15 +9,9 @@ import ProtectedRoute from '@/components/protectedroute';
 
 const page = () => {
     const {user: currentUser} = useSession();
-    const router = useRouter()
-
-    /*useEffect(() => {
-        if (!currentUser) {
-            router.push('/login')
-        }
-    }, [currentUser, router]);
-    */
+    
   return (
+    <ProtectedRoute>
       <div className='bg-black text-white min-h-screen'>
         <header>
             <h1 className='text-4xl text-center p-4 border-b border-gray-800'>Speech Repository for {currentUser?.firstname}</h1>
@@ -50,7 +44,7 @@ const page = () => {
         </main>
         
     </div>
-    
+    </ProtectedRoute>
   )
 }
 
