@@ -2,32 +2,25 @@
 import React, { useEffect } from 'react'
 import {CustomNav} from '@/components/ui/customnav'
 import {speeches} from '@/app/db/index'
-import {useUser} from '../context/usercontext'
+import {useSession} from '../context/sessionContext'
 import {useRouter} from 'next/navigation'
 import {Speech} from '@/app/db/types'
+import ProtectedRoute from '@/components/protectedroute';
 
 const page = () => {
-    const {currentUser} = useUser()
+    const {user: currentUser} = useSession();
     const router = useRouter()
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (!currentUser) {
-          router.push("/login");
+            router.push('/login')
         }
-      }, [currentUser, router]);
-    
-      if (!currentUser) {
-        return (
-          <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
-            Loading...
-          </div>
-        );
-      }
-
+    }, [currentUser, router]);
+    */
   return (
-    <div className='bg-black text-white min-h-screen'>
+      <div className='bg-black text-white min-h-screen'>
         <header>
-            <h1 className='text-4xl text-center p-4 border-b border-gray-800'>Speech Repository</h1>
+            <h1 className='text-4xl text-center p-4 border-b border-gray-800'>Speech Repository for {currentUser?.firstname}</h1>
         </header>
 
         <main>
@@ -41,7 +34,8 @@ const page = () => {
                     <h2 className='text-2xl font-semibold mb-4 text-center'>Speeches</h2>
                     <div className='h-96 overflow-y-auto'>
                         <ul>
-                            {speeches.filter(speech => speech.speechID.substring(0, 3) === currentUser.id)
+                            {
+                            speeches.filter(speech => speech.speechID.substring(0, 4) === currentUser?.id)
                                     .map((speech) => (
                                         <li key={speech.speechID} className='p-2 border-b border-gray-700'>
                                             <h3 className='text-xl'>{speech.title}</h3>
@@ -56,6 +50,7 @@ const page = () => {
         </main>
         
     </div>
+    
   )
 }
 

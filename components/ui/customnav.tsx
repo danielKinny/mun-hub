@@ -30,7 +30,7 @@ export function CustomNav() {
                     <NavigationMenuItem>
                         <NavigationMenuTrigger className="text-xl">Home</NavigationMenuTrigger>
                         <NavigationMenuContent className="min-w-[200px]">
-                            <NavigationMenuLink href="/home">Your Dashboard</NavigationMenuLink>
+                            <Link href="/home">Your Dashboard</Link>
                         </NavigationMenuContent>
                     </NavigationMenuItem>
 

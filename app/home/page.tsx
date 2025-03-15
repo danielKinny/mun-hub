@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "../context/usercontext";
+import { useSession } from "../context/sessionContext";
 import {
   Card,
   CardHeader,
@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/navigation-menu";
 
 import { CustomNav } from "@/components/ui/customnav";
-
+import ProtectedRoute from "@/components/protectedroute";
 interface Announcement {
   title: string;
   externallink: string;
@@ -35,7 +35,7 @@ interface Announcement {
 }
 
 export default function Home() {
-  const { currentUser } = useUser();
+  const { user: currentUser } = useSession();
   const router = useRouter();
 
   useEffect(() => {
@@ -106,7 +106,8 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col items-start justify-center bg-black text-white">
+    <ProtectedRoute>
+      <div className="min-h-screen flex flex-col items-start justify-center bg-black text-white">
       <header className="w-full text-center py-8 bg-black text-white border-b-3 border-gray-900">
         <motion.h1
           className="text-4xl font-bold"
@@ -253,5 +254,7 @@ export default function Home() {
         </p>
       </footer>
     </div>
+    </ProtectedRoute>
+    
   );
 }
