@@ -22,7 +22,7 @@ const page = () => {
                 <CustomNav/>
             </section>
 
-            <section>
+            <section className='flex justify-center'>
 
                 <div className= " m-4 rounded-lg p-4 w-1/3 bg-gray-800">
                     <h2 className='text-2xl font-semibold mb-4 text-center'>Speeches</h2>
