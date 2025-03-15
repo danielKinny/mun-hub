@@ -23,8 +23,15 @@ export interface Committee {
     delegates: any[];
 }
 
+export interface Speech {
+    speechID: string;
+    title: string;
+    content: string;
+}
+
 export interface Database {
     delegates: Delegate[];
     countries: Country[];
     committees: Committee[];
+    speeches: Speech[];
 }
