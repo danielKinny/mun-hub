@@ -27,84 +27,10 @@ import {
 
 import { CustomNav } from "@/components/ui/customnav";
 import ProtectedRoute from "@/components/protectedroute";
-interface Announcement {
-  title: string;
-  externallink: string;
-  description: string;
-  date: string;
-}
+import { announcements } from "@/app/db/index";
 
 export default function Home() {
   const { user: currentUser } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!currentUser) {
-      router.push("/login");
-    }
-  }, [currentUser, router]);
-
-  if (!currentUser) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
-        Loading...
-      </div>
-    );
-  }
-
-  const announcements: Announcement[] = [
-    {
-      title: "EXAMPLEMUN BACK FOR 2025 !!! ",
-      externallink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      description: "This is a sample announcement.",
-      date: "10-03-2025",
-    },
-    {
-      title: "MUN Hub is now live!",
-      externallink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      description: "This is a sample announcement.",
-      date: "10-03-2025",
-    },
-    {
-      title: "Join our Webinar on International Relations",
-      externallink: "https://www.example.com/webinar",
-      description: "Learn about the latest trends in international relations.",
-      date: "15-04-2025",
-    },
-    {
-      title: "New Resources Available for Delegates",
-      externallink: "https://www.example.com/resources",
-      description:
-        "Check out the new resources to help you prepare for your next MUN conference.",
-      date: "20-05-2025",
-    },
-  ];
-
-  {
-    /* using announcement interface for homepage cards cos im lowkey lazy ykykyk */
-  }
-
-  const homepagecards: Announcement[] = [
-    {
-      title: "Committee Overview",
-      externallink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      description: "Learn about the structure and function of committees in Model UN.",
-      date: "n/a",
-    },
-    {
-      title: "Speech Repo",
-      externallink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      description: "Access a repository of sample speeches to help you prepare.",
-      date: "n/a",
-    },
-    {
-      title: "MUN Glossary",
-      externallink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      description: "Understand common MUN terms and jargon with our glossary.",
-      date: "n/a",
-    },
-  ];
-
   return (
     <ProtectedRoute>
       <div className="min-h-screen flex flex-col items-start justify-center bg-black text-white">
@@ -115,7 +41,7 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          MUN Hub - Welcome {currentUser.firstname} {currentUser.flag} !
+          MUN Hub - Welcome {currentUser?.firstname} {currentUser?.flag} !
         </motion.h1>
 
         <motion.h2
@@ -124,7 +50,7 @@ export default function Home() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        You are the delegate of {currentUser.delegation} in the committee {currentUser.committee}.
+        You are the delegate of {currentUser?.delegation} in the committee {currentUser?.committee}.
       </motion.h2>
 
       </header>
@@ -212,39 +138,9 @@ export default function Home() {
             </section>
           </div>
         </section>
-
-        {/* daniel dearest please put cards here */}
-        <section className="w-full block mt-8">
-          <h2 className=" text-center text-2xl font-semibold mb-4 text-white">
-            Additional Resources
-          </h2>
-          <div className="flex flex-wrap">
-            <div className="flex flex-row">
-              {homepagecards.map((card, index) => (
-                <motion.div 
-                  key={index} 
-                  className="w-1/3 p-2"
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 + index * 0.15 }}
-                  whileHover={{ scale: 1.03 }}
-                >
-                  <Link href="/login">
-                    <Card className="bg-gray-800 text-white shadow-md rounded-lg hover:shadow-xl transition-all duration-300 border-2 border-gray-900 hover:scale-105 h-40">
-                      <CardHeader>
-                        <CardTitle className="font-2xl">{card.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p>{card.description}</p>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
       </main>
+      {/* what do i add here mayne */}
+      
       <footer className="w-full text-center py-4 bg-black text-white">
         <p>
           Contact us:

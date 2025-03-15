@@ -8,6 +8,13 @@ export interface Delegate {
     password: string;
 }
 
+export interface Announcement {
+    title: string;
+    externallink: string;
+    description: string;
+    date: string;
+  }
+
 export interface Country {
     name: string;
     description: string;
@@ -31,6 +38,7 @@ export interface Speech {
 
 export interface Database {
     delegates: Delegate[];
+    announcements: Announcement[];
     countries: Country[];
     committees: Committee[];
     speeches: Speech[];

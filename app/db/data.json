@@ -51,6 +51,33 @@
         { "id": "0049", "firstname": "Francesca", "lastname": "Ricci", "delegation": "Italy", "committee": "UNHRC", "flag": "🇮🇹", "password": "TESTING" },
         { "id": "0050", "firstname": "Alessandro", "lastname": "Conti", "delegation": "Italy", "committee": "UNESCO", "flag": "🇮🇹", "password": "TESTING" }
     ],
+    "announcements": [
+        {
+            "title": "EXAMPLEMUN BACK FOR 2025 !!! ",
+            "externallink": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "description": "This is a sample announcement.",
+            "date": "10-03-2025"
+            },
+            {
+            "title": "MUN Hub is now live!",
+            "externallink": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "description": "This is a sample announcement.",
+            "date": "10-03-2025"
+            },
+            {
+            "title": "Join our Webinar on International Relations",
+            "externallink": "https://www.example.com/webinar",
+            "description": "Learn about the latest trends in international relations.",
+            "date": "15-04-2025"
+            },
+            {
+            "title": "New Resources Available for Delegates",
+            "externallink": "https://www.example.com/resources",
+            "description": "Check out the new resources to help you prepare for your next MUN conference.",
+            "date": "20-05-2025"
+            }
+
+    ],
     "countries": [
         {
             "name": "USA",
