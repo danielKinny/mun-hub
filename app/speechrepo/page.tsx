@@ -11,7 +11,6 @@ import ReactQuill from 'react-quill-new';
 import "react-quill-new/dist/quill.snow.css";
 
 
-
 const page = () => {
     const { user: currentUser } = useSession();
     const [editorContent, setEditorContent] = React.useState('');
@@ -48,18 +47,16 @@ const page = () => {
                             </div>
                         </section>
 
-                        <section>
+                        <section className='w-full pr-8 '>
                             <div>
                                 <h2 className='text-2xl text-center p-4 border-b border-gray-800'>
                                     Speech Interface
                                 </h2>
-                            </div>
-                            <div>
                                 <ReactQuill
                                 value={editorContent}
                                 onChange={setEditorContent}
                                 theme="snow"
-                                className='bg-white text-black p-4 rounded-lg w-2/3'
+                                className= "w-full bg-white text-blackh-96 p-4 rounded-lg"
                                 />
                             </div>
                         </section>
