@@ -1,51 +1,61 @@
 "use client";
 import React, { useEffect } from 'react'
-import {CustomNav} from '@/components/ui/customnav'
-import {speeches} from '@/app/db/index'
-import {useSession} from '../context/sessionContext'
-import {useRouter} from 'next/navigation'
-import {Speech} from '@/app/db/types'
+import { CustomNav } from '@/components/ui/customnav'
+import { speeches } from '@/app/db/index'
+import { useSession } from '../context/sessionContext'
+import { useRouter } from 'next/navigation'
+import { Speech } from '@/app/db/types'
 import ProtectedRoute from '@/components/protectedroute';
 
 const page = () => {
-    const {user: currentUser} = useSession();
-    
-  return (
-    <ProtectedRoute>
-      <div className='bg-black text-white min-h-screen'>
-        <header>
-            <h1 className='text-4xl text-center p-4 border-b border-gray-800'>Speech Repository for {currentUser?.firstname}</h1>
-        </header>
+    const { user: currentUser } = useSession();
 
-        <main>
-            <section>
-                <CustomNav/>
-            </section>
+    return (
+        <ProtectedRoute>
+            <div className='bg-black text-white min-h-screen'>
+                <header>
+                    <h1 className='text-4xl text-center p-4 border-b border-gray-800'>Speech Repository for {currentUser?.firstname}</h1>
+                </header>
 
-            <section className='flex justify-center'>
+                <main>
+                    <section>
+                        <CustomNav />
+                    </section>
 
-                <div className= " m-4 rounded-lg p-4 w-1/3 bg-gray-800">
-                    <h2 className='text-2xl font-semibold mb-4 text-center'>Speeches</h2>
-                    <div className='h-96 overflow-y-auto'>
-                        <ul>
-                            {
-                            speeches.filter(speech => speech.speechID.substring(0, 4) === currentUser?.id)
-                                    .map((speech) => (
-                                        <li key={speech.speechID} className='p-2 border-b border-gray-700'>
-                                            <h3 className='text-xl'>{speech.title}</h3>
-                                            <p>{speech.content}</p>
-                                        </li>
-                                    ))}
-                        </ul>
-                    </div>
-                </div>
+                    <section className='flex'>
 
-            </section>
-        </main>
-        
-    </div>
-    </ProtectedRoute>
-  )
+                        <section className='p-6 w-1/3'>
+                            <div className="m-4 rounded-lg p-4 bg-gray-900">
+                                <h2 className='text-2xl font-semibold mb-4 text-center'>Speeches</h2>
+                                <div className='h-96 overflow-y-auto bg-gray-800 p-4 rounded-lg'>
+                                    <ul>
+                                        {
+                                            speeches.filter(speech => speech.speechID.substring(0, 4) === currentUser?.id)
+                                                .map((speech) => (
+                                                    <li key={speech.speechID} className='p-2 border-b border-gray-700'>
+                                                        <h3 className='text-xl'>{speech.title}</h3>
+                                                        <p>{speech.content}</p>
+                                                    </li>
+                                                ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div>
+                                <h2 className='text-2xl text-center p-4 border-b border-gray-800'>
+                                    Speech Interface
+                                </h2>
+                            </div>
+                        </section>
+
+                    </section>
+                </main>
+
+            </div>
+        </ProtectedRoute>
+    )
 }
 
 export default page
