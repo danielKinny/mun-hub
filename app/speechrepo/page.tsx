@@ -19,7 +19,7 @@ const page = () => {
         <ProtectedRoute>
             <div className='bg-black text-white min-h-screen'>
                 <header>
-                    <h1 className='text-4xl text-center p-4 border-b border-gray-800'>Speech Repository for {currentUser?.firstname}</h1>
+                    <h1 className='text-4xl text-center p-4 border-b border-gray-800'>Speech Repository {currentUser?.flag}</h1>
                 </header>
 
                 <main>
@@ -47,17 +47,20 @@ const page = () => {
                             </div>
                         </section>
 
-                        <section className='w-full pr-8 '>
+                        <section className='w-full pr-8'>
                             <div>
                                 <h2 className='text-2xl text-center p-4 border-b border-gray-800'>
                                     Speech Interface
                                 </h2>
-                                <ReactQuill
+                                <textarea 
+                                className='w-full p-4 bg-gray-800 rounded-lg text-white'
                                 value={editorContent}
-                                onChange={setEditorContent}
-                                theme="snow"
-                                className= "w-full bg-white text-blackh-96 p-4 rounded-lg"
-                                />
+                                onChange={(e)=>setEditorContent(e.target.value)}
+                                placeholder='Write your speech here...'>
+
+                                    
+
+                                </textarea>
                             </div>
                         </section>
 

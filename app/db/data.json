@@ -184,6 +184,9 @@
     ],
     "speeches":[
         { "speechID": "0001-1", "title": "Opening Statement", "content": "The United States believes in..." },
+        { "speechID": "0001-2", "title": "Point of Information", "content": "Can the speaker clarify..." },
+        { "speechID": "0001-3", "title": "Motion to Adjourn", "content": "The United States moves to adjourn the meeting." },
+        { "speechID": "0001-4", "title": "Closing Remarks", "content": "In conclusion, the United States urges..." },
         { "speechID": "0002-1", "title": "Opening Statement", "content": "The United States believes in..." },
         { "speechID": "0003-1", "title": "Opening Statement", "content": "The United States believes in..." },
         { "speechID": "0004-1", "title": "Opening Statement", "content": "The United States believes in..." },
