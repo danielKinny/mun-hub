@@ -12,8 +12,21 @@ import "react-quill-new/dist/quill.snow.css";
 
 
 const page = () => {
-    const { user: currentUser } = useSession();
-    const [editorContent, setEditorContent] = React.useState('');
+    const { user: currentUser } = useSession(); 
+    const [selectedSpeech, setSelectedSpeech] = React.useState<Speech | null>(null);
+    const [text, setText] = React.useState<string>('');
+
+    useEffect(() => {
+        if (selectedSpeech) {
+            setText(selectedSpeech.content);
+        } else {
+            setText('');
+        }
+    }, [selectedSpeech]);
+
+    const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setText(e.target.value);
+    };
 
     return (
         <ProtectedRoute>
@@ -37,7 +50,11 @@ const page = () => {
                                         {
                                             speeches.filter(speech => speech.speechID.substring(0, 4) === currentUser?.id)
                                                 .map((speech) => (
-                                                    <li key={speech.speechID} className='p-2 border-b border-gray-700'>
+                                                    <li 
+                                                        key={speech.speechID} 
+                                                        className='p-2 border-b border-gray-700 cursor-pointer transition-transform hover:scale-105'
+                                                        onClick={() => setSelectedSpeech(speech)}
+                                                    >
                                                         <h3 className='text-xl'>{speech.title}</h3>
                                                         <p>{speech.content}</p>
                                                     </li>
@@ -54,12 +71,10 @@ const page = () => {
                                 </h2>
                                 <textarea 
                                 className='w-full p-4 bg-gray-800 rounded-lg text-white'
-                                value={editorContent}
-                                onChange={(e)=>setEditorContent(e.target.value)}
-                                placeholder='Write your speech here...'>
-
-                                    
-
+                                value={text}
+                                onChange={handleTextChange}
+                                placeholder='Write your speech here...'
+                                >
                                 </textarea>
                             </div>
                         </section>
