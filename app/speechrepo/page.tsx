@@ -28,6 +28,18 @@ const page = () => {
         setText(e.target.value);
     };
 
+    const handleAddSpeech = () => {
+        let speechNo: number = speeches.filter(speech => speech.speechID.substring(0, 4) === currentUser?.id).length;
+        const newSpeech: Speech = {
+            speechID: `${currentUser?.id}-${speechNo + 1}`,
+            title: `Speech ${speeches.length + 1}`,
+            content: text,
+        };
+        
+        console.log(newSpeech);
+
+    };
+
     return (
         <ProtectedRoute>
             <div className='bg-black text-white min-h-screen'>
@@ -64,19 +76,34 @@ const page = () => {
                             </div>
                         </section>
 
-                        <section className='w-full pr-8'>
+                        <section className='w-full pr-8 items-center justify-center'>
                             <div>
                                 <h2 className='text-2xl text-center p-4 border-b border-gray-800'>
                                     Speech Interface
                                 </h2>
                                 <textarea 
-                                className='w-full p-4 bg-gray-800 rounded-lg text-white'
+                                className='w-full p-4 bg-gray-800 rounded-lg text-white h-20'
                                 value={text}
                                 onChange={handleTextChange}
-                                placeholder='Write your speech here...'
+                                placeholder='Write your speech title here...'
                                 >
                                 </textarea>
+
+                                <textarea className='w-full p-4 bg-gray-800 rounded-lg text-white mt-4'
+                                value={text}
+                                onChange={handleTextChange}
+                                placeholder='Write your speech here...'>
+
+                                </textarea>
                             </div>
+                            <div className='flex justify-center items-center mt-4'>
+                                <button 
+                                className='min-w-50 bg-white text-black p-4 rounded-lg'
+                                onClick={() => handleAddSpeech()} >
+                                    Add
+                                </button>
+                            </div>
+                            
                         </section>
 
                     </section>
