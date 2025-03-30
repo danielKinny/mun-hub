@@ -8,7 +8,7 @@
       "committee": "ECOSOC",
       "flag": "🇺🇸",
       "password": "TESTING",
-      "speechCount": 17
+      "speechCount": 1
     },
     {
       "id": "0002",
@@ -38,7 +38,7 @@
       "committee": "UNHRC",
       "flag": "🇺🇸",
       "password": "TESTING",
-      "speechCount": 2
+      "speechCount": 1
     },
     {
       "id": "0005",
@@ -298,7 +298,7 @@
       "committee": "UNESCO",
       "flag": "🇪🇬",
       "password": "TESTING",
-      "speechCount": 2
+      "speechCount": 1
     },
     {
       "id": "0031",
@@ -398,7 +398,7 @@
       "committee": "UNESCO",
       "flag": "🇩🇪",
       "password": "TESTING",
-      "speechCount": 7
+      "speechCount": 1
     },
     {
       "id": "0041",
@@ -633,6 +633,11 @@
   ],
   "speeches": [
     {
+      "speechID": "0001-1",
+      "title": "Opening Statement",
+      "content": "The United States believes in..."
+    },
+    {
       "speechID": "0002-1",
       "title": "Opening Statement",
       "content": "The United States believes in..."
@@ -823,6 +828,11 @@
       "content": "Germany believes in..."
     },
     {
+      "speechID": "0040-1",
+      "title": "Opening Statement",
+      "content": "Italy believes in..."
+    },
+    {
       "speechID": "0041-1",
       "title": "Opening Statement",
       "content": "France believes in..."
@@ -871,21 +881,6 @@
       "speechID": "0050-1",
       "title": "Opening Statement",
       "content": "Italy believes in..."
-    },
-    {
-      "speechID": "0004-2",
-      "title": "Opening Statement",
-      "content": "we hate the reds"
-    },
-    {
-      "speechID": "0030-2",
-      "title": "Opening Statement",
-      "content": "egypt mohammed salah"
-    },
-    {
-      "speechID": "0040-2",
-      "title": "1",
-      "content": "2"
     }
   ]
 }
