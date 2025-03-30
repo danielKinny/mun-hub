@@ -27,7 +27,7 @@ import {
 
 import { CustomNav } from "@/components/ui/customnav";
 import ProtectedRoute from "@/components/protectedroute";
-import { announcements } from "@/app/db/index";
+import { announcements } from "@/db/index";
 
 export default function Home() {
   const { user: currentUser } = useSession();

@@ -7,7 +7,8 @@
       "delegation": "USA",
       "committee": "ECOSOC",
       "flag": "🇺🇸",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 17
     },
     {
       "id": "0002",
@@ -16,7 +17,8 @@
       "delegation": "USA",
       "committee": "UNODC",
       "flag": "🇺🇸",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0003",
@@ -25,7 +27,8 @@
       "delegation": "USA",
       "committee": "UNSC",
       "flag": "🇺🇸",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0004",
@@ -34,7 +37,8 @@
       "delegation": "USA",
       "committee": "UNHRC",
       "flag": "🇺🇸",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 2
     },
     {
       "id": "0005",
@@ -43,7 +47,8 @@
       "delegation": "USA",
       "committee": "UNESCO",
       "flag": "🇺🇸",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0006",
@@ -52,7 +57,8 @@
       "delegation": "China",
       "committee": "ECOSOC",
       "flag": "🇨🇳",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0007",
@@ -61,7 +67,8 @@
       "delegation": "China",
       "committee": "UNODC",
       "flag": "🇨🇳",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0008",
@@ -70,7 +77,8 @@
       "delegation": "China",
       "committee": "UNSC",
       "flag": "🇨🇳",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0009",
@@ -79,7 +87,8 @@
       "delegation": "China",
       "committee": "UNHRC",
       "flag": "🇨🇳",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0010",
@@ -88,7 +97,8 @@
       "delegation": "China",
       "committee": "UNESCO",
       "flag": "🇨🇳",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0011",
@@ -97,7 +107,8 @@
       "delegation": "India",
       "committee": "ECOSOC",
       "flag": "🇮🇳",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0012",
@@ -106,7 +117,8 @@
       "delegation": "India",
       "committee": "UNODC",
       "flag": "🇮🇳",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0013",
@@ -115,7 +127,8 @@
       "delegation": "India",
       "committee": "UNSC",
       "flag": "🇮🇳",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0014",
@@ -124,7 +137,8 @@
       "delegation": "India",
       "committee": "UNHRC",
       "flag": "🇮🇳",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0015",
@@ -133,7 +147,8 @@
       "delegation": "India",
       "committee": "UNESCO",
       "flag": "🇮🇳",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0016",
@@ -142,7 +157,8 @@
       "delegation": "Russia",
       "committee": "ECOSOC",
       "flag": "🇷🇺",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0017",
@@ -151,7 +167,8 @@
       "delegation": "Russia",
       "committee": "UNODC",
       "flag": "🇷🇺",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0018",
@@ -160,7 +177,8 @@
       "delegation": "Russia",
       "committee": "UNSC",
       "flag": "🇷🇺",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0019",
@@ -169,7 +187,8 @@
       "delegation": "Russia",
       "committee": "UNHRC",
       "flag": "🇷🇺",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0020",
@@ -178,7 +197,8 @@
       "delegation": "Russia",
       "committee": "UNESCO",
       "flag": "🇷🇺",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0021",
@@ -187,7 +207,8 @@
       "delegation": "UK",
       "committee": "ECOSOC",
       "flag": "🇬🇧",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0022",
@@ -196,7 +217,8 @@
       "delegation": "UK",
       "committee": "UNODC",
       "flag": "🇬🇧",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0023",
@@ -205,7 +227,8 @@
       "delegation": "UK",
       "committee": "UNSC",
       "flag": "🇬🇧",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0024",
@@ -214,7 +237,8 @@
       "delegation": "UK",
       "committee": "UNHRC",
       "flag": "🇬🇧",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0025",
@@ -223,7 +247,8 @@
       "delegation": "UK",
       "committee": "UNESCO",
       "flag": "🇬🇧",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0026",
@@ -232,7 +257,8 @@
       "delegation": "Egypt",
       "committee": "ECOSOC",
       "flag": "🇪🇬",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0027",
@@ -241,7 +267,8 @@
       "delegation": "Egypt",
       "committee": "UNODC",
       "flag": "🇪🇬",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0028",
@@ -250,7 +277,8 @@
       "delegation": "Egypt",
       "committee": "UNSC",
       "flag": "🇪🇬",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0029",
@@ -259,7 +287,8 @@
       "delegation": "Egypt",
       "committee": "UNHRC",
       "flag": "🇪🇬",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0030",
@@ -268,7 +297,8 @@
       "delegation": "Egypt",
       "committee": "UNESCO",
       "flag": "🇪🇬",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 2
     },
     {
       "id": "0031",
@@ -277,7 +307,8 @@
       "delegation": "Japan",
       "committee": "ECOSOC",
       "flag": "🇯🇵",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0032",
@@ -286,7 +317,8 @@
       "delegation": "Japan",
       "committee": "UNODC",
       "flag": "🇯🇵",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0033",
@@ -295,7 +327,8 @@
       "delegation": "Japan",
       "committee": "UNSC",
       "flag": "🇯🇵",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0034",
@@ -304,7 +337,8 @@
       "delegation": "Japan",
       "committee": "UNHRC",
       "flag": "🇯🇵",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0035",
@@ -313,7 +347,8 @@
       "delegation": "Japan",
       "committee": "UNESCO",
       "flag": "🇯🇵",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0036",
@@ -322,7 +357,8 @@
       "delegation": "Germany",
       "committee": "ECOSOC",
       "flag": "🇩🇪",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0037",
@@ -331,7 +367,8 @@
       "delegation": "Germany",
       "committee": "UNODC",
       "flag": "🇩🇪",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0038",
@@ -340,7 +377,8 @@
       "delegation": "Germany",
       "committee": "UNSC",
       "flag": "🇩🇪",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0039",
@@ -349,7 +387,8 @@
       "delegation": "Germany",
       "committee": "UNHRC",
       "flag": "🇩🇪",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0040",
@@ -358,7 +397,8 @@
       "delegation": "Germany",
       "committee": "UNESCO",
       "flag": "🇩🇪",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 7
     },
     {
       "id": "0041",
@@ -367,7 +407,8 @@
       "delegation": "France",
       "committee": "ECOSOC",
       "flag": "🇫🇷",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0042",
@@ -376,7 +417,8 @@
       "delegation": "France",
       "committee": "UNODC",
       "flag": "🇫🇷",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0043",
@@ -385,7 +427,8 @@
       "delegation": "France",
       "committee": "UNSC",
       "flag": "🇫🇷",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0044",
@@ -394,7 +437,8 @@
       "delegation": "France",
       "committee": "UNHRC",
       "flag": "🇫🇷",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0045",
@@ -403,7 +447,8 @@
       "delegation": "France",
       "committee": "UNESCO",
       "flag": "🇫🇷",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0046",
@@ -412,7 +457,8 @@
       "delegation": "Italy",
       "committee": "ECOSOC",
       "flag": "🇮🇹",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0047",
@@ -421,7 +467,8 @@
       "delegation": "Italy",
       "committee": "UNODC",
       "flag": "🇮🇹",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0048",
@@ -430,7 +477,8 @@
       "delegation": "Italy",
       "committee": "UNSC",
       "flag": "🇮🇹",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0049",
@@ -439,7 +487,8 @@
       "delegation": "Italy",
       "committee": "UNHRC",
       "flag": "🇮🇹",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     },
     {
       "id": "0050",
@@ -448,7 +497,8 @@
       "delegation": "Italy",
       "committee": "UNESCO",
       "flag": "🇮🇹",
-      "password": "TESTING"
+      "password": "TESTING",
+      "speechCount": 1
     }
   ],
   "announcements": [
@@ -582,26 +632,6 @@
     }
   ],
   "speeches": [
-    {
-      "speechID": "0001-1",
-      "title": "Opening Statement",
-      "content": "The United States believes in..."
-    },
-    {
-      "speechID": "0001-2",
-      "title": "Point of Information",
-      "content": "Can the speaker clarify..."
-    },
-    {
-      "speechID": "0001-3",
-      "title": "Motion to Adjourn",
-      "content": "The United States moves to adjourn the meeting."
-    },
-    {
-      "speechID": "0001-4",
-      "title": "Closing Remarks",
-      "content": "In conclusion, the United States urges..."
-    },
     {
       "speechID": "0002-1",
       "title": "Opening Statement",
@@ -745,7 +775,7 @@
     {
       "speechID": "0030-1",
       "title": "Opening Statement",
-      "content": "Egypt believes in..."
+      "content": "Egypt believes in... MOHAMMED SALAHHHH"
     },
     {
       "speechID": "0031-1",
@@ -789,11 +819,6 @@
     },
     {
       "speechID": "0039-1",
-      "title": "Opening Statement",
-      "content": "Germany believes in..."
-    },
-    {
-      "speechID": "0040-1",
       "title": "Opening Statement",
       "content": "Germany believes in..."
     },
@@ -846,6 +871,21 @@
       "speechID": "0050-1",
       "title": "Opening Statement",
       "content": "Italy believes in..."
+    },
+    {
+      "speechID": "0004-2",
+      "title": "Opening Statement",
+      "content": "we hate the reds"
+    },
+    {
+      "speechID": "0030-2",
+      "title": "Opening Statement",
+      "content": "egypt mohammed salah"
+    },
+    {
+      "speechID": "0040-2",
+      "title": "1",
+      "content": "2"
     }
   ]
 }
