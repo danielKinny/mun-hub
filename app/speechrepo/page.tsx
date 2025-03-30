@@ -7,14 +7,14 @@ import { useRouter } from 'next/navigation'
 import { Speech } from '@/app/db/types'
 import ProtectedRoute from '@/components/protectedroute';
 import dynamic from 'next/dynamic';
-import ReactQuill from 'react-quill-new';
-import "react-quill-new/dist/quill.snow.css";
+
 
 
 const page = () => {
     const { user: currentUser } = useSession(); 
     const [selectedSpeech, setSelectedSpeech] = React.useState<Speech | null>(null);
     const [text, setText] = React.useState<string>('');
+    const [speechTitle, setSpeechTitle] = React.useState<string>('');
 
     useEffect(() => {
         if (selectedSpeech) {
@@ -28,11 +28,15 @@ const page = () => {
         setText(e.target.value);
     };
 
+    const handleSpeechChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setSpeechTitle(e.target.value);
+    };
+
     const handleAddSpeech = () => {
         let speechNo: number = speeches.filter(speech => speech.speechID.substring(0, 4) === currentUser?.id).length;
         const newSpeech: Speech = {
             speechID: `${currentUser?.id}-${speechNo + 1}`,
-            title: `Speech ${speeches.length + 1}`,
+            title: speechTitle,
             content: text,
         };
         
@@ -82,10 +86,11 @@ const page = () => {
                                     Speech Interface
                                 </h2>
                                 <textarea 
-                                className='w-full p-4 bg-gray-800 rounded-lg text-white h-20'
-                                value={text}
-                                onChange={handleTextChange}
+                                className=' w-full p-4 bg-gray-800 rounded-lg text-white h-12'
+                                value={speechTitle}
+                                onChange={handleSpeechChange}
                                 placeholder='Write your speech title here...'
+                                style={{ resize: 'none' }}
                                 >
                                 </textarea>
 
@@ -98,7 +103,7 @@ const page = () => {
                             </div>
                             <div className='flex justify-center items-center mt-4'>
                                 <button 
-                                className='min-w-50 bg-white text-black p-4 rounded-lg'
+                                className='min-w-50 bg-white text-black p-4 rounded-lg cursor-pointer'
                                 onClick={() => handleAddSpeech()} >
                                     Add
                                 </button>
