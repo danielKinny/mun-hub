@@ -1,25 +1,24 @@
 "use client";
-import React, { useEffect } from 'react'
-import { CustomNav } from '@/components/ui/customnav'
-import { speeches } from '@/app/db/index'
-import { useSession } from '../context/sessionContext'
-import { useRouter } from 'next/navigation'
-import { Speech } from '@/app/db/types'
+import React, { useEffect } from 'react';
+import { CustomNav } from '@/components/ui/customnav';
+import { speeches, delegates } from '@/db/index';
+import { useSession } from '../context/sessionContext';
+import { Speech } from '@/db/types';
 import ProtectedRoute from '@/components/protectedroute';
-import dynamic from 'next/dynamic';
+import { toast } from "sonner";
 
-
-
-const page = () => {
-    const { user: currentUser } = useSession(); 
-    const [selectedSpeech, setSelectedSpeech] = React.useState<Speech | null>(null);
+const Page = () => {
+    const { user: currentUser } = useSession();
+    const [selectedSpeech, setSelectedSpeech] = React.useState<Speech | null>(speeches.filter((speech: Speech) => currentUser?.id === (speech.speechID).substring(0, 4))[0] || null);
     const [text, setText] = React.useState<string>('');
     const [speechTitle, setSpeechTitle] = React.useState<string>('');
 
     useEffect(() => {
         if (selectedSpeech) {
+            setSpeechTitle(selectedSpeech.title);
             setText(selectedSpeech.content);
         } else {
+            setSpeechTitle('');
             setText('');
         }
     }, [selectedSpeech]);
@@ -32,16 +31,73 @@ const page = () => {
         setSpeechTitle(e.target.value);
     };
 
-    const handleAddSpeech = () => {
-        let speechNo: number = speeches.filter(speech => speech.speechID.substring(0, 4) === currentUser?.id).length;
-        const newSpeech: Speech = {
-            speechID: `${currentUser?.id}-${speechNo + 1}`,
-            title: speechTitle,
-            content: text,
-        };
+    const handleDeleteSpeech = async (speechID: string) => {
         
-        console.log(newSpeech);
+        if (!speechTitle || !text || !currentUser?.id) {
+            alert('Please fill in all fields.');
+            return;
+        }
+        try {
+            const response = await fetch('/api/speeches', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    speechID,
+                }),
+            });
 
+            if (response.ok) {
+                await response.json();
+            } else {
+                await response.json();
+            }
+        } catch (error) {
+            alert('Failed to delete speech.');
+        }
+    };
+
+    const handleAddSpeech = async () => {
+
+        if (!speechTitle || !text || !currentUser?.id) {
+            alert('Please fill in all fields.');
+            return;
+        }
+
+        let id: string;
+    
+        if (selectedSpeech) {
+            id = selectedSpeech.speechID;
+        } else {
+            id = `${currentUser.id}-${delegates.filter((delegate)=> delegate.id === currentUser.id)[0].speechCount}`;
+        }
+
+        try {
+            const response = await fetch('/api/speeches', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    speechID: id,
+                    title: speechTitle,
+                    content: text,
+                }),
+            });
+
+            if (response.ok) {
+                await response.json();
+                setSpeechTitle('');
+                setText('');
+            } else {
+                await response.json();
+            }
+
+            
+        } catch (error) {
+            alert('Failed to add speech.');
+        }
     };
 
     return (
@@ -60,22 +116,43 @@ const page = () => {
 
                         <section className='p-6 w-1/3'>
                             <div className="m-4 rounded-lg p-4 bg-gray-900">
-                                <h2 className='text-2xl font-semibold mb-4 text-center'>Speeches</h2>
+                                <h2 className='text-2xl font-semibold mb-4 text-center inline-block'>Speeches</h2>
+                                <button
+                                    onClick={() => setSelectedSpeech(null)}
+                                    className='hover:bg-black bg-white text-2xl items-center w-10 h-8 text-black rounded-lg mb-4 ml-4 cursor-pointer transition-colors hover:text-white'>
+                                    +
+                                </button>
                                 <div className='h-96 overflow-y-auto bg-gray-800 p-4 rounded-lg'>
                                     <ul>
                                         {
                                             speeches.filter(speech => speech.speechID.substring(0, 4) === currentUser?.id)
                                                 .map((speech) => (
-                                                    <li 
-                                                        key={speech.speechID} 
+                                                    <li
+                                                        key={speech.speechID}
                                                         className='p-2 border-b border-gray-700 cursor-pointer transition-transform hover:scale-105'
                                                         onClick={() => setSelectedSpeech(speech)}
                                                     >
-                                                        <h3 className='text-xl'>{speech.title}</h3>
+                                                        <div className='flex justify-center items-center'>
+                                                            <h3 className='text-xl'>{speech.title}</h3>
+                                                            <button
+                                                                key={speech.speechID}
+                                                                onClick={() => {handleDeleteSpeech(speech.speechID); toast("Speech has been deleted")}}
+                                                                className='bg-red-500 text-white ml-auto rounded-lg w-8 h-8 flex items-center justify-center hover:bg-black transition-colors'>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                                </svg>
+
+
+                                                            </button>
+                                                        </div>
                                                         <p>{speech.content}</p>
+
                                                     </li>
                                                 ))}
+
+
                                     </ul>
+
                                 </div>
                             </div>
                         </section>
@@ -85,30 +162,31 @@ const page = () => {
                                 <h2 className='text-2xl text-center p-4 border-b border-gray-800'>
                                     Speech Interface
                                 </h2>
-                                <textarea 
-                                className=' w-full p-4 bg-gray-800 rounded-lg text-white h-12'
-                                value={speechTitle}
-                                onChange={handleSpeechChange}
-                                placeholder='Write your speech title here...'
-                                style={{ resize: 'none' }}
+                                <textarea
+                                    className=' w-full p-4 bg-gray-800 rounded-lg text-white h-12 align-top'
+                                    value={speechTitle}
+                                    onChange={handleSpeechChange}
+                                    placeholder='Write your speech title here...'
+                                    style={{ resize: 'none' }}
                                 >
                                 </textarea>
 
-                                <textarea className='w-full p-4 bg-gray-800 rounded-lg text-white mt-4'
-                                value={text}
-                                onChange={handleTextChange}
-                                placeholder='Write your speech here...'>
+                                <textarea
+                                    className='w-full p-4 bg-gray-800 rounded-lg text-white mt-4'
+                                    value={text}
+                                    onChange={handleTextChange}
+                                    placeholder='Write your speech here...'>
 
                                 </textarea>
                             </div>
                             <div className='flex justify-center items-center mt-4'>
-                                <button 
-                                className='min-w-50 bg-white text-black p-4 rounded-lg cursor-pointer'
-                                onClick={() => handleAddSpeech()} >
+                                <button
+                                    className='min-w-50 bg-white text-black p-4 rounded-lg cursor-pointer'
+                                    onClick={() => { toast("speech created"); handleAddSpeech() }}>
                                     Add
                                 </button>
                             </div>
-                            
+
                         </section>
 
                     </section>
@@ -119,4 +197,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

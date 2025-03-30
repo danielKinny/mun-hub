@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { Delegate } from "@/app/db/types";
+import { Delegate } from "@/db/types";
 import Cookies from 'js-cookie';
 
 // lot to explain here lolz

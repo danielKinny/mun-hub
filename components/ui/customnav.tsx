@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { committees, countries } from "@/app/db/index";
+import { committees, countries } from "@/db/index";
 import {
     NavigationMenu,
     NavigationMenuContent,

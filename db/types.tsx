@@ -6,6 +6,7 @@ export interface Delegate {
     committee: string;
     flag: string;
     password: string;
+    speechCount: number;
 }
 
 export interface Announcement {
