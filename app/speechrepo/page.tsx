@@ -6,15 +6,49 @@ import { useSession } from '../context/sessionContext'
 import { useRouter } from 'next/navigation'
 import { Speech } from '@/app/db/types'
 import ProtectedRoute from '@/components/protectedroute';
+import dynamic from 'next/dynamic';
+
+
 
 const page = () => {
-    const { user: currentUser } = useSession();
+    const { user: currentUser } = useSession(); 
+    const [selectedSpeech, setSelectedSpeech] = React.useState<Speech | null>(null);
+    const [text, setText] = React.useState<string>('');
+    const [speechTitle, setSpeechTitle] = React.useState<string>('');
+
+    useEffect(() => {
+        if (selectedSpeech) {
+            setText(selectedSpeech.content);
+        } else {
+            setText('');
+        }
+    }, [selectedSpeech]);
+
+    const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setText(e.target.value);
+    };
+
+    const handleSpeechChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setSpeechTitle(e.target.value);
+    };
+
+    const handleAddSpeech = () => {
+        let speechNo: number = speeches.filter(speech => speech.speechID.substring(0, 4) === currentUser?.id).length;
+        const newSpeech: Speech = {
+            speechID: `${currentUser?.id}-${speechNo + 1}`,
+            title: speechTitle,
+            content: text,
+        };
+        
+        console.log(newSpeech);
+
+    };
 
     return (
         <ProtectedRoute>
             <div className='bg-black text-white min-h-screen'>
                 <header>
-                    <h1 className='text-4xl text-center p-4 border-b border-gray-800'>Speech Repository for {currentUser?.firstname}</h1>
+                    <h1 className='text-4xl text-center p-4 border-b border-gray-800'>Speech Repository {currentUser?.flag}</h1>
                 </header>
 
                 <main>
@@ -32,7 +66,11 @@ const page = () => {
                                         {
                                             speeches.filter(speech => speech.speechID.substring(0, 4) === currentUser?.id)
                                                 .map((speech) => (
-                                                    <li key={speech.speechID} className='p-2 border-b border-gray-700'>
+                                                    <li 
+                                                        key={speech.speechID} 
+                                                        className='p-2 border-b border-gray-700 cursor-pointer transition-transform hover:scale-105'
+                                                        onClick={() => setSelectedSpeech(speech)}
+                                                    >
                                                         <h3 className='text-xl'>{speech.title}</h3>
                                                         <p>{speech.content}</p>
                                                     </li>
@@ -42,12 +80,35 @@ const page = () => {
                             </div>
                         </section>
 
-                        <section>
+                        <section className='w-full pr-8 items-center justify-center'>
                             <div>
                                 <h2 className='text-2xl text-center p-4 border-b border-gray-800'>
                                     Speech Interface
                                 </h2>
+                                <textarea 
+                                className=' w-full p-4 bg-gray-800 rounded-lg text-white h-12'
+                                value={speechTitle}
+                                onChange={handleSpeechChange}
+                                placeholder='Write your speech title here...'
+                                style={{ resize: 'none' }}
+                                >
+                                </textarea>
+
+                                <textarea className='w-full p-4 bg-gray-800 rounded-lg text-white mt-4'
+                                value={text}
+                                onChange={handleTextChange}
+                                placeholder='Write your speech here...'>
+
+                                </textarea>
                             </div>
+                            <div className='flex justify-center items-center mt-4'>
+                                <button 
+                                className='min-w-50 bg-white text-black p-4 rounded-lg cursor-pointer'
+                                onClick={() => handleAddSpeech()} >
+                                    Add
+                                </button>
+                            </div>
+                            
                         </section>
 
                     </section>
