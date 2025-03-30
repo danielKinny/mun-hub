@@ -6,7 +6,15 @@ export interface Delegate {
     committee: string;
     flag: string;
     password: string;
+    speechCount: number;
 }
+
+export interface Announcement {
+    title: string;
+    externallink: string;
+    description: string;
+    date: string;
+  }
 
 export interface Country {
     name: string;
@@ -23,8 +31,16 @@ export interface Committee {
     delegates: any[];
 }
 
+export interface Speech {
+    speechID: string;
+    title: string;
+    content: string;
+}
+
 export interface Database {
     delegates: Delegate[];
+    announcements: Announcement[];
     countries: Country[];
     committees: Committee[];
+    speeches: Speech[];
 }

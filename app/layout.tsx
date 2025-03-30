@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { UserProvider } from "./context/usercontext";
-
+import { SessionProvider } from "./context/sessionContext";
+import { Toaster } from "sonner";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,11 +26,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-black antialiased`}
       >
-        <UserProvider>
-        {children}
-        </UserProvider>
+
+        {/* entire thingy is wrapped with session provider */}
+        <SessionProvider>
+          <main>
+            {children}
+          </main>
+        <Toaster />
+        </SessionProvider>
       </body>
     </html>
   );

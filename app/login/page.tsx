@@ -3,21 +3,21 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { authenticate } from '../utils/auth';
 import { useRouter } from 'next/navigation';
-import { useUser } from '../context/usercontext';
+import { useSession } from '../context/sessionContext';
 
 const Login = () => {
   const [participantId, setParticipantId] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [error, setError] = React.useState('');
   const router = useRouter();
-  const { setCurrentUser } = useUser();
+  const { login } = useSession();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const delegate = authenticate(participantId, password);
     
     if (delegate) {
-      setCurrentUser({...delegate, id: parseInt(delegate.id)})
+      login(delegate);
       router.push("/home");
     } else {
       setError("Invalid Participant ID or Password");

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { committees, countries } from "@/app/db/index";
+import { committees, countries } from "@/db/index";
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -28,11 +28,17 @@ export function CustomNav() {
                 <NavigationMenuList className="w-full flex justify-center gap-4">
                     
                     <NavigationMenuItem>
-                        <NavigationMenuTrigger className="text-xl"><Link href="/home">Home</Link></NavigationMenuTrigger>
+                        <NavigationMenuTrigger className="text-xl">Home</NavigationMenuTrigger>
+                        <NavigationMenuContent className="min-w-[200px]">
+                            <Link href="/home">Your Dashboard</Link>
+                        </NavigationMenuContent>
                     </NavigationMenuItem>
 
                     <NavigationMenuItem>
                         <NavigationMenuTrigger className="text-xl">Speech Repo</NavigationMenuTrigger>
+                        <NavigationMenuContent className="min-w-[200px]">
+                            <NavigationMenuLink href="/speechrepo">Access and store speeches</NavigationMenuLink>
+                        </NavigationMenuContent>
                     </NavigationMenuItem>
 
                     <NavigationMenuItem>
