@@ -3,10 +3,8 @@ import React, { useEffect } from 'react'
 import { CustomNav } from '@/components/ui/customnav'
 import { speeches } from '@/app/db/index'
 import { useSession } from '../context/sessionContext'
-import { useRouter } from 'next/navigation'
 import { Speech } from '@/app/db/types'
 import ProtectedRoute from '@/components/protectedroute';
-import dynamic from 'next/dynamic';
 
 
 
@@ -32,16 +30,42 @@ const page = () => {
         setSpeechTitle(e.target.value);
     };
 
-    const handleAddSpeech = () => {
-        let speechNo: number = speeches.filter(speech => speech.speechID.substring(0, 4) === currentUser?.id).length;
-        const newSpeech: Speech = {
-            speechID: `${currentUser?.id}-${speechNo + 1}`,
-            title: speechTitle,
-            content: text,
-        };
+    const handleAddSpeech = async () => {
         
-        console.log(newSpeech);
+        if (!speechTitle || !text || !currentUser?.id) {
+            alert('Please fill in all fields.');
+            return;
+        }
 
+        try {
+            let newSpeech : Speech = {
+                speechID: `${currentUser.id}-${speeches.filter(speech => speech.speechID.substring(0, 4) === currentUser.id).length + 1}`,
+                title: speechTitle,
+                content: text,
+            }
+
+            const response = await fetch('/api/speeches', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    speechID: `${currentUser.id}-${speeches.filter(speech => speech.speechID.substring(0, 4) === currentUser.id).length + 1}`,
+                    title: speechTitle,
+                    content: text,
+                }),
+            });
+
+            if (response.ok) {
+                await response.json();
+                setSpeechTitle('');
+                setText('');
+            } else {
+                await response.json();
+            }
+        } catch (error) {
+            alert('Failed to add speech.');
+        }
     };
 
     return (
