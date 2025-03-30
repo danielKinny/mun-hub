@@ -8,7 +8,7 @@
       "committee": "ECOSOC",
       "flag": "🇺🇸",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0002",
@@ -18,7 +18,7 @@
       "committee": "UNODC",
       "flag": "🇺🇸",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0003",
@@ -28,7 +28,7 @@
       "committee": "UNSC",
       "flag": "🇺🇸",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0004",
@@ -38,7 +38,7 @@
       "committee": "UNHRC",
       "flag": "🇺🇸",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0005",
@@ -48,7 +48,7 @@
       "committee": "UNESCO",
       "flag": "🇺🇸",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0006",
@@ -58,7 +58,7 @@
       "committee": "ECOSOC",
       "flag": "🇨🇳",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0007",
@@ -68,7 +68,7 @@
       "committee": "UNODC",
       "flag": "🇨🇳",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0008",
@@ -78,7 +78,7 @@
       "committee": "UNSC",
       "flag": "🇨🇳",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0009",
@@ -88,7 +88,7 @@
       "committee": "UNHRC",
       "flag": "🇨🇳",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0010",
@@ -98,7 +98,7 @@
       "committee": "UNESCO",
       "flag": "🇨🇳",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0011",
@@ -108,7 +108,7 @@
       "committee": "ECOSOC",
       "flag": "🇮🇳",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0012",
@@ -118,7 +118,7 @@
       "committee": "UNODC",
       "flag": "🇮🇳",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0013",
@@ -128,7 +128,7 @@
       "committee": "UNSC",
       "flag": "🇮🇳",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0014",
@@ -138,7 +138,7 @@
       "committee": "UNHRC",
       "flag": "🇮🇳",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0015",
@@ -148,7 +148,7 @@
       "committee": "UNESCO",
       "flag": "🇮🇳",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0016",
@@ -158,7 +158,7 @@
       "committee": "ECOSOC",
       "flag": "🇷🇺",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0017",
@@ -168,7 +168,7 @@
       "committee": "UNODC",
       "flag": "🇷🇺",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0018",
@@ -178,7 +178,7 @@
       "committee": "UNSC",
       "flag": "🇷🇺",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0019",
@@ -188,7 +188,7 @@
       "committee": "UNHRC",
       "flag": "🇷🇺",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0020",
@@ -198,7 +198,7 @@
       "committee": "UNESCO",
       "flag": "🇷🇺",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0021",
@@ -208,7 +208,7 @@
       "committee": "ECOSOC",
       "flag": "🇬🇧",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0022",
@@ -218,7 +218,7 @@
       "committee": "UNODC",
       "flag": "🇬🇧",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0023",
@@ -228,7 +228,7 @@
       "committee": "UNSC",
       "flag": "🇬🇧",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0024",
@@ -238,7 +238,7 @@
       "committee": "UNHRC",
       "flag": "🇬🇧",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0025",
@@ -248,7 +248,7 @@
       "committee": "UNESCO",
       "flag": "🇬🇧",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0026",
@@ -258,7 +258,7 @@
       "committee": "ECOSOC",
       "flag": "🇪🇬",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0027",
@@ -268,7 +268,7 @@
       "committee": "UNODC",
       "flag": "🇪🇬",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0028",
@@ -278,7 +278,7 @@
       "committee": "UNSC",
       "flag": "🇪🇬",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0029",
@@ -288,7 +288,7 @@
       "committee": "UNHRC",
       "flag": "🇪🇬",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0030",
@@ -298,7 +298,7 @@
       "committee": "UNESCO",
       "flag": "🇪🇬",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0031",
@@ -308,7 +308,7 @@
       "committee": "ECOSOC",
       "flag": "🇯🇵",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0032",
@@ -318,7 +318,7 @@
       "committee": "UNODC",
       "flag": "🇯🇵",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0033",
@@ -328,7 +328,7 @@
       "committee": "UNSC",
       "flag": "🇯🇵",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0034",
@@ -338,7 +338,7 @@
       "committee": "UNHRC",
       "flag": "🇯🇵",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0035",
@@ -348,7 +348,7 @@
       "committee": "UNESCO",
       "flag": "🇯🇵",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0036",
@@ -358,7 +358,7 @@
       "committee": "ECOSOC",
       "flag": "🇩🇪",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0037",
@@ -368,7 +368,7 @@
       "committee": "UNODC",
       "flag": "🇩🇪",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0038",
@@ -378,7 +378,7 @@
       "committee": "UNSC",
       "flag": "🇩🇪",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0039",
@@ -388,7 +388,7 @@
       "committee": "UNHRC",
       "flag": "🇩🇪",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0040",
@@ -398,7 +398,7 @@
       "committee": "UNESCO",
       "flag": "🇩🇪",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0041",
@@ -408,7 +408,7 @@
       "committee": "ECOSOC",
       "flag": "🇫🇷",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0042",
@@ -418,7 +418,7 @@
       "committee": "UNODC",
       "flag": "🇫🇷",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0043",
@@ -428,7 +428,7 @@
       "committee": "UNSC",
       "flag": "🇫🇷",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0044",
@@ -438,7 +438,7 @@
       "committee": "UNHRC",
       "flag": "🇫🇷",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0045",
@@ -448,7 +448,7 @@
       "committee": "UNESCO",
       "flag": "🇫🇷",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0046",
@@ -458,7 +458,7 @@
       "committee": "ECOSOC",
       "flag": "🇮🇹",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0047",
@@ -468,7 +468,7 @@
       "committee": "UNODC",
       "flag": "🇮🇹",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0048",
@@ -478,7 +478,7 @@
       "committee": "UNSC",
       "flag": "🇮🇹",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0049",
@@ -488,7 +488,7 @@
       "committee": "UNHRC",
       "flag": "🇮🇹",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     },
     {
       "id": "0050",
@@ -498,7 +498,7 @@
       "committee": "UNESCO",
       "flag": "🇮🇹",
       "password": "TESTING",
-      "speechCount": 1
+      "speechCount": 0
     }
   ],
   "announcements": [
@@ -631,256 +631,5 @@
       "delegates": []
     }
   ],
-  "speeches": [
-    {
-      "speechID": "0001-1",
-      "title": "Opening Statement",
-      "content": "The United States believes in..."
-    },
-    {
-      "speechID": "0002-1",
-      "title": "Opening Statement",
-      "content": "The United States believes in..."
-    },
-    {
-      "speechID": "0003-1",
-      "title": "Opening Statement",
-      "content": "The United States believes in..."
-    },
-    {
-      "speechID": "0004-1",
-      "title": "Opening Statement",
-      "content": "The United States believes in..."
-    },
-    {
-      "speechID": "0005-1",
-      "title": "Opening Statement",
-      "content": "The United States believes in..."
-    },
-    {
-      "speechID": "0006-1",
-      "title": "Opening Statement",
-      "content": "China believes in..."
-    },
-    {
-      "speechID": "0007-1",
-      "title": "Opening Statement",
-      "content": "China believes in..."
-    },
-    {
-      "speechID": "0008-1",
-      "title": "Opening Statement",
-      "content": "China believes in..."
-    },
-    {
-      "speechID": "0009-1",
-      "title": "Opening Statement",
-      "content": "China believes in..."
-    },
-    {
-      "speechID": "0010-1",
-      "title": "Opening Statement",
-      "content": "China believes in..."
-    },
-    {
-      "speechID": "0011-1",
-      "title": "Opening Statement",
-      "content": "India believes in..."
-    },
-    {
-      "speechID": "0012-1",
-      "title": "Opening Statement",
-      "content": "India believes in..."
-    },
-    {
-      "speechID": "0013-1",
-      "title": "Opening Statement",
-      "content": "India believes in..."
-    },
-    {
-      "speechID": "0014-1",
-      "title": "Opening Statement",
-      "content": "India believes in..."
-    },
-    {
-      "speechID": "0015-1",
-      "title": "Opening Statement",
-      "content": "India believes in..."
-    },
-    {
-      "speechID": "0016-1",
-      "title": "Opening Statement",
-      "content": "Russia believes in..."
-    },
-    {
-      "speechID": "0017-1",
-      "title": "Opening Statement",
-      "content": "Russia believes in..."
-    },
-    {
-      "speechID": "0018-1",
-      "title": "Opening Statement",
-      "content": "Russia believes in..."
-    },
-    {
-      "speechID": "0019-1",
-      "title": "Opening Statement",
-      "content": "Russia believes in..."
-    },
-    {
-      "speechID": "0020-1",
-      "title": "Opening Statement",
-      "content": "Russia believes in..."
-    },
-    {
-      "speechID": "0021-1",
-      "title": "Opening Statement",
-      "content": "The UK believes in..."
-    },
-    {
-      "speechID": "0022-1",
-      "title": "Opening Statement",
-      "content": "The UK believes in..."
-    },
-    {
-      "speechID": "0023-1",
-      "title": "Opening Statement",
-      "content": "The UK believes in..."
-    },
-    {
-      "speechID": "0024-1",
-      "title": "Opening Statement",
-      "content": "The UK believes in..."
-    },
-    {
-      "speechID": "0025-1",
-      "title": "Opening Statement",
-      "content": "The UK believes in..."
-    },
-    {
-      "speechID": "0026-1",
-      "title": "Opening Statement",
-      "content": "Egypt believes in..."
-    },
-    {
-      "speechID": "0027-1",
-      "title": "Opening Statement",
-      "content": "Egypt believes in..."
-    },
-    {
-      "speechID": "0028-1",
-      "title": "Opening Statement",
-      "content": "Egypt believes in..."
-    },
-    {
-      "speechID": "0029-1",
-      "title": "Opening Statement",
-      "content": "Egypt believes in..."
-    },
-    {
-      "speechID": "0030-1",
-      "title": "Opening Statement",
-      "content": "Egypt believes in... MOHAMMED SALAHHHH"
-    },
-    {
-      "speechID": "0031-1",
-      "title": "Opening Statement",
-      "content": "Japan believes in..."
-    },
-    {
-      "speechID": "0032-1",
-      "title": "Opening Statement",
-      "content": "Japan believes in..."
-    },
-    {
-      "speechID": "0033-1",
-      "title": "Opening Statement",
-      "content": "Japan believes in..."
-    },
-    {
-      "speechID": "0034-1",
-      "title": "Opening Statement",
-      "content": "Japan believes in..."
-    },
-    {
-      "speechID": "0035-1",
-      "title": "Opening Statement",
-      "content": "Japan believes in..."
-    },
-    {
-      "speechID": "0036-1",
-      "title": "Opening Statement",
-      "content": "Germany believes in..."
-    },
-    {
-      "speechID": "0037-1",
-      "title": "Opening Statement",
-      "content": "Germany believes in..."
-    },
-    {
-      "speechID": "0038-1",
-      "title": "Opening Statement",
-      "content": "Germany believes in..."
-    },
-    {
-      "speechID": "0039-1",
-      "title": "Opening Statement",
-      "content": "Germany believes in..."
-    },
-    {
-      "speechID": "0040-1",
-      "title": "Opening Statement",
-      "content": "Italy believes in..."
-    },
-    {
-      "speechID": "0041-1",
-      "title": "Opening Statement",
-      "content": "France believes in..."
-    },
-    {
-      "speechID": "0042-1",
-      "title": "Opening Statement",
-      "content": "France believes in..."
-    },
-    {
-      "speechID": "0043-1",
-      "title": "Opening Statement",
-      "content": "France believes in..."
-    },
-    {
-      "speechID": "0044-1",
-      "title": "Opening Statement",
-      "content": "France believes in..."
-    },
-    {
-      "speechID": "0045-1",
-      "title": "Opening Statement",
-      "content": "France believes in..."
-    },
-    {
-      "speechID": "0046-1",
-      "title": "Opening Statement",
-      "content": "Italy believes in..."
-    },
-    {
-      "speechID": "0047-1",
-      "title": "Opening Statement",
-      "content": "Italy believes in..."
-    },
-    {
-      "speechID": "0048-1",
-      "title": "Opening Statement",
-      "content": "Italy believes in..."
-    },
-    {
-      "speechID": "0049-1",
-      "title": "Opening Statement",
-      "content": "Italy believes in..."
-    },
-    {
-      "speechID": "0050-1",
-      "title": "Opening Statement",
-      "content": "Italy believes in..."
-    }
-  ]
+  "speeches": []
 }
