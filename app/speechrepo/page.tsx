@@ -162,6 +162,29 @@ const Page = () => {
                                 <h2 className='text-2xl text-center p-4 border-b border-gray-800'>
                                     Speech Interface
                                 </h2>
+
+                                <div className=' w-full flex items-center justify-center overflow-x-auto'>
+                                    <p className='inline-block text-2xl p-4'>
+                                        Add tags !
+                                    </p>
+                                    <button
+                                    className='inline-block bg-white text-black rounded-lg cursor-pointer min-w-12 h-8 font-semibold text-2xl'>
+                                        +
+                                    </button>
+
+                                    <ul className='border border-white h-8 inline-block ml-4'>
+                                        {
+                                            selectedSpeech?.tags.map((tag, index) => (
+                                                <li key={index}
+                                                className= 'border border-white h-8 cursor-pointer transition-transform w-12 text-center bg-white rounded-lg '>
+                                                    {tag}
+                                                </li>
+                                            ))
+                                        }
+
+                                    </ul>
+
+                                </div>
                                 <textarea
                                     className=' w-full p-4 bg-gray-800 rounded-lg text-white h-12 align-top'
                                     value={speechTitle}
