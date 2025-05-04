@@ -244,7 +244,7 @@ const Page = () => {
                             <div className='flex justify-center items-center mt-4'>
                                 <button
                                     className='min-w-50 bg-white text-black p-4 rounded-lg cursor-pointer'
-                                    onClick={() => { toast("speech created"); handleAddSpeech() }}>
+                                    onClick={() => { selectedSpeech ? toast("Speech Updated") : toast("Speech Created"); handleAddSpeech() }}>
                                     {selectedSpeech ? 'Update Speech' : 'Add Speech'}
                                 </button>
                             </div>
