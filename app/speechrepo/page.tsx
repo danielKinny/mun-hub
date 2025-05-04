@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from 'react';
 import { CustomNav } from '@/components/ui/customnav';
-import { speeches, delegates } from '@/db/index';
+import { speeches, delegates, countries } from '@/db/index';
 import { useSession } from '../context/sessionContext';
 import { Speech } from '@/db/types';
 import ProtectedRoute from '@/components/protectedroute';
@@ -12,11 +12,13 @@ const Page = () => {
     const [selectedSpeech, setSelectedSpeech] = React.useState<Speech | null>(speeches.filter((speech: Speech) => currentUser?.id === (speech.speechID).substring(0, 4))[0] || null);
     const [text, setText] = React.useState<string>('');
     const [speechTitle, setSpeechTitle] = React.useState<string>('');
+    const [addingNewTag, setAddingNewTag] = React.useState<boolean>(false);
 
     useEffect(() => {
         if (selectedSpeech) {
             setSpeechTitle(selectedSpeech.title);
             setText(selectedSpeech.content);
+
         } else {
             setSpeechTitle('');
             setText('');
@@ -83,6 +85,7 @@ const Page = () => {
                     speechID: id,
                     title: speechTitle,
                     content: text,
+                    tags: selectedSpeech?.tags || [],
                 }),
             });
 
@@ -136,7 +139,7 @@ const Page = () => {
                                                             <h3 className='text-xl'>{speech.title}</h3>
                                                             <button
                                                                 key={speech.speechID}
-                                                                onClick={() => {handleDeleteSpeech(speech.speechID); toast("Speech has been deleted")}}
+                                                                onClick={() => { setSelectedSpeech(speech); handleDeleteSpeech(speech.speechID); toast("Speech has been deleted")}}
                                                                 className='bg-red-500 text-white ml-auto rounded-lg w-8 h-8 flex items-center justify-center hover:bg-black transition-colors'>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
                                                                     <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
@@ -158,6 +161,33 @@ const Page = () => {
                         </section>
 
                         <section className='w-full pr-8 items-center justify-center'>
+
+                            {
+                                addingNewTag && selectedSpeech &&(
+                                    
+                                    <div className='flex justify-center items-center'>
+                                        {
+                                            countries.filter((country)=>!selectedSpeech?.tags?.includes(country.flag)).map((country) => (
+                                                <div
+                                                    key={country.name}
+                                                    className='cursor-pointer transition-transform text-center mx-2 inline-block'
+                                                    onClick={() => {
+                                                        selectedSpeech?.tags?.push(country.flag);
+                                                        setAddingNewTag(false);
+                                                    }}
+                                                >
+                                                    <p className='w-12 text-2xl h-8 bg-white text-black rounded-lg'>
+                                                        {country.flag}
+                                                    </p>
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+
+
+                                )
+
+                            }
                             <div>
                                 <h2 className='text-2xl text-center p-4 border-b border-gray-800'>
                                     Speech Interface
@@ -168,21 +198,26 @@ const Page = () => {
                                         Add tags !
                                     </p>
                                     <button
-                                    className='inline-block bg-white text-black rounded-lg cursor-pointer min-w-12 h-8 font-semibold text-2xl'>
+                                    className='inline-block bg-white text-black rounded-lg cursor-pointer min-w-12 h-8 font-semibold text-2xl'
+                                    onClick={() => setAddingNewTag(true)}>
                                         +
                                     </button>
 
-                                    <ul className='border border-white h-8 inline-block ml-4'>
+                                    <nav className='inline-block h-8 ml-4'>
                                         {
-                                            selectedSpeech?.tags.map((tag, index) => (
-                                                <li key={index}
-                                                className= 'border border-white h-8 cursor-pointer transition-transform w-12 text-center bg-white rounded-lg '>
+                                            selectedSpeech?.tags?.map((tag, index) => (
+                                                <div
+                                                className='cursor-pointer transition-transform text-center mx-2 inline-block'>
+                                                   <p key={index}
+                                                   className='w-12 text-2xl h-8 bg-white rounded-lg'>
                                                     {tag}
-                                                </li>
+                                                    </p> 
+                                                </div>
+                                                
                                             ))
                                         }
 
-                                    </ul>
+                                    </nav>
 
                                 </div>
                                 <textarea
@@ -206,7 +241,7 @@ const Page = () => {
                                 <button
                                     className='min-w-50 bg-white text-black p-4 rounded-lg cursor-pointer'
                                     onClick={() => { toast("speech created"); handleAddSpeech() }}>
-                                    Add
+                                    {selectedSpeech ? 'Update Speech' : 'Add Speech'}
                                 </button>
                             </div>
 

@@ -8,7 +8,7 @@
       "committee": "ECOSOC",
       "flag": "🇺🇸",
       "password": "TESTING",
-      "speechCount": 3
+      "speechCount": 11
     },
     {
       "id": "0002",
@@ -631,12 +631,5 @@
       "delegates": []
     }
   ],
-  "speeches": [
-    {
-      "speechID": "0001-2",
-      "title": "asd",
-      "content": "asd",
-      "tags": ["🇷🇺"]
-    }
-  ]
+  "speeches": []
 }
