@@ -55,6 +55,10 @@ const Page = () => {
             } else {
                 await response.json();
             }
+
+            setText('');
+            setSpeechTitle('');
+            setSelectedSpeech(null);
         } catch (error) {
             alert('Failed to delete speech.');
         }
@@ -163,7 +167,7 @@ const Page = () => {
                         <section className='w-full pr-8 items-center justify-center'>
 
                             {
-                                addingNewTag && selectedSpeech &&(
+                                addingNewTag &&(
                                     
                                     <div className='flex justify-center items-center'>
                                         {
