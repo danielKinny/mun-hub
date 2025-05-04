@@ -45,7 +45,7 @@ const Page = () => {
   };
 
   const handleDeleteSpeech = async (speechID: string) => {
-    if (!speechTitle || !text || !currentUser?.id) {
+    if (!currentUser?.id) {
       alert('Please fill in all fields.');
       return;
     }
@@ -144,8 +144,12 @@ const Page = () => {
                               key={speech.speechID}
                               onClick={() => {
                                 setSelectedSpeech(speech);
-                                handleDeleteSpeech(speech.speechID);
-                                toast("Speech has been deleted");
+                                try {
+                                    handleDeleteSpeech(speech.speechID);
+                                    toast("Speech has been deleted");
+                                } catch (error) {
+                                    toast.error("Error deleting speech");
+                                }
                               }}
                               className='bg-red-500 text-white ml-auto rounded-lg w-8 h-8 flex items-center justify-center hover:bg-black transition-colors'>
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -161,7 +165,12 @@ const Page = () => {
               </div>
             </section>
             <section className='w-full pr-8 items-center justify-center'>
-              {addingNewTag && (
+              
+              <div>
+                <h2 className='text-2xl text-center p-4 border-b border-gray-800'>Speech Interface</h2>
+                <div className='w-full flex items-center justify-center overflow-x-auto'>
+                  <p className='inline-block text-2xl p-4'>Add tags !</p>
+                  {addingNewTag && (
                 <div className='flex justify-center items-center'>
                   {countries
                     .filter((country) => !selectedSpeech?.tags?.includes(country.flag))
@@ -173,17 +182,13 @@ const Page = () => {
                           selectedSpeech?.tags?.push(country.flag);
                           setAddingNewTag(false);
                         }}>
-                        <p className='w-12 text-2xl h-8 bg-white text-black rounded-lg'>
+                        <p className='w-12 text-2xl h-8 bg-gray-800 text-black rounded-lg'>
                           {country.flag}
                         </p>
                       </div>
                     ))}
                 </div>
               )}
-              <div>
-                <h2 className='text-2xl text-center p-4 border-b border-gray-800'>Speech Interface</h2>
-                <div className='w-full flex items-center justify-center overflow-x-auto'>
-                  <p className='inline-block text-2xl p-4'>Add tags !</p>
                   <button
                     className='inline-block bg-white text-black rounded-lg cursor-pointer min-w-12 h-8 font-semibold text-2xl'
                     onClick={() => setAddingNewTag(true)}>
@@ -198,7 +203,7 @@ const Page = () => {
                   </nav>
                 </div>
                 <textarea
-                  className='w-full p-4 bg-gray-800 rounded-lg text-white h-12 align-top'
+                  className='w-full p-4 bg-gray-800 rounded-lg text-white h-12 align-top overflow-'
                   value={speechTitle}
                   onChange={handleSpeechChange}
                   placeholder='Write your speech title here...'
