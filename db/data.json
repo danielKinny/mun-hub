@@ -8,7 +8,7 @@
       "committee": "ECOSOC",
       "flag": "🇺🇸",
       "password": "TESTING",
-      "speechCount": 17
+      "speechCount": 20
     },
     {
       "id": "0002",
@@ -631,5 +631,14 @@
       "delegates": []
     }
   ],
-  "speeches": []
+  "speeches": [
+    {
+      "speechID": "0001-19",
+      "title": "we hate russia",
+      "content": "goat",
+      "tags": [
+        "🇷🇺"
+      ]
+    }
+  ]
 }

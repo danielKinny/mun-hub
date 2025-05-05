@@ -69,7 +69,7 @@ const Page = () => {
   };
 
   const handleAddSpeech = async () => {
-    if (!speechTitle || !text || !currentUser?.id) {
+    if (!speechTitle || !text ) {
       alert('Please fill in all fields.');
       return;
     }
@@ -77,7 +77,7 @@ const Page = () => {
     if (selectedSpeech) {
       id = selectedSpeech.speechID;
     } else {
-      id = `${currentUser.id}-${delegates.filter((delegate) => delegate.id === currentUser.id)[0].speechCount}`;
+      id = `${currentUser?.id}-${delegates.filter((delegate) => delegate.id === currentUser?.id)[0].speechCount}`;
     }
     try {
       const response = await fetch('/api/speeches', {
