@@ -12,27 +12,27 @@ The MUN Hub app aims to streamline the conference experience for delegates by pr
 
 ## Features included (or to be included):
 
-1. **Conference Schedule**
+1. **Conference Schedule** **✅**
     - Provides an interface to access the schedule of the conference
       for each day.
 
-2. **Committee Overview**
+2. **Committee Overview** **✅**
     - Overview of each delegate's committee, including topics and key issues.
     - Profiles of committee chairs and other delegates.
 
-3. **Speech Repository**
+3. **Speech Repository** **✅**
     - Store and organize specific speeches against specific countries.
     - Easy access to past speeches for reference and preparation.
 
-4. **Document Repository**
+4. **Document Repository** 
     - Access to all necessary documents, such as position papers and resolutions.
     - Ability to upload and share documents.
 
-5. **Announcements**
+5. **Announcements** **✅**
     - Real-time updates and announcements from organizers.
     - Push notifications for important updates.
 
-6. **Social Media Integration**
+6. **Social Media Integration** 
     - Share updates and photos on social media.
     - Follow conference hashtags and accounts.
 
@@ -40,7 +40,7 @@ The MUN Hub app aims to streamline the conference experience for delegates by pr
     - Contact information for emergency services.
     - Safety guidelines and procedures.
   
-8. **Authorisation**
+8. **Authorisation** **✅**
    - Utilises protected routes facilitated through HOC components
    - Allows for individual access to provide a bespoke experience.
 
