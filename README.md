@@ -1,7 +1,12 @@
 # MUN Hub App
 
 ## Purpose
-An MUN ( MODEL UNITED NATIONS ) is a debate competition that follows the structure of real UN (UNITED NATIONS) committees, that allows for discourse and discussion about pressing topics in the current political landscape, MUNs can often by overwhelming, participants are required to create their own speeches, and utilise documents such as background guides and delegate handbooks, which are often spread out and difficult to keep in one place. The age-old solution to this was the use of google drives to store documents, and external apps such as Evernote, Notion, or the IOS notes app to store speeches, however there is no reason for which organisers of these MUNs should strive to improve the experience of their delegates, thats where mun-hub comes in;
+An MUN ( Model United Nations ) is a debate competition that follows the structure of real UN (UNITED NATIONS) committees, that allows for discourse and discussion about pressing topics in the current political landscape, MUNs can often by overwhelming, participants are required to:
+- Create their own speeches.
+- utilise background guides.
+- Access delegate handbooks.
+
+Which are often spread out and difficult to keep in one place. The age-old solution to this was the use of google drives to store documents, and external apps such as Evernote, Notion, or the IOS notes app to store their own personal speeches, however there is no reason for which organisers of these MUNs shouldn't strive to improve the experience of their delegates, and thats where mun-hub comes in;
 
 The MUN Hub app aims to streamline the conference experience for delegates by providing a centralized platform to manage all aspects of the event. It includes features such as conference schedules, committee overviews, speech repositories, document repositories, announcements, social media integration, and emergency information.
 
