@@ -28,7 +28,7 @@ export interface Committee {
     name: string;
     description: string;
     href: string;
-    delegates: any[];
+    delegates: Delegate[];
 }
 
 export interface Speech {
