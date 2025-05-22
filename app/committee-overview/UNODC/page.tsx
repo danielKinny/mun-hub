@@ -46,7 +46,7 @@ const Page = () => {
                 <ParallaxLayer
                     offset={1}  
                     speed={0.5}
-                    style = {{ backgroundImage : 'url(/crime.jpg)', backgroundSize : 'cover' }}
+                    style = {{ backgroundImage : 'url(/UNODC2.jpg)', backgroundSize : 'cover' }}
                     className="flex items-center justify-center w-full h-full"
                     >
                 </ParallaxLayer>
