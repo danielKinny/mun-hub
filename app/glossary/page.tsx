@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "../context/sessionContext";
 import { CustomNav, CountryNav } from "@/components/ui/customnav";
@@ -18,11 +18,18 @@ import { Parallax, ParallaxLayer } from '@react-spring/parallax';
 const Page = () => {
     const { user: currentUser } = useSession();
     const router = useRouter();
+    const parallaxRef = useRef<any>(null);
+
+    const handleScrollTo = (offset: number) => {
+        if (parallaxRef.current) {
+            parallaxRef.current.scrollTo(offset);
+        }
+    };
 
     return (
         <ProtectedRoute>
             <CustomNav />
-            <Parallax pages={4}>
+            <Parallax pages={4} ref={parallaxRef}>
                 <ParallaxLayer
                     offset={0}
                     speed={0.5}
@@ -39,9 +46,18 @@ const Page = () => {
                         </h1>
                     </div>
                     <div className="space-y-2 p-2 w-[200px] ">
-                        <h1 className="text-white text-3xl text-center font-extrabold bg-black cursor-pointer"> POINTS </h1>
-                        <h1 className="text-white text-3xl text-center font-extrabold bg-black cursor-pointer"> MOTIONS </h1>
-                        <h1 className="text-white text-3xl text-center font-extrabold bg-black cursor-pointer"> RESOLUTIONS </h1>
+                        <h1
+                            className="text-white text-3xl text-center font-extrabold bg-black cursor-pointer"
+                            onClick={() => handleScrollTo(1)}
+                        > POINTS </h1>
+                        <h1
+                            className="text-white text-3xl text-center font-extrabold bg-black cursor-pointer"
+                            onClick={() => handleScrollTo(2)}
+                        > MOTIONS </h1>
+                        <h1
+                            className="text-white text-3xl text-center font-extrabold bg-black cursor-pointer"
+                            onClick={() => handleScrollTo(3)}
+                        > RESOLUTIONS </h1>
                     </div>
                 </ParallaxLayer>
                 <ParallaxLayer
