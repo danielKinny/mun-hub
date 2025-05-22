@@ -24,7 +24,7 @@ import {
 
 export function CustomNav() {
     return (
-        <NavigationMenu className="w-full" viewport={false}>
+        <NavigationMenu className="w-full text-white" viewport={false}>
                 <NavigationMenuList className="w-full flex justify-center gap-4">
                     
                     <NavigationMenuItem>

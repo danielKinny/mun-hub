@@ -21,6 +21,7 @@ const Page = () => {
 
     return (
         <ProtectedRoute>
+            <CustomNav />
             <div>
 
             <Parallax pages={2}>
@@ -28,7 +29,7 @@ const Page = () => {
                     offset={0}
                     speed={1.5}
                     factor={1.5}
-                    style={{ backgroundImage : 'url(/UNODC.jpg)',
+                    style={{ backgroundImage : 'url(/images/UNODC.jpg)',
                         backgroundSize : 'cover',
                      }}
                      className="flex items-center justify-center w-full h-full"
@@ -46,7 +47,7 @@ const Page = () => {
                 <ParallaxLayer
                     offset={1}  
                     speed={0.5}
-                    style = {{ backgroundImage : 'url(/UNODC2.jpg)', backgroundSize : 'cover' }}
+                    style = {{ backgroundImage : 'url(/images/UNODC2.jpg)', backgroundSize : 'cover' }}
                     className="flex items-center justify-center w-full h-full"
                     >
                 </ParallaxLayer>

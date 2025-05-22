@@ -11,7 +11,9 @@ import {
     CardDescription,
     CardContent,
 } from "@/components/ui/card";
+
 import ProtectedRoute from "@/components/protectedroute";
+import { Parallax, ParallaxLayer } from '@react-spring/parallax';
 
 const Page = () => {
     const { user: currentUser } = useSession();
@@ -19,82 +21,56 @@ const Page = () => {
 
     return (
         <ProtectedRoute>
-            <div className="min-h-screen items-center justify-center bg-black text-white">
-                <header className="text-center border-b border-gray-800">
-                    <h1 className="p-4 text-4xl font-extrabold">
-                        Committee Overview
-                    </h1>
-                    <h4 className="p-2 text-xl font-light">
-                        UNHRC - United Nations Human Rights Council
-                    </h4>
-                </header>
+            <CustomNav />
+            <div>
 
-                <main>
-                    <section className="w-full mb-8 block border-b border-gray-800">
-                        <CustomNav />
-                    </section>
-                    <section className="flex items-start justify-center">
-                        <div className="max-w-1/3 p-5 text-3xl space-y-6 border-r border-gray-800">
-                            <h1 className="text-4xl font-extrabold border-b-1 border-gray-800">
-                                Committee Overview
-                            </h1>
-                            <p>
-                                The United Nations Human Rights Council (UNHRC) is an inter-governmental body within the United Nations system responsible for strengthening the promotion and protection of human rights around the globe.
-                            </p>
-                            <p>
-                                The UNHRC was established in 2006, replacing the former United Nations Commission on Human Rights.
-                            </p>
-                            <p>
-                                The Council is made up of 47 Member States, which are elected by the UN General Assembly.
-                            </p>
-                            <p>
-                                The UNHRC addresses human rights violations and makes recommendations on them.
-                            </p>
-                            <p>
-                                The Council also works to promote the full implementation of human rights obligations undertaken by states.
-                            </p>
-                            <p>
-                                The UNHRC's work is guided by the principles of universality, impartiality, objectivity, and non-selectivity.
-                            </p>
-                            <p>
-                                The Council collaborates with various UN agencies, international organizations, and civil society to achieve its objectives.
-                            </p>
-                            <p>
-                                The UNHRC's efforts contribute to the achievement of the Sustainable Development Goals, particularly Goal 16 on peace, justice, and strong institutions.
-                            </p>
+            <Parallax pages={2}>
+                <ParallaxLayer
+                    offset={0}
+                    speed={1.5}
+                    factor={1.5}
+                    style={{ backgroundImage : 'url(/images/UNHRC.jpg)',
+                        backgroundSize : 'cover',
+                     }}
+                     className="flex items-center justify-center w-full h-full"
+                />
+                
+
+                <ParallaxLayer
+                    offset={0}
+                    factor={1}
+                    speed={2}
+                    className="flex items-center justify-center w-full h-full"
+                >
+                    <h2 className="text-white text-9xl text-center font-extrabold">UNHRC</h2>
+                </ParallaxLayer>
+                <ParallaxLayer
+                    offset={1}  
+                    speed={0.5}
+                    style = {{ backgroundImage : 'url(/images/UNHRC2.jpg)', backgroundSize : 'cover' }}
+                    className="flex items-center justify-center w-full h-full"
+                    >
+                </ParallaxLayer>
+                <ParallaxLayer
+                    offset={1}
+                    speed={1.4}
+                    className="flex items-center justify-center w-full h-full"
+                >
+                    <div className="text-center flex flex-row items-center justify-center w-full h-full space-x-4 text-white text-3xl font-extrabold">
+                        <div>
+                            <p> Agenda 1: <br/> Combating the Illicit Trade of Synthetic Drugs and Precursors</p>
                         </div>
-                        <div className="w-1/3 p-4 flex items-center justify-center h-full border-r border-l border-gray-800 text-center">
-                            <CountryNav />
+                        <div>
+                            <h1 className="text-9xl p-6"> Agendas </h1>
                         </div>
-                        <div className= "w-1/3 text-3xl p-5 border-l border-gray-800 h-full">
-                            <div className="space-y-6">
-                                <h1 className="font-extrabold">Agenda Item 1: Freedom of Expression</h1>
-                                <p>
-                                    Promoting and protecting the right to freedom of expression.
-                                </p>
-                                <p>
-                                    Analysis of the current challenges to freedom of expression and its impact on society.
-                                </p>
-                                <p>
-                                    Deliberate on potential resolutions and actions to safeguard freedom of expression globally.
-                                </p>
-                            </div>
-                            <div className="mt-4 space-y-4">
-                                <h1 className="font-bold mt-10">Agenda Item 2: Human Rights Violations</h1>
-                                <p>
-                                    Addressing human rights violations in conflict zones.
-                                </p>
-                                <p>
-                                    Examination of the human rights violations occurring in conflict zones and their impact on civilians.
-                                </p>
-                                <p>
-                                    Discuss strategies for prevention, protection, and accountability related to human rights violations.
-                                </p>
-                            </div>
+                        <div>
+                            <p> Agenda 2: <br/> Tackling Human Trafficking and Forced Labor in Conflict Zones</p>
                         </div>
-                    </section>
-                </main>
-            </div>
+                    </div>
+                    
+                </ParallaxLayer>
+            </Parallax>
+        </div>
         </ProtectedRoute>
     );
 };
