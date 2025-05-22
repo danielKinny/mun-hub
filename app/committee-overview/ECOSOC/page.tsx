@@ -58,13 +58,15 @@ const Page = () => {
                 >
                     <div className="text-center flex flex-row items-center justify-center w-full h-full space-x-4 text-white text-3xl font-extrabold">
                         <div>
-                            <p> Agenda 1: <br/> Combating the Illicit Trade of Synthetic Drugs and Precursors</p>
+                            <p> Agenda 1: <br/> Tackling Global Food Insecurity and Supply Chain Disruptions <br/>
+Focus: Post-pandemic recovery, conflict-related shortages, and sustainable agriculture.</p>
                         </div>
                         <div>
                             <h1 className="text-9xl p-6"> Agendas </h1>
                         </div>
                         <div>
-                            <p> Agenda 2: <br/> Tackling Human Trafficking and Forced Labor in Conflict Zones</p>
+                            <p> Agenda 2: <br/> Strategies for Achieving Universal Access to Clean Water and Sanitation by 2030 <br/>
+Focus: Sustainable Development Goal 6 (SDG 6) implementation and funding gaps.</p>
                         </div>
                     </div>
                     

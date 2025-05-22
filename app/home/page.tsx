@@ -119,7 +119,7 @@ export default function Home() {
                 <div className="bg-gray-800 shadow-lg rounded-lg w-full p-4 transition-transform transform hover:scale-103 hover:shadow-xl">
                   <h3 className="text-xl font-bold text-white mb-2">
                     <Link
-                      href="./public/CLC SCHEDULE-2.pdf"
+                      href="/delegate-resources/placeholder.pdf"
                       className="hover:underline"
                     >
                       View Schedule

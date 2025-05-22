@@ -58,13 +58,15 @@ const Page = () => {
                 >
                     <div className="text-center flex flex-row items-center justify-center w-full h-full space-x-4 text-white text-3xl font-extrabold">
                         <div>
-                            <p> Agenda 1: <br/> Combating the Illicit Trade of Synthetic Drugs and Precursors</p>
+                            <p> Agenda 1: <br/> Human Rights Violations in the Xinjiang Uyghur Autonomous Region <br/>
+Focus: Alleged mass internment, surveillance, and cultural repression.</p>
                         </div>
                         <div>
                             <h1 className="text-9xl p-6"> Agendas </h1>
                         </div>
                         <div>
-                            <p> Agenda 2: <br/> Tackling Human Trafficking and Forced Labor in Conflict Zones</p>
+                            <p> Agenda 2: <br/> Protecting Freedom of Expression and Digital Rights under Authoritarian Regimes <br/>
+Focus: Government censorship, internet shutdowns, and suppression of dissent.</p>
                         </div>
                     </div>
                     
