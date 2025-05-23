@@ -22,14 +22,15 @@ const Page = () => {
   return (
     <ProtectedRoute>
       <CustomNav />
+      <h1 className="text-white text-center text-4xl font-bold"> {currentUser?.firstname}'s Speech Repository {currentUser?.flag}</h1>
       <div className="flex text-white h-screen p-4 bg-gradient-to-b from-black to-gray-950">
-        <div className="bg-gray-900 w-1/4 h-full rounded-2xl p-4">
+        <div className="outline w-1/4 h-full rounded-2xl p-4">
           this will be were speeches are listed
         </div>
         <div className="w-full space-y-2">
           <textarea
           className="block w-full outline rounded-2xl p-4 ml-4"
-          placeholder="Write your speech here..."
+          placeholder="Write your title here..."
           onChange={(e) => { setHeading(e.target.value); }
           }
           value={heading}
