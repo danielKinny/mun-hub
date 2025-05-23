@@ -1,26 +1,14 @@
 "use client";
 import React from "react";
-import Link from "next/link";
-import { committees, countries } from "@/db/index";
+import { committees } from "@/db/index";
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
-
-import {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
 
 export function CustomNav() {
   return (
@@ -77,28 +65,5 @@ export function CustomNav() {
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
-  );
-}
-
-export function CountryNav() {
-  return (
-    <div>
-      <Card className="bg-black w-full text-white">
-        <CardHeader className="text-3xl text-center border-b border-gray-800 pb-4">
-          Delegations in this committee:
-        </CardHeader>
-        <CardContent>
-          <ul>
-            {countries.map((country) => (
-              <li key={country.name} className="text-center p-2 text-2xl">
-                <Link href={country.href}>
-                  {country.name} {country.flag}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
-    </div>
   );
 }
