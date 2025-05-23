@@ -1,89 +1,69 @@
 "use client";
 import React from "react";
-import Link from "next/link";
-import { committees, countries } from "@/db/index";
+import { committees } from "@/db/index";
 import {
-    NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuIndicator,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-    NavigationMenuViewport,
-  } from "@/components/ui/navigation-menu";
-
-import {
-    Card,
-    CardHeader,
-    CardFooter,
-    CardTitle,
-    CardDescription,
-    CardContent,
-} from "@/components/ui/card";
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 
 export function CustomNav() {
-    return (
-        <NavigationMenu className="w-full" viewport={false}>
-                <NavigationMenuList className="w-full flex justify-center gap-4">
-                    
-                    <NavigationMenuItem>
-                        <NavigationMenuTrigger className="text-xl">Home</NavigationMenuTrigger>
-                        <NavigationMenuContent className="min-w-[200px]">
-                            <Link href="/home">Your Dashboard</Link>
-                        </NavigationMenuContent>
-                    </NavigationMenuItem>
+  return (
+    <NavigationMenu className="w-full text-white" viewport={false}>
+      <NavigationMenuList className="w-full flex justify-center gap-4">
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className="text-xl">
+            Home
+          </NavigationMenuTrigger>
+          <NavigationMenuContent className="min-w-[200px]">
+            <NavigationMenuLink href="/home">Your Dashboard</NavigationMenuLink>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
 
-                    <NavigationMenuItem>
-                        <NavigationMenuTrigger className="text-xl">Speech Repo</NavigationMenuTrigger>
-                        <NavigationMenuContent className="min-w-[200px]">
-                            <NavigationMenuLink href="/speechrepo">Access and store speeches</NavigationMenuLink>
-                        </NavigationMenuContent>
-                    </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className="text-xl">
+            Speech Repo
+          </NavigationMenuTrigger>
+          <NavigationMenuContent className="min-w-[200px]">
+            <NavigationMenuLink href="/speechrepo">
+              Access and store speeches
+            </NavigationMenuLink>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
 
-                    <NavigationMenuItem>
-                        <NavigationMenuTrigger className="text-xl">Committee Overview</NavigationMenuTrigger>
-                        <NavigationMenuContent className="min-w-[200px]">
-                            {committees.map((committee) => (
-                                <NavigationMenuLink key={committee.name} href={committee.href}>
-                                    {committee.name}
-                                </NavigationMenuLink>
-                            ))}
-                        </NavigationMenuContent>
-                    </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className="text-xl">
+            Committee Overview
+          </NavigationMenuTrigger>
+          <NavigationMenuContent className="min-w-[200px]">
+            {committees.map((committee) => (
+              <NavigationMenuLink key={committee.name} href={committee.href}>
+                {committee.name}
+              </NavigationMenuLink>
+            ))}
+          </NavigationMenuContent>
+        </NavigationMenuItem>
 
-                    <NavigationMenuItem>
-                        <NavigationMenuTrigger className="text-xl">MUN Glossary</NavigationMenuTrigger>
-                    </NavigationMenuItem>
-                    
-                    <NavigationMenuItem>
-                        <NavigationMenuTrigger className="text-xl">Global Affairs</NavigationMenuTrigger>
-                    </NavigationMenuItem>
-                </NavigationMenuList>
-            </NavigationMenu>
-    );
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className="text-xl">
+            MUN Glossary
+          </NavigationMenuTrigger>
+          <NavigationMenuContent className="min-w-[200px]">
+            <NavigationMenuLink href="/glossary">
+              Access the glossary
+            </NavigationMenuLink>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className="text-xl">
+            Global Affairs
+          </NavigationMenuTrigger>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
+  );
 }
-
-export function CountryNav() {
-    return (
-
-        <div>
-           <Card className="bg-black w-full text-white">
-            <CardHeader className="text-3xl text-center border-b border-gray-800 pb-4">
-                Delegations in this committee:
-            </CardHeader>
-            <CardContent>
-                <ul>
-                    {countries.map((country) => (
-                        <li key={country.name} className="text-center p-2 text-2xl">
-                            <Link href={country.href}>{country.name} {country.flag}</Link>
-                        </li>
-                    ))}
-                </ul>
-            </CardContent>
-        </Card> 
-        </div>
-        
-    );
-}
-    

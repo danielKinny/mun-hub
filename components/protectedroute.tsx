@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect } from 'react';
-import { useSession } from '../app/context/sessionContext';
+import React, { useEffect } from "react";
+import { useSession } from "../app/context/sessionContext";
 import { useRouter } from "next/navigation";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
