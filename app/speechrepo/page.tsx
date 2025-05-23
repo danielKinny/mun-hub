@@ -8,13 +8,8 @@ import { toast } from "sonner";
 
 const Page = () => {
   const { user: currentUser } = useSession();
-  const [speech, setSpeech] = React.useState<Speech>({
-    speechID: "",
-    title: "",
-    content: "",
-    tags: [],
-  });
 
+  const [speechTags, setSpeechTags] = React.useState<string[]>([]);
   const [speechList, setSpeechList] = React.useState<Speech[]>([]);
   const [heading, setHeading] = React.useState<string>("");
   const [content, setContent] = React.useState<string>("");
@@ -24,6 +19,45 @@ const Page = () => {
         let data = await response.json();
         setSpeechList(data.speeches);
       };
+
+  const addSpeech = async () => {
+    const response = await fetch("/api/speeches", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: heading,
+        content: content,
+        speechID: `${currentUser?.id}-${currentUser?.speechCount ? currentUser?.speechCount + 1 : 1}`,
+        tags : speechTags
+      }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      toast.success("Speech added successfully");
+      setSpeechList((prev) => [...prev, data.speech]);
+      setHeading("");
+      setContent("");
+    }
+  }
+
+  const deleteSpeech = async (speechID: string) => {
+    const response = await fetch("/api/speeches", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ speechID }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      setContent("");
+      setHeading("");
+      toast.success("Speech deleted successfully");
+      setSpeechList((prev) => prev.filter((speech) => speech.speechID !== speechID));
+    }
+  };
 
   useEffect(() => {
     try {
@@ -59,8 +93,20 @@ const Page = () => {
           }
         </ul>
         <div className="w-full h-screen space-y-2 p-4">
+          <div className="space-x-4 w-full mx-8">
+            <button
+            onClick = {() => { addSpeech();}}
+            className="bg-blue-500 cursor-pointer text-white rounded-2xl p-2 hover:bg-blue-600"
+          >Add/Update Speech </button>
+
+          <button 
+          onClick = {() => { deleteSpeech(`${currentUser?.id}-${currentUser?.speechCount? currentUser?.speechCount+1 : 1}`);}}
+          className=" bg-red-500 cursor-pointer text-white rounded-2xl p-2 hover:bg-red-600">
+            delete
+          </button>
+          </div>
           <textarea
-          className="block w-8/9 outline rounded-2xl p-4 mx-8"
+          className="block w-8/9 outline rounded-2xl mx-8 p-4"
           placeholder="Write your title here..."
           onChange={(e) => { setHeading(e.target.value); }
           }
@@ -68,7 +114,7 @@ const Page = () => {
           value={heading}
         ></textarea>
         <textarea
-          className="outline w-8/9 rounded-2xl p-4 mx-8 m"
+          className="outline w-8/9 rounded-2xl mx-8 p-4"
           placeholder="Write your speech here..."
           onChange={(e) => { setContent(e.target.value); }}
           value={content}
