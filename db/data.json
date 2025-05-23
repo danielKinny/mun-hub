@@ -631,14 +631,5 @@
       "delegates": []
     }
   ],
-  "speeches": [
-    {
-      "speechID": "0001-19",
-      "title": "we hate russia",
-      "content": "goat",
-      "tags": [
-        "🇷🇺"
-      ]
-    }
-  ]
+  "speeches": []
 }
