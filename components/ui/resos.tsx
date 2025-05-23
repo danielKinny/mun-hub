@@ -1,14 +1,7 @@
 "use client";
-import React, { useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
-import { CustomNav } from "@/components/ui/customnav";
-import ProtectedRoute from "@/components/protectedroute";
-import { Parallax, ParallaxLayer } from "@react-spring/parallax";
-import { useSession } from "../../app/context/sessionContext";
-interface jargons {
-  name: string;
-  description: string;
-}
+import React, { useRef } from "react";
+import { ParallaxLayer } from "@react-spring/parallax";
+import { jargons } from "@/db/types";
 
 const resos: jargons[] = [
   {

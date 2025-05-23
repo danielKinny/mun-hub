@@ -1,18 +1,14 @@
 "use client";
-import React, { useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "../context/sessionContext";
+import React, { useRef } from "react";
+
 import { CustomNav } from "@/components/ui/customnav";
 import ProtectedRoute from "@/components/protectedroute";
+
 import { Parallax, ParallaxLayer } from "@react-spring/parallax";
+
 import ResosComp from "@/components/ui/resos";
 import MotionsComp from "@/components/ui/motions";
 import PointsComp from "@/components/ui/points";
-
-interface jargons {
-  name: string;
-  description: string;
-}
 
 const Page = () => {
   const parallaxRef = useRef<any>(null);
