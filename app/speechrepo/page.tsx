@@ -39,7 +39,7 @@ const Page = () => {
             : speech.title.toLowerCase().includes(search.toLowerCase()))
       )
     );
-  }, [selectedSpeech, search, speeches, currentUser]);
+  }, [selectedSpeech, search, currentUser]);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
@@ -72,7 +72,7 @@ const Page = () => {
       setText("");
       setSpeechTitle("");
       setSelectedSpeech(null);
-    } catch (error) {
+    } catch {
       alert("Failed to delete speech.");
     }
   };
@@ -109,7 +109,7 @@ const Page = () => {
       } else {
         await response.json();
       }
-    } catch (error) {
+    } catch {
       alert("Failed to add speech.");
     }
   };
@@ -161,7 +161,7 @@ const Page = () => {
                               try {
                                 handleDeleteSpeech(speech.speechID);
                                 toast("Speech has been deleted");
-                              } catch (error) {
+                              } catch {
                                 toast.error("Error deleting speech");
                               }
                             }}
@@ -257,9 +257,11 @@ const Page = () => {
                 <button
                   className="min-w-50 bg-white text-black p-4 rounded-lg cursor-pointer"
                   onClick={() => {
-                    selectedSpeech
-                      ? toast("Speech Updated")
-                      : toast("Speech Created");
+                    if (selectedSpeech) {
+                      toast("Speech Updated");
+                    } else {
+                      toast("Speech Created");
+                    }
                     handleAddSpeech();
                   }}
                 >

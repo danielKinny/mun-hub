@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 
 export default function TypeWriter() {
   const [text, setText] = useState("");
@@ -7,7 +7,7 @@ export default function TypeWriter() {
   const [count, setCount] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
 
-  const words: string[] = [
+  const words = useMemo<string[]>(() => [
     "innovating",
     "collaborating",
     "communicating",
@@ -18,9 +18,9 @@ export default function TypeWriter() {
     "networking",
     "connecting",
     "engaging",
-  ];
+  ], []);
 
-  const returnIndex = (index: number) => index % words.length;
+  const returnIndex = useCallback((index: number) => index % words.length, [words.length]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
@@ -97,7 +97,7 @@ export default function TypeWriter() {
     return () => {
       timeouts.forEach((timeout) => clearTimeout(timeout));
     };
-  }, [count]);
+  }, [count, returnIndex, words]);
 
   return (
     <>

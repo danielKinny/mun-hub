@@ -4,14 +4,14 @@ import React, { useRef } from "react";
 import { CustomNav } from "@/components/ui/customnav";
 import ProtectedRoute from "@/components/protectedroute";
 
-import { Parallax, ParallaxLayer } from "@react-spring/parallax";
+import { Parallax, ParallaxLayer, IParallax } from "@react-spring/parallax";
 
 import ResosComp from "@/components/ui/resos";
 import MotionsComp from "@/components/ui/motions";
 import PointsComp from "@/components/ui/points";
 
 const Page = () => {
-  const parallaxRef = useRef<any>(null);
+  const parallaxRef = useRef<IParallax>(null);
   const handleScrollTo = (offset: number) => {
     if (parallaxRef.current) {
       parallaxRef.current.scrollTo(offset);

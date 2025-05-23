@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { authenticate } from "../utils/auth";
 import { useRouter } from "next/navigation";
 import { useSession } from "../context/sessionContext";
+import Image from "next/image";
 
 const Login = () => {
   const [participantId, setParticipantId] = React.useState("");
@@ -35,8 +36,10 @@ const Login = () => {
         <h1 className="text-4xl text-center text-white">
           some motivational mun nonsense
         </h1>
-        <img
-          className="max-w-90 mr-auto ml-auto block p-4"
+        <Image
+          width={90}
+          height={90}
+          className=" mr-auto ml-auto block p-4"
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/UN_emblem_blue.svg/1024px-UN_emblem_blue.svg.png?20230920050537"
           alt="UN Emblem"
         />

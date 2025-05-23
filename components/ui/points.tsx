@@ -1,6 +1,6 @@
 "use client";
-import React, {useRef } from "react";
-import { ParallaxLayer } from "@react-spring/parallax";
+import React from "react";
+import { ParallaxLayer} from "@react-spring/parallax";
 import { jargons } from "@/db/types";
 
 const points: jargons[] = [
@@ -27,7 +27,6 @@ const points: jargons[] = [
 ];
 
 const PointsComp = () => {
-  const parallaxRef = useRef<any>(null);
   const [point, setPoint] = React.useState<jargons | null>(null);
 
   return (

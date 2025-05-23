@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React from "react";
 import { ParallaxLayer } from "@react-spring/parallax";
 import { jargons } from "@/db/types";
 
@@ -32,7 +32,6 @@ const motions: jargons[] = [
 ];
 
 const MotionsComp = () => {
-  const parallaxRef = useRef<any>(null);
   const [motion, setMotion] = React.useState<jargons | null>(null);
 
   return (

@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React from "react";
 import { ParallaxLayer } from "@react-spring/parallax";
 import { jargons } from "@/db/types";
 
@@ -52,7 +52,6 @@ const resos: jargons[] = [
 ];
 
 const ResosComp = () => {
-  const parallaxRef = useRef<any>(null);
   const [reso, setReso] = React.useState<jargons | null>(null);
 
   return (
