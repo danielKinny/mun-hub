@@ -1,5 +1,11 @@
 # MUN Hub App
 
+## Videos documenting mun-hub's innovation process
+
+Why am I making videos for this project? : https://youtu.be/5FItR6uRGMQ <br>
+What is mun-hub? : https://youtu.be/4SLt7qEX_xM <br>
+Project timeline, update-01 : https://youtu.be/OaaPG92jGiI <br>
+
 ## Purpose
 An MUN ( Model United Nations ) is a debate competition that follows the structure of real UN (UNITED NATIONS) committees, that allows for discourse and discussion about pressing topics in the current political landscape, MUNs can often by overwhelming, participants are required to:
 - Create their own speeches.
