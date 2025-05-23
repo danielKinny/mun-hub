@@ -45,3 +45,8 @@ export interface Database {
     committees: Committee[];
     speeches: Speech[];
 }
+
+export interface jargons {
+    name: string;
+    description: string;
+};

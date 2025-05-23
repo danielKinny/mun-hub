@@ -28,13 +28,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-black antialiased`}
       >
-
         {/* entire thingy is wrapped with session provider */}
         <SessionProvider>
-          <main>
-            {children}
-          </main>
-        <Toaster />
+          <main>{children}</main>
+          <Toaster />
         </SessionProvider>
       </body>
     </html>

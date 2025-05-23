@@ -1,21 +1,21 @@
-'use client';
-import React from 'react';
-import { motion } from 'framer-motion';
-import { authenticate } from '../utils/auth';
-import { useRouter } from 'next/navigation';
-import { useSession } from '../context/sessionContext';
+"use client";
+import React from "react";
+import { motion } from "framer-motion";
+import { authenticate } from "../utils/auth";
+import { useRouter } from "next/navigation";
+import { useSession } from "../context/sessionContext";
 
 const Login = () => {
-  const [participantId, setParticipantId] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [error, setError] = React.useState('');
+  const [participantId, setParticipantId] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [error, setError] = React.useState("");
   const router = useRouter();
   const { login } = useSession();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const delegate = authenticate(participantId, password);
-    
+
     if (delegate) {
       login(delegate);
       router.push("/home");
@@ -25,29 +25,36 @@ const Login = () => {
   };
 
   return (
-    <div className='h-screen flex items-center justify-center bg-black'>
-      <motion.div 
+    <div className="h-screen flex items-center justify-center bg-black">
+      <motion.div
         className="w-1/2 flex flex-col justify-center font-serif shadow-md bg-gray-900 h-screen border-r-2 border-gray-700"
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl text-center text-white">some motivational mun nonsense</h1>
-        <img 
+        <h1 className="text-4xl text-center text-white">
+          some motivational mun nonsense
+        </h1>
+        <img
           className="max-w-90 mr-auto ml-auto block p-4"
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/UN_emblem_blue.svg/1024px-UN_emblem_blue.svg.png?20230920050537"
           alt="UN Emblem"
         />
       </motion.div>
-      <motion.div 
+      <motion.div
         className=" bg-black w-1/2 flex flex-col justify-center font-serif shadow-md h-full border-gray-700"
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="p-3 items-center justify-center flex flex-col font-extrabold text-2xl mb-4 text-white">Access your Delegation</h1>
-        
-        <form className="flex flex-col items-center justify-center text-white" onSubmit={handleSubmit}>
+        <h1 className="p-3 items-center justify-center flex flex-col font-extrabold text-2xl mb-4 text-white">
+          Access your Delegation
+        </h1>
+
+        <form
+          className="flex flex-col items-center justify-center text-white"
+          onSubmit={handleSubmit}
+        >
           <input
             type="text"
             placeholder="Participant ID"

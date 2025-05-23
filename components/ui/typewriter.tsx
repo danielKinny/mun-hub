@@ -1,5 +1,5 @@
 "use client";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function TypeWriter() {
   const [text, setText] = useState("");
@@ -7,72 +7,103 @@ export default function TypeWriter() {
   const [count, setCount] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
 
-  const words: string[] = [ "innovating", "collaborating", "communicating", "negotiating", "debating", "resolving", "advocating", "networking", "connecting", "engaging" ];
+  const words: string[] = [
+    "innovating",
+    "collaborating",
+    "communicating",
+    "negotiating",
+    "debating",
+    "resolving",
+    "advocating",
+    "networking",
+    "connecting",
+    "engaging",
+  ];
 
-  const returnIndex = (index: number) => index%words.length;
+  const returnIndex = (index: number) => index % words.length;
 
   useEffect(() => {
-    
     let interval: NodeJS.Timeout | undefined;
 
     if (!isTyping) {
       interval = setInterval(() => {
-      setBlinker((prev) => (prev === "|" ? "" : "|"));
+        setBlinker((prev) => (prev === "|" ? "" : "|"));
       }, 300);
     } else {
-      setBlinker("|")
+      setBlinker("|");
     }
 
-    return () => interval ? clearInterval(interval) : undefined;
-  },[isTyping])
+    return () => (interval ? clearInterval(interval) : undefined);
+  }, [isTyping]);
 
-  useEffect( () => {
+  useEffect(() => {
     const timeouts: NodeJS.Timeout[] = [];
 
     const currWord = words[count];
-    const nextWord = words[returnIndex(count+1)];
+    const nextWord = words[returnIndex(count + 1)];
     let shared = 0;
-    while (shared < currWord.length && shared < nextWord.length && currWord[shared] === nextWord[shared]) {
+    while (
+      shared < currWord.length &&
+      shared < nextWord.length &&
+      currWord[shared] === nextWord[shared]
+    ) {
       shared++;
     }
 
-
     setIsTyping(true);
 
-      for (let i = shared; i < words[count].length; i++) {
-        timeouts.push
-        (setTimeout( () => setText(words[count].slice(0, i + 1)), 100*(i-shared)))
+    for (let i = shared; i < words[count].length; i++) {
+      timeouts.push(
+        setTimeout(
+          () => setText(words[count].slice(0, i + 1)),
+          100 * (i - shared)
+        )
+      );
     }
 
-    const typingDuration = 100* words[count].length + 500
+    const typingDuration = 100 * words[count].length + 500;
 
-    timeouts.push(setTimeout(() => setIsTyping(false), typingDuration + 2000))
-    for (let i = currWord.length-1; i>=shared; i--) {
-      timeouts.push
-        (setTimeout( () => setText(words[count].slice(0, i)), typingDuration + 100*(currWord.length - i)))
-        if (i!==0 && words[returnIndex(count+1)].startsWith(words[count].slice(0, i))) {
-          break
-        }
+    timeouts.push(setTimeout(() => setIsTyping(false), typingDuration + 2000));
+    for (let i = currWord.length - 1; i >= shared; i--) {
+      timeouts.push(
+        setTimeout(
+          () => setText(words[count].slice(0, i)),
+          typingDuration + 100 * (currWord.length - i)
+        )
+      );
+      if (
+        i !== 0 &&
+        words[returnIndex(count + 1)].startsWith(words[count].slice(0, i))
+      ) {
+        break;
+      }
     }
-    
-    const deletingDuration = 100 * (currWord.length - shared) + 500
 
-    timeouts.push(setTimeout(() => setIsTyping(false), typingDuration + deletingDuration + 1000))
+    const deletingDuration = 100 * (currWord.length - shared) + 500;
 
-    timeouts.push(setTimeout ((() =>{
-    setCount( count === words.length-1 ? 0 : count + 1)
-    }), typingDuration + deletingDuration + 1000))
+    timeouts.push(
+      setTimeout(
+        () => setIsTyping(false),
+        typingDuration + deletingDuration + 1000
+      )
+    );
 
-    return () => { timeouts.forEach(timeout => clearTimeout(timeout)) }
+    timeouts.push(
+      setTimeout(() => {
+        setCount(count === words.length - 1 ? 0 : count + 1);
+      }, typingDuration + deletingDuration + 1000)
+    );
 
-  }
-  
-  ,[count])
-  
+    return () => {
+      timeouts.forEach((timeout) => clearTimeout(timeout));
+    };
+  }, [count]);
+
   return (
     <>
       <h1 className="text-4xl text-center font-bold text-white">
-        example MUN is all about {text}<span>{blinker}</span>
+        example MUN is all about {text}
+        <span>{blinker}</span>
       </h1>
     </>
   );

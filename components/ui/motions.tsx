@@ -3,79 +3,94 @@ import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { CustomNav } from "@/components/ui/customnav";
 import ProtectedRoute from "@/components/protectedroute";
-import { Parallax, ParallaxLayer } from '@react-spring/parallax';
+import { Parallax, ParallaxLayer } from "@react-spring/parallax";
 import { useSession } from "../../app/context/sessionContext";
 interface jargons {
-    name: string;
-    description: string;
+  name: string;
+  description: string;
 }
 
 const motions: jargons[] = [
-    {
-        name: "Motion to Open Committee Session",
-        description: "A motion to open the floor is a request made by a delegate to allow other delegates to speak or ask questions. It is typically used at the beginning of a session or after a speech.",
-    },
-    {
-        name: "Motion to Open the General Speakers List",
-        description: "A motion to open the general speakers list is a request made by a delegate to allow other delegates to sign up to speak on a specific topic. It is used to facilitate discussion and debate.",
-    },
-    {
-        name: "Motion to Suspend Committee Session",
-        description: "A motion to suspend the debate is a request made by a delegate to temporarily halt the proceedings. It is often used to take a break or allow for informal discussions.",
-    },
-    {
-        name: "Motion to Divide the House",
-        description: "A motion to divide the house is a request made by a delegate to call for a vote on a specific issue or resolution. It is used to determine the opinion of the committee on a particular matter.",
-    },
-    {
-        name:"Motion to Introduce a Un/Moderated Caucus",
-        description: "A motion to introduce a un/moderated caucus is a request made by a delegate to allow for informal discussions and debates among delegates. It is used to encourage collaboration and brainstorming.",
-    }
-]
+  {
+    name: "Motion to Open Committee Session",
+    description:
+      "A motion to open the floor is a request made by a delegate to allow other delegates to speak or ask questions. It is typically used at the beginning of a session or after a speech.",
+  },
+  {
+    name: "Motion to Open the General Speakers List",
+    description:
+      "A motion to open the general speakers list is a request made by a delegate to allow other delegates to sign up to speak on a specific topic. It is used to facilitate discussion and debate.",
+  },
+  {
+    name: "Motion to Suspend Committee Session",
+    description:
+      "A motion to suspend the debate is a request made by a delegate to temporarily halt the proceedings. It is often used to take a break or allow for informal discussions.",
+  },
+  {
+    name: "Motion to Divide the House",
+    description:
+      "A motion to divide the house is a request made by a delegate to call for a vote on a specific issue or resolution. It is used to determine the opinion of the committee on a particular matter.",
+  },
+  {
+    name: "Motion to Introduce a Un/Moderated Caucus",
+    description:
+      "A motion to introduce a un/moderated caucus is a request made by a delegate to allow for informal discussions and debates among delegates. It is used to encourage collaboration and brainstorming.",
+  },
+];
 
 const MotionsComp = () => {
+  const parallaxRef = useRef<any>(null);
+  const [motion, setMotion] = React.useState<jargons | null>(null);
 
-    const parallaxRef = useRef<any>(null);
-    const [motion, setMotion] = React.useState<jargons|null>(null);
-
-
-
-    return (
-        <div>
-            <ParallaxLayer
-                                offset={2}
-                                speed={1.2}
-                                style={{ backgroundImage: 'url(/images/UN6.jpg)',
-                                    backgroundSize: 'cover',
-                                }}/>
-                            <ParallaxLayer
-                                offset={2}
-                                speed={0.9}
-                                className="flex items-center justify-center w-full h-full">
-                                <div className="flex flex-row items-center justify-center h-full w-full gap-2">
-                                    <div className="flex flex-col items-center justify-center h-full space-y-2">
-                                        {motions.map((motion, index) => (
-                                            <button key={index} className="bg-black text-white cursor-pointer p-2 text-2xl" onClick={() => setMotion(motion)}>
-                                                {motion.name}
-                                            </button>
-                                        ))}
-                                    </div>
-                                    <div className="flex flex-col items-center justify-center h-full mx-2">
-                                        <div className="bg-black p-2 mb-2">
-                                            <h1 className="text-white text-9xl text-center font-extrabold">
-                                                MOTIONS
-                                            </h1>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-col items-center justify-center h-full ml-2">
-                                        <div className="text-xl text-white bg-black p-3 min-h-[100px] w-[320px] rounded transition-all duration-300 flex items-center justify-center">
-                                            {motion ? motion.description : <span className="opacity-50">Select a motion to see its description</span>}
-                                        </div>
-                                    </div>
-                                </div>
-                            </ParallaxLayer>
+  return (
+    <div>
+      <ParallaxLayer
+        offset={2}
+        speed={1.2}
+        style={{
+          backgroundImage: "url(/images/UN6.jpg)",
+          backgroundSize: "cover",
+        }}
+      />
+      <ParallaxLayer
+        offset={2}
+        speed={0.9}
+        className="flex items-center justify-center w-full h-full"
+      >
+        <div className="flex flex-row items-center justify-center h-full w-full gap-2">
+          <div className="flex flex-col items-center justify-center h-full space-y-2">
+            {motions.map((motion, index) => (
+              <button
+                key={index}
+                className="bg-black text-white cursor-pointer p-2 text-2xl"
+                onClick={() => setMotion(motion)}
+              >
+                {motion.name}
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-col items-center justify-center h-full mx-2">
+            <div className="bg-black p-2 mb-2">
+              <h1 className="text-white text-9xl text-center font-extrabold">
+                MOTIONS
+              </h1>
             </div>
-    );
+          </div>
+          <div className="flex flex-col items-center justify-center h-full ml-2">
+            <div className="text-xl text-white bg-black p-3 min-h-[100px] w-[320px] rounded transition-all duration-300 flex items-center justify-center">
+              {motion ? (
+                motion.description
+              ) : (
+                <span className="opacity-50">
+                  Select a motion to see its description
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      </ParallaxLayer>
+    </div>
+  );
 };
 
 export default MotionsComp;
