@@ -1,78 +1,13 @@
-"use client";
-import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "../../context/sessionContext";
-import { CustomNav, CountryNav } from "@/components/ui/customnav";
-import {
-    Card,
-    CardHeader,
-    CardFooter,
-    CardTitle,
-    CardDescription,
-    CardContent,
-} from "@/components/ui/card";
-
+import { CustomNav } from "@/components/ui/customnav";
+import { UNSCComp } from "@/components/ui/committeeComponents";
 import ProtectedRoute from "@/components/protectedroute";
-import { Parallax, ParallaxLayer } from '@react-spring/parallax';
 
 const Page = () => {
-    const { user: currentUser } = useSession();
-    const router = useRouter();
 
     return (
         <ProtectedRoute>
             <CustomNav />
-            <div>
-
-            <Parallax pages={2}>
-                <ParallaxLayer
-                    offset={0}
-                    speed={1.5}
-                    factor={1.5}
-                    style={{ backgroundImage : 'url(/images/UNSC.jpg)',
-                        backgroundSize : 'cover',
-                     }}
-                     className="flex items-center justify-center w-full h-full"
-                />
-                
-
-                <ParallaxLayer
-                    offset={0}
-                    factor={1}
-                    speed={2}
-                    className="flex items-center justify-center w-full h-full"
-                >
-                    <h2 className="text-white text-9xl text-center font-extrabold">UNSC</h2>
-                </ParallaxLayer>
-                <ParallaxLayer
-                    offset={1}  
-                    speed={0.5}
-                    style = {{ backgroundImage : 'url(/images/UNSC2.jpg)', backgroundSize : 'cover' }}
-                    className="flex items-center justify-center w-full h-full"
-                    >
-                </ParallaxLayer>
-                <ParallaxLayer
-                    offset={1}
-                    speed={1.4}
-                    className="flex items-center justify-center w-full h-full"
-                >
-                    <div className="text-center flex flex-row items-center justify-center w-full h-full space-x-4 text-white text-3xl font-extrabold">
-                        <div>
-                            <p> Agenda 1: <br/> The Situation in the Red Sea and Ensuring Maritime Security in International Waters <br/>
-                            Focus: Ongoing threats to shipping lanes, including piracy and state-sponsored aggression.</p>
-                        </div>
-                        <div>
-                            <h1 className="text-9xl p-6"> Agendas </h1>
-                        </div>
-                        <div>
-                            <p> Agenda 2: <br/> Addressing the Escalation of the Israel-Palestine Conflict and Ensuring Humanitarian Access <br/>
-Focus: Civilian protection, ceasefire enforcement, and access for aid organizations.</p>
-                        </div>
-                    </div>
-                    
-                </ParallaxLayer>
-            </Parallax>
-        </div>
+            <UNSCComp />
         </ProtectedRoute>
     );
 };
