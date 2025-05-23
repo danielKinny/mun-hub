@@ -113,10 +113,10 @@ export default function Home() {
                 </motion.div>
                 <Image
                   className=" mx-auto block p-4"
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/UN_emblem_blue.svg/1024px-UN_emblem_blue.svg.png?20230920050537"
+                  src="/images/UNEMBLEM.png"
                   alt="UN Emblem"
-                  width={200}
-                  height={200}
+                  width={500}
+                  height={500}
                 />
               </section>
             </div>

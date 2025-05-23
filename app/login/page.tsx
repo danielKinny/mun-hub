@@ -5,6 +5,7 @@ import { authenticate } from "../utils/auth";
 import { useRouter } from "next/navigation";
 import { useSession } from "../context/sessionContext";
 import Image from "next/image";
+import TypeWriter from "@/components/ui/typewriter";
 
 const Login = () => {
   const [participantId, setParticipantId] = React.useState("");
@@ -33,14 +34,12 @@ const Login = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl text-center text-white">
-          some motivational mun nonsense
-        </h1>
+        <TypeWriter />
         <Image
-          width={90}
-          height={90}
+          width={350}
+          height={350}
           className=" mr-auto ml-auto block p-4"
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/UN_emblem_blue.svg/1024px-UN_emblem_blue.svg.png?20230920050537"
+          src="/images/UNEMBLEM.png"
           alt="UN Emblem"
         />
       </motion.div>
