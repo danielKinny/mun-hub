@@ -631,5 +631,12 @@
       "delegates": []
     }
   ],
-  "speeches": []
+  "speeches": [
+    {
+      "speechID" : "0001-1",
+      "title" : "sample",
+      "content" : "sample",
+      "tags" : []
+    }
+  ]
 }

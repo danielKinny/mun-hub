@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { readFileSync, writeFileSync } from "fs";
 import path from "path";
 import { Speech, Delegate } from "@/db/types";
+import { useSession } from "../../context/sessionContext";
 
 export async function DELETE(request: Request) {
   try {
@@ -116,6 +117,40 @@ export async function POST(request: Request) {
       
     return new NextResponse(
       JSON.stringify({ message: `Error adding speech: ${errorMessage}` }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+}
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const delegateID = searchParams.get('delegateID');
+    const dataFilePath = path.join(process.cwd(), "db/data.json");
+    const fileContent = readFileSync(dataFilePath, "utf-8");
+    const data = JSON.parse(fileContent);
+
+    if (!data.speeches) {
+      return new NextResponse(
+        JSON.stringify({ message: "No speeches found" }),
+        { status: 404, headers: { "Content-Type": "application/json" } }
+      );
+    }
+    
+    const filteredSpeeches : Speech[] = data.speeches.filter(
+      (speech: Speech) => speech.speechID.startsWith(delegateID ? delegateID : "")
+    );
+
+    return new NextResponse(
+      JSON.stringify({ speeches: filteredSpeeches }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error
+      ? error.message
+      : "Unknown error occurred";
+    return new NextResponse(
+      JSON.stringify({ message: `Error fetching speeches: ${errorMessage}` }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
