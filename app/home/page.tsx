@@ -49,12 +49,12 @@ export default function Home() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   <h2 className="text-2xl font-semibold mb-4">Announcements</h2>
-                  <div className="h-96 overflow-y-auto">
+                  <div className="h-128 overflow-y-auto">
                     <ul>
                       {announcements.map((announcement, index) => (
                         <motion.li
                           key={index}
-                          className="mb-4"
+                          className="mb-4 overflow-x-hidden"
                           initial={{ opacity: 0, y: 50 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{
