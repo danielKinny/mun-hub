@@ -54,6 +54,9 @@ export function CustomNav() {
 
                     <NavigationMenuItem>
                         <NavigationMenuTrigger className="text-xl">MUN Glossary</NavigationMenuTrigger>
+                        <NavigationMenuContent className="min-w-[200px]">
+                        <NavigationMenuLink href="/glossary">Access the glossary</NavigationMenuLink>
+                        </NavigationMenuContent>
                     </NavigationMenuItem>
                     
                     <NavigationMenuItem>
