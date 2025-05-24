@@ -16,17 +16,17 @@ const Page = () => {
   const [content, setContent] = React.useState<string>("");
 
   const fetchSpeeches = async () => {
-        const response = await fetch(`/api/speeches?delegateID=${currentUser?.id}`);
+        const response = await fetch(`/api/speeches?delegateID=${currentUser?.delegateID}`);
         let data = await response.json();
         setSpeechList(data.speeches);
       };
 
   const addSpeech = async () => {
+
     let speechData : Speech = {
       title: heading,
       content: content,
-      speechID: `${currentUser?.id}-${(speechCount ?? 0) + 1}`,
-      tags: speechTags,
+      speechID: `${currentUser?.delegateID}-${(speechCount ?? 0) + 1}`,
     }
     const response = await fetch("/api/speeches", {
       method: "POST",
@@ -77,7 +77,7 @@ const Page = () => {
   return (
     <ProtectedRoute>
       <CustomNav />
-      <h1 className="text-white text-center text-4xl font-bold"> {currentUser?.firstname}'s Speech Repository {currentUser?.flag}</h1>
+      <h1 className="text-white text-center text-4xl font-bold"> {currentUser?.firstname}'s Speech Repository </h1>
       <div className="flex text-white h-screen p-4 bg-gradient-to-b from-black to-gray-950">
         <ul className="outline w-1/4 h-full rounded-2xl p-4">
           {
@@ -108,7 +108,7 @@ const Page = () => {
           >Add/Update Speech </button>
 
           <button 
-          onClick = {() => { deleteSpeech(`${currentUser?.id}-${speechCount+1}`);}}
+          onClick = {() => { deleteSpeech(`${currentUser?.delegateID}-${speechCount+1}`);}}
           className=" bg-red-500 cursor-pointer text-white rounded-2xl p-2 hover:bg-red-600">
             Delete Speech
           </button>

@@ -19,23 +19,42 @@ const Login = () => {
     e.preventDefault();
     setError("");
     setLoading(true);
-    
-    const { data, error: supabaseError } = await supabase
-      .from("Delegate")
-      .select("*")
-      .eq("delegateID", participantId)
-      .eq("password", password)
-      .single();
 
-    setLoading(false);
+    // Trim the inputs to remove any accidental spaces
+    const trimmedId = participantId.trim();
+    const trimmedPassword = password.trim();
 
-    if (supabaseError || !data) {
-      setError("Invalid Participant ID or Password");
-      return;
+    try {
+      // First, try to find the delegate by ID
+      const { data, error: idError } = await supabase
+        .from("Delegate")
+        .select("*")
+        .eq("delegateID", trimmedId)
+        .single();
+
+      if (idError || !data) {
+        console.log("Login error:", idError);
+        setError("Participant ID not found");
+        setLoading(false);
+        return;
+      }
+
+      // Then check if password matches
+      if (data.password !== trimmedPassword) {
+        setError("Incorrect password");
+        setLoading(false);
+        return;
+      }
+
+      // Login successful
+      login(data);
+      router.push("/home");
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("An error occurred during login. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    login(data);
-    router.push("/home");
   };
 
   return (

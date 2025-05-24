@@ -1,5 +1,5 @@
 export interface Delegate {
-  delegateID: number;
+  delegateID: string;
   firstname: string;
   lastname: string;
   speechCount: number;
@@ -7,41 +7,41 @@ export interface Delegate {
 }
 
 export interface Committee {
-  committeeID: number;
+  committeeID: string;
   name: string;
 }
 
 export interface Country {
-  countryID: number;
+  countryID: string;
   name: string;
   flag: string;
 }
 
 export interface Delegation {
-  delegateID: number;
-  committeeID: number;
-  countryID: number;
+  delegateID: string;
+  committeeID: string;
+  countryID: string;
 }
 
 export interface Speech {
-  speechID: number;
+  speechID: string;
   title: string;
   content: string;
 }
 
 export interface DelegateSpeech {
-  delegateID: number;
-  speechID: number;
+  delegateID: string;
+  speechID: string;
 }
 
 export interface Announcement {
-  announcementID: number;
+  announcementID: string;
   date: string;
   title: string;
   content: string;
 }
 
 export interface SpeechTag {
-  speechID: number;
+  speechID: string;
   tag: string;
 }

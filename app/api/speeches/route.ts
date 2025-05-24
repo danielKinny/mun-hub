@@ -86,18 +86,17 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const delegateID = (searchParams.get("delegateID"));
+    const delegateID = searchParams.get("delegateID");
 
-
-    let query =  supabase
+    let query = supabase
     .from('Speech')
-  .select(`
+    .select(`
     *,
-    Delegate-Speech(*)
-  `)
+    Delegate-Speech(delegateID)
+    `)
 
     if (delegateID) {
-      query = query.ilike('delegateID', delegateID);
+      query = query.eq('Delegate-Speech.delegateID', delegateID);
     }
 
     const { data, error } = await query;
