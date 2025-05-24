@@ -14,6 +14,8 @@ const Page = () => {
       (speech: Speech) => currentUser?.id === speech.speechID.substring(0, 4)
     )[0] || null
   );
+
+  const [localTags, setLocalTags] = React.useState<string[]>([]);
   const [text, setText] = React.useState<string>("");
   const [speechTitle, setSpeechTitle] = React.useState<string>("");
   const [search, setSearch] = React.useState<string>("");
@@ -21,6 +23,15 @@ const Page = () => {
   const [filteredSpeeches, setFilteredSpeeches] =
     React.useState<Speech[]>(speeches);
 
+  const filterSpeeches = () => (
+    speeches.filter(
+        (speech: Speech) =>
+          speech.speechID.substring(0, 4) === currentUser?.id &&
+          (!search
+            ? true
+            : speech.title.toLowerCase().includes(search.toLowerCase()))
+      )
+  )
   useEffect(() => {
     if (selectedSpeech) {
       setSpeechTitle(selectedSpeech.title);
@@ -30,15 +41,8 @@ const Page = () => {
       setText("");
     }
 
-    setFilteredSpeeches(
-      speeches.filter(
-        (speech: Speech) =>
-          speech.speechID.substring(0, 4) === currentUser?.id &&
-          (!search
-            ? true
-            : speech.title.toLowerCase().includes(search.toLowerCase()))
-      )
-    );
+    setFilteredSpeeches(filterSpeeches());
+
   }, [selectedSpeech, search, currentUser]);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -99,13 +103,14 @@ const Page = () => {
           speechID: id,
           title: speechTitle,
           content: text,
-          tags: selectedSpeech?.tags || [],
+          tags: (selectedSpeech ? selectedSpeech.tags : localTags),
         }),
       });
       if (response.ok) {
         await response.json();
         setSpeechTitle("");
         setText("");
+        setFilteredSpeeches(filterSpeeches());
       } else {
         await response.json();
       }
@@ -202,16 +207,18 @@ const Page = () => {
                       {countries
                         .filter(
                           (country) =>
-                            !selectedSpeech?.tags?.includes(country.flag)
+                            (selectedSpeech ? !selectedSpeech?.tags?.includes(country.flag): !localTags.includes(country.flag))
                         )
                         .map((country) => (
                           <div
                             key={country.name}
                             className="cursor-pointer transition-transform text-center mx-2 inline-block"
                             onClick={() => {
+                              if (!selectedSpeech) {
+                                setLocalTags([...localTags, country.flag]);
+                            }else {
                               selectedSpeech?.tags?.push(country.flag);
-                              setAddingNewTag(false);
-                            }}
+                            } setAddingNewTag(false);} }
                           >
                             <p className="w-12 text-2xl h-8 bg-gray-800 text-black rounded-lg">
                               {country.flag}
@@ -227,7 +234,7 @@ const Page = () => {
                     +
                   </button>
                   <nav className="inline-block h-8 ml-4">
-                    {selectedSpeech?.tags?.map((tag, index) => (
+                    {(selectedSpeech ? selectedSpeech.tags : localTags).map((tag, index) => (
                       <div
                         key={index}
                         className="cursor-pointer transition-transform text-center mx-2 inline-block"
