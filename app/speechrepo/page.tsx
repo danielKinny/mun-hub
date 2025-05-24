@@ -9,6 +9,7 @@ import { toast } from "sonner";
 const Page = () => {
   const { user: currentUser } = useSession();
 
+  const [speechCount, setSpeechCount] = React.useState<number>(currentUser?.speechCount || 0);
   const [speechTags, setSpeechTags] = React.useState<string[]>([]);
   const [speechList, setSpeechList] = React.useState<Speech[]>([]);
   const [heading, setHeading] = React.useState<string>("");
@@ -21,24 +22,27 @@ const Page = () => {
       };
 
   const addSpeech = async () => {
+    let speechData : Speech = {
+      title: heading,
+      content: content,
+      speechID: `${currentUser?.id}-${(speechCount ?? 0) + 1}`,
+      tags: speechTags,
+    }
     const response = await fetch("/api/speeches", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        title: heading,
-        content: content,
-        speechID: `${currentUser?.id}-${currentUser?.speechCount ? currentUser?.speechCount + 1 : 1}`,
-        tags : speechTags
-      }),
+      body: JSON.stringify(speechData),
     });
     const data = await response.json();
     if (response.ok) {
       toast.success("Speech added successfully");
-      setSpeechList((prev) => [...prev, data.speech]);
+      data.found ? setSpeechList((prev) => prev.map((speech) => speech.speechID === data.speech.speechID ? data.speech : speech))
+      : setSpeechList((prev) => [...prev, data.speech]);
       setHeading("");
       setContent("");
+      setSpeechCount((prev) => prev + 1);
     }
   }
 
@@ -95,14 +99,18 @@ const Page = () => {
         <div className="w-full h-screen space-y-2 p-4">
           <div className="space-x-4 w-full mx-8">
             <button
+            onClick = {() => { setHeading(""); setContent(""); }}
+            className="bg-gray-500 cursor-pointer text-white rounded-2xl p-2 hover:bg-gray-600"
+          >New Speech</button>
+            <button
             onClick = {() => { addSpeech();}}
             className="bg-blue-500 cursor-pointer text-white rounded-2xl p-2 hover:bg-blue-600"
           >Add/Update Speech </button>
 
           <button 
-          onClick = {() => { deleteSpeech(`${currentUser?.id}-${currentUser?.speechCount? currentUser?.speechCount+1 : 1}`);}}
+          onClick = {() => { deleteSpeech(`${currentUser?.id}-${speechCount+1}`);}}
           className=" bg-red-500 cursor-pointer text-white rounded-2xl p-2 hover:bg-red-600">
-            delete
+            Delete Speech
           </button>
           </div>
           <textarea
@@ -126,5 +134,4 @@ const Page = () => {
     </ProtectedRoute>
   );
 };
-
 export default Page;

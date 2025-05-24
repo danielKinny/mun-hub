@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { readFileSync, writeFileSync } from "fs";
 import path from "path";
-import { Speech, Delegate } from "@/db/types";
+import { Speech, Delegate, Database } from "@/db/types";
 import { useSession } from "../../context/sessionContext";
 
 export async function DELETE(request: Request) {
@@ -55,68 +55,41 @@ export async function DELETE(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const newSpeech: Speech = await request.json();
+
+    let found = false;
+
+    let speechData: Speech = await request.json();
     const dataFilePath = path.join(process.cwd(), "db/data.json");
+    const fileData : Database= JSON.parse(readFileSync(dataFilePath, "utf-8"));
 
-    let data;
-    try {
-      const fileContent = readFileSync(dataFilePath, "utf-8");
-      data = JSON.parse(fileContent);
-    } catch (readError: unknown) {
-      if ((readError as NodeJS.ErrnoException).code === "ENOENT") {
-        data = { speeches: [], delegates: [] };
-      } else if (readError instanceof SyntaxError) {
-        return new NextResponse(
-          JSON.stringify({ message: "Error parsing JSON in data.json" }),
-          { status: 500, headers: { "Content-Type": "application/json" } }
-        );
-      } else {
-        return new NextResponse(
-          JSON.stringify({ message: "Error reading data.json" }),
-          { status: 500, headers: { "Content-Type": "application/json" } }
-        );
-      }
-      if (!data) {
-        return new NextResponse(
-          JSON.stringify({ message: "Data is undefined" }),
-          { status: 500, headers: { "Content-Type": "application/json" } }
-        );
-      }
-    }
-
-    if (!data.speeches) {
-      data.speeches = [];
-      data.delegates = [];
-    }
-
-    const existingSpeechIndex = data.speeches.findIndex(
-      (speech: Speech) => speech.speechID === newSpeech.speechID
+    let delegateIndex = fileData.delegates.findIndex(
+      (delegate: Delegate) => delegate?.id === speechData.speechID.split("-")[0]
     );
-    const existingDelegateIndex = data.delegates.findIndex(
-      (delegate: Delegate) => delegate.id === newSpeech.speechID.substring(0, 4)
+
+    let existingIndex = fileData.speeches.findIndex(
+      (speech: Speech) => speech.speechID === speechData.speechID
     );
-    if (existingSpeechIndex !== -1) {
-      data.speeches[existingSpeechIndex] = newSpeech;
+
+    if (
+      existingIndex !== -1
+    ) {
+      fileData.speeches[existingIndex] = speechData;
+      found = true;
     } else {
-      data.speeches.push(newSpeech);
-      data.delegates[existingDelegateIndex].speechCount += 1;
+      fileData.speeches.push(speechData);
     }
 
-    writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+    fileData.delegates[delegateIndex].speechCount += 1;
+    writeFileSync(dataFilePath, JSON.stringify(fileData, null, 2));
 
     return new NextResponse(
-      JSON.stringify({
-        message: "Speech added successfully",
-        speech: newSpeech,
-      }),
-      { status: 201, headers: { "Content-Type": "application/json" } }
-    );  } catch (error: unknown) {
-    const errorMessage = error instanceof Error 
-      ? error.message 
-      : 'Unknown error occurred';
-      
+      JSON.stringify({ response: "Speech added successfully", speech : speechData, found: found }),
+      { status: 200, headers: { "Content-Type": "application/json" } } 
+    );
+
+  } catch {
     return new NextResponse(
-      JSON.stringify({ message: `Error adding speech: ${errorMessage}` }),
+      JSON.stringify({ message: "Error reading data.json" }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
@@ -125,7 +98,7 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const delegateID = searchParams.get('delegateID');
+    const delegateID = searchParams.get("delegateID");
     const dataFilePath = path.join(process.cwd(), "db/data.json");
     const fileContent = readFileSync(dataFilePath, "utf-8");
     const data = JSON.parse(fileContent);
@@ -136,19 +109,18 @@ export async function GET(request: Request) {
         { status: 404, headers: { "Content-Type": "application/json" } }
       );
     }
-    
-    const filteredSpeeches : Speech[] = data.speeches.filter(
-      (speech: Speech) => speech.speechID.startsWith(delegateID ? delegateID : "")
+
+    const filteredSpeeches: Speech[] = data.speeches.filter((speech: Speech) =>
+      speech.speechID.startsWith(delegateID ? delegateID : "")
     );
 
-    return new NextResponse(
-      JSON.stringify({ speeches: filteredSpeeches }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
+    return new NextResponse(JSON.stringify({ speeches: filteredSpeeches }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error
-      ? error.message
-      : "Unknown error occurred";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error occurred";
     return new NextResponse(
       JSON.stringify({ message: `Error fetching speeches: ${errorMessage}` }),
       { status: 500, headers: { "Content-Type": "application/json" } }
