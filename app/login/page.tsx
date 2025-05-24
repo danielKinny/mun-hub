@@ -1,29 +1,41 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { authenticate } from "../utils/auth";
 import { useRouter } from "next/navigation";
 import { useSession } from "../context/sessionContext";
 import Image from "next/image";
 import TypeWriter from "@/components/ui/typewriter";
+import supabase from "@/lib/supabase";
 
 const Login = () => {
   const [participantId, setParticipantId] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
   const router = useRouter();
   const { login } = useSession();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const delegate = authenticate(participantId, password);
+    setError("");
+    setLoading(true);
+    
+    const { data, error: supabaseError } = await supabase
+      .from("Delegate")
+      .select("*")
+      .eq("delegateID", participantId)
+      .eq("password", password)
+      .single();
 
-    if (delegate) {
-      login(delegate);
-      router.push("/home");
-    } else {
+    setLoading(false);
+
+    if (supabaseError || !data) {
       setError("Invalid Participant ID or Password");
+      return;
     }
+
+    login(data);
+    router.push("/home");
   };
 
   return (
@@ -75,8 +87,9 @@ const Login = () => {
           <button
             type="submit"
             className="border-2 bg-white text-black border-gray-800 p-2 mb-4 rounded-md w-80 h-10 align-middle mt-12 font-extrabold"
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
       </motion.div>

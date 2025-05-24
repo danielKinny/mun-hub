@@ -1,45 +1,28 @@
 import { NextResponse } from "next/server";
-import { readFileSync, writeFileSync } from "fs";
-import path from "path";
-import { Speech, Delegate, Database } from "@/db/types";
-import { useSession } from "../../context/sessionContext";
+import { Speech, Delegate } from "@/db/types";
+import supabase from "@/lib/supabase";
 
 export async function DELETE(request: Request) {
   try {
     const { speechID } = await request.json();
-    const dataFilePath = path.join(process.cwd(), "db/data.json");
-
-    let data;
-    try {
-      const fileContent = readFileSync(dataFilePath, "utf-8");
-      data = JSON.parse(fileContent);
-    } catch {
+    if (!speechID) {
       return new NextResponse(
-        JSON.stringify({ message: "Error reading data.json" }),
+        JSON.stringify({ message: "Missing speechID" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const { error } = await supabase
+      .from('Speech')
+      .delete()
+      .eq('speechID', speechID);
+
+    if (error) {
+      return new NextResponse(
+        JSON.stringify({ message: `Error deleting speech: ${error.message}` }),
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
-
-    if (!data.speeches) {
-      return new NextResponse(
-        JSON.stringify({ message: "No speeches found" }),
-        { status: 404, headers: { "Content-Type": "application/json" } }
-      );
-    }
-
-    const initialLength = data.speeches.length;
-    data.speeches = data.speeches.filter(
-      (speech: Speech) => speech.speechID !== speechID
-    );
-
-    if (data.speeches.length === initialLength) {
-      return new NextResponse(JSON.stringify({ message: "Speech not found" }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
 
     return new NextResponse(
       JSON.stringify({ message: "Speech deleted successfully" }),
@@ -55,41 +38,46 @@ export async function DELETE(request: Request) {
 
 export async function POST(request: Request) {
   try {
-
-    let found = false;
-
-    let speechData: Speech = await request.json();
-    const dataFilePath = path.join(process.cwd(), "db/data.json");
-    const fileData : Database= JSON.parse(readFileSync(dataFilePath, "utf-8"));
-
-    let delegateIndex = fileData.delegates.findIndex(
-      (delegate: Delegate) => delegate?.id === speechData.speechID.split("-")[0]
-    );
-
-    let existingIndex = fileData.speeches.findIndex(
-      (speech: Speech) => speech.speechID === speechData.speechID
-    );
-
-    if (
-      existingIndex !== -1
-    ) {
-      fileData.speeches[existingIndex] = speechData;
-      found = true;
-    } else {
-      fileData.speeches.push(speechData);
+    const speechData: Speech = await request.json();
+    if (!speechData.speechID || !speechData.title || !speechData.content) {
+      return new NextResponse(
+        JSON.stringify({ message: "Missing required speech fields" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
     }
 
-    fileData.delegates[delegateIndex].speechCount += 1;
-    writeFileSync(dataFilePath, JSON.stringify(fileData, null, 2));
+    const { data, error } = await supabase
+      .from('Speech')
+      .upsert(speechData)
+      .select()
+      .single();
+
+    if (error) {
+      return new NextResponse(
+        JSON.stringify({ message: `Error saving speech: ${error.message}` }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    if (speechData.speechID) {
+
+      const { data: delegateSpeech } = await supabase
+        .from('Delegate-Speech')
+        .select('delegateID')
+        .eq('speechID', speechData.speechID)
+        .single();
+      if (delegateSpeech?.delegateID) {
+        await supabase.rpc('increment_speech_count', { delegate_id: delegateSpeech.delegateID });
+      }
+    }
 
     return new NextResponse(
-      JSON.stringify({ response: "Speech added successfully", speech : speechData, found: found }),
-      { status: 200, headers: { "Content-Type": "application/json" } } 
+      JSON.stringify({ response: "Speech added successfully", speech: data }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
     );
-
   } catch {
     return new NextResponse(
-      JSON.stringify({ message: "Error reading data.json" }),
+      JSON.stringify({ message: "Error saving speech" }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
@@ -98,26 +86,32 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const delegateID = searchParams.get("delegateID");
-    const dataFilePath = path.join(process.cwd(), "db/data.json");
-    const fileContent = readFileSync(dataFilePath, "utf-8");
-    const data = JSON.parse(fileContent);
+    const delegateID = (searchParams.get("delegateID"));
 
-    if (!data.speeches) {
-      return new NextResponse(
-        JSON.stringify({ message: "No speeches found" }),
-        { status: 404, headers: { "Content-Type": "application/json" } }
-      );
+
+    let query =  supabase
+    .from('Speech')
+  .select(`
+    *,
+    Delegate-Speech(*)
+  `)
+
+    if (delegateID) {
+      query = query.ilike('delegateID', delegateID);
     }
 
-    const filteredSpeeches: Speech[] = data.speeches.filter((speech: Speech) =>
-      speech.speechID.startsWith(delegateID ? delegateID : "")
-    );
+    const { data, error } = await query;
+    if (error) {
+      return new NextResponse(
+        JSON.stringify({ message: `Error fetching speeches: ${error.message}` }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      )
+    }
 
-    return new NextResponse(JSON.stringify({ speeches: filteredSpeeches }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new NextResponse(
+      JSON.stringify({ speeches: data }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error occurred";

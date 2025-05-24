@@ -1,52 +1,47 @@
 export interface Delegate {
-    id: string;
-    firstname: string;
-    lastname: string;
-    delegation: string;
-    committee: string;
-    flag: string;
-    password: string;
-    speechCount: number;
-}
-
-export interface Announcement {
-    title: string;
-    externallink: string;
-    description: string;
-    date: string;
-  }
-
-export interface Country {
-    name: string;
-    description: string;
-    href: string;
-    delegates: any[];
-    flag: string;
+  delegateID: number;
+  firstname: string;
+  lastname: string;
+  speechCount: number;
+  password: string;
 }
 
 export interface Committee {
-    name: string;
-    description: string;
-    href: string;
-    delegates: Delegate[];
+  committeeID: number;
+  name: string;
+}
+
+export interface Country {
+  countryID: number;
+  name: string;
+  flag: string;
+}
+
+export interface Delegation {
+  delegateID: number;
+  committeeID: number;
+  countryID: number;
 }
 
 export interface Speech {
-    speechID: string;
-    title: string;
-    content: string;
-    tags: string[];
+  speechID: number;
+  title: string;
+  content: string;
 }
 
-export interface Database {
-    delegates: Delegate[];
-    announcements: Announcement[];
-    countries: Country[];
-    committees: Committee[];
-    speeches: Speech[];
+export interface DelegateSpeech {
+  delegateID: number;
+  speechID: number;
 }
 
-export interface jargons {
-    name: string;
-    description: string;
-};
+export interface Announcement {
+  announcementID: number;
+  date: string;
+  title: string;
+  content: string;
+}
+
+export interface SpeechTag {
+  speechID: number;
+  tag: string;
+}
