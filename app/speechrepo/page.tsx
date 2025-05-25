@@ -14,6 +14,7 @@ const Page = () => {
   const [speechList, setSpeechList] = React.useState<Speech[]>([]);
   const [heading, setHeading] = React.useState<string>("");
   const [content, setContent] = React.useState<string>("");
+  const [selectedSpeech, setSelectedSpeech] = React.useState<Speech | null>(null);
 
   const fetchSpeeches = async () => {
         const response = await fetch(`/api/speeches?delegateID=${currentUser?.delegateID}`);
@@ -26,7 +27,7 @@ const Page = () => {
     let speechData : Speech = {
       title: heading,
       content: content,
-      speechID: `${currentUser?.delegateID}-${(speechCount + 1)}`,
+      speechID: selectedSpeech? selectedSpeech.speechID :`${currentUser?.delegateID}-${(speechCount + 1)}`,
     }
     const response = await fetch("/api/speeches", {
       method: "POST",
@@ -38,15 +39,20 @@ const Page = () => {
     const data = await response.json();
     if (response.ok) {
       toast.success("Speech added successfully");
-      data.found ? setSpeechList((prev) => prev.map((speech) => speech.speechID === data.speech.speechID ? data.speech : speech))
-      : setSpeechList((prev) => [...prev, data.speech]);
+      selectedSpeech ? setSpeechList((prev) => prev.map((speech) => speech.speechID === selectedSpeech.speechID ? speechData : speech)) : setSpeechList((prev) => [...prev, speechData])
       setHeading("");
       setContent("");
-      setSpeechCount((prev) => prev + 1);
+      console.log(speechData.speechID);
+      selectedSpeech ? setSpeechCount(speechCount) : setSpeechCount(speechCount + 1);
+      console.log("new speech count: ", speechCount);
     }
   }
 
   const deleteSpeech = async (speechID: string) => {
+    if (!speechID) {
+      toast.error("No speech selected to delete");
+      return;
+    }
     const response = await fetch("/api/speeches", {
       method: "DELETE",
       headers: {
@@ -69,8 +75,16 @@ const Page = () => {
     } catch (error) {
       console.error("Error fetching speeches:", error);
       toast.error("Error fetching speeches");
-
       }
+
+      if (speechList.length > 0) {
+        setSelectedSpeech(speechList[0]);
+      } else {
+        setSelectedSpeech(null);
+      } 
+      setHeading(selectedSpeech?.title || "");
+      setContent(selectedSpeech?.content || "");
+
     }
   , []);
 
@@ -84,8 +98,9 @@ const Page = () => {
             (speechList && speechList.map((speech) => (
               <li
                 key={speech.speechID}
-                className="outline rounded-2xl p-4 mb-2 cursor-pointer hover:bg-gray-700"
+                className={`outline rounded-2xl p-4 mb-2 cursor-pointer ${selectedSpeech?.speechID === speech.speechID ? 'bg-blue-700' : 'hover:bg-gray-700'}`}
                 onClick={() => {
+                  setSelectedSpeech(speech);
                   setHeading(speech.title);
                   setContent(speech.content);
                 }}
@@ -99,7 +114,7 @@ const Page = () => {
         <div className="w-full h-screen space-y-2 p-4">
           <div className="space-x-4 w-full mx-8">
             <button
-            onClick = {() => { setHeading(""); setContent(""); }}
+            onClick = {() => { setSelectedSpeech(null); setHeading(""); setContent(""); }}
             className="bg-gray-500 cursor-pointer text-white rounded-2xl p-2 hover:bg-gray-600"
           >New Speech</button>
             <button
@@ -108,7 +123,7 @@ const Page = () => {
           >Add/Update Speech </button>
 
           <button 
-          onClick = {() => { deleteSpeech(`${currentUser?.delegateID}-${speechCount+1}`);}}
+          onClick = {() => { deleteSpeech(selectedSpeech?.speechID || "");}}
           className=" bg-red-500 cursor-pointer text-white rounded-2xl p-2 hover:bg-red-600">
             Delete Speech
           </button>

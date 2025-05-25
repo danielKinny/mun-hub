@@ -6,16 +6,16 @@ export async function DELETE(request: Request) {
   try {
     const { speechID } = await request.json();
     if (!speechID) {
-      return new NextResponse(
-        JSON.stringify({ message: "Missing speechID" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+      return new NextResponse(JSON.stringify({ message: "Missing speechID" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     const { error } = await supabase
-      .from('Speech')
+      .from("Speech")
       .delete()
-      .eq('speechID', speechID);
+      .eq("speechID", speechID);
 
     if (error) {
       return new NextResponse(
@@ -39,61 +39,119 @@ export async function DELETE(request: Request) {
 export async function POST(request: Request) {
   try {
     const speechData: Speech = await request.json();
-    
+
     if (!speechData.title || !speechData.content) {
       return new NextResponse(
-        JSON.stringify({ message: "Missing required speech fields: title and content are required" }),
+        JSON.stringify({
+          message:
+            "Missing required speech fields: title and content are required",
+        }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
-    const { data, error } = await supabase
-      .from('Speech')
-      .upsert(speechData)
+    const { data: existingSpeech, error: existingError } = (await supabase
+      .from("Speech")
       .select()
-      .single();
+      .eq("speechID", speechData.speechID)
+      .single()) as { data: Speech | null; error: Error | null };
 
-    if (error) {
-      console.error("Supabase error:", error);
+    if (existingSpeech) {
+      const { data: updatedData, error: updatedError } = await supabase
+        .from("Speech")
+        .update({ title: speechData.title, content: speechData.content })
+        .eq("speechID", speechData.speechID)
+        .select()
+        .single();
+
+      if (updatedError) {
+        console.error("Error updating speech:", updatedError);
+        return new NextResponse(
+          JSON.stringify({
+            message: `Error updating speech: ${updatedError.message}`,
+          }),
+          { status: 500, headers: { "Content-Type": "application/json" } }
+        );
+      }
+
       return new NextResponse(
-        JSON.stringify({ message: `Error saving speech: ${error.message}` }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
+        JSON.stringify({
+          response: "Speech updated successfully",
+          speech: updatedData,
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
+    } else {
+      const { data: insertedData, error: insertedError } = await supabase
+        .from("Speech")
+        .insert(speechData)
+        .select()
+        .single();
+
+      if (insertedError) {
+        console.error("Error inserting speech:", insertedError);
+        return new NextResponse(
+          JSON.stringify({
+            message: `Error inserting speech: ${insertedError.message}`,
+          }),
+          { status: 500, headers: { "Content-Type": "application/json" } }
+        );
+      }
+
+      if (!insertedData) {
+        return new NextResponse(
+          JSON.stringify({
+            message: "Failed to insert speech: No data returned",
+          }),
+          { status: 500, headers: { "Content-Type": "application/json" } }
+        );
+      }
+
+      const delegateID = insertedData.speechID.substring(0, 4);
+
+      const { error: relationshipError } = await supabase
+        .from("Delegate-Speech")
+        .insert({
+          delegateID: delegateID,
+          speechID: insertedData.speechID,
+        });
+
+      if (relationshipError) {
+        console.error(
+          "Error creating delegate-speech relationship:",
+          relationshipError
+        );
+        return new NextResponse(
+          JSON.stringify({
+            response:
+              "Speech added successfully, but failed to create relationship",
+            speech: insertedData,
+          }),
+          { status: 201, headers: { "Content-Type": "application/json" } }
+        );
+      }
+
+      const { error: incrementError } = await supabase.rpc(
+        "increment_speech_count",
+        { delegate_id: delegateID }
+      );
+
+      if (incrementError) {
+        console.error("Error incrementing speech count:", incrementError);
+      }
+
+      return new NextResponse(
+        JSON.stringify({
+          response: "Speech added successfully",
+          speech: insertedData,
+        }),
+        { status: 201, headers: { "Content-Type": "application/json" } }
       );
     }
-    if (data?.speechID) {
-      try {
-        const { data: delegateSpeech, error: delegateError } = await supabase
-          .from('Delegate-Speech')
-          .select('delegateID')
-          .eq('speechID', data.speechID)
-          .single();
-          
-        if (delegateError && !delegateError.message.includes('No rows found')) {
-          console.error("Error fetching delegate-speech relationship:", delegateError);
-        }
-        
-        if (delegateSpeech?.delegateID) {
-          const { error: incrementError } = await supabase.rpc(
-            'increment_speech_count', 
-            { delegate_id: delegateSpeech.delegateID }
-          );
-          
-          if (incrementError) {
-            console.error("Error incrementing speech count:", incrementError);
-          }
-        }
-      } catch (relationError) {
-        console.error("Error handling delegate-speech relationship:", relationError);
-      }
-    }
-
-    return new NextResponse(
-      JSON.stringify({ response: "Speech added successfully", speech: data }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     console.error("Error in POST /api/speeches:", errorMessage);
-    
+
     return new NextResponse(
       JSON.stringify({ message: `Error saving speech: ${errorMessage}` }),
       { status: 500, headers: { "Content-Type": "application/json" } }
@@ -106,29 +164,29 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const delegateID = searchParams.get("delegateID");
 
-    let query = supabase
-    .from('Speech')
-    .select(`
+    let query = supabase.from("Speech").select(`
     *,
     Delegate-Speech(delegateID)
-    `)
+    `);
 
     if (delegateID) {
-      query = query.eq('Delegate-Speech.delegateID', delegateID);
+      query = query.eq("Delegate-Speech.delegateID", delegateID);
     }
 
     const { data, error } = await query;
     if (error) {
       return new NextResponse(
-        JSON.stringify({ message: `Error fetching speeches: ${error.message}` }),
+        JSON.stringify({
+          message: `Error fetching speeches: ${error.message}`,
+        }),
         { status: 500, headers: { "Content-Type": "application/json" } }
-      )
+      );
     }
 
-    return new NextResponse(
-      JSON.stringify({ speeches: data }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
+    return new NextResponse(JSON.stringify({ speeches: data }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error occurred";
