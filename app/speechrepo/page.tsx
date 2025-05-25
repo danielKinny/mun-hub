@@ -26,7 +26,7 @@ const Page = () => {
     let speechData : Speech = {
       title: heading,
       content: content,
-      speechID: `${currentUser?.delegateID}-${(speechCount ?? 0) + 1}`,
+      speechID: `${currentUser?.delegateID}-${(speechCount + 1)}`,
     }
     const response = await fetch("/api/speeches", {
       method: "POST",

@@ -39,13 +39,13 @@ export async function DELETE(request: Request) {
 export async function POST(request: Request) {
   try {
     const speechData: Speech = await request.json();
-    if (!speechData.speechID || !speechData.title || !speechData.content) {
+    
+    if (!speechData.title || !speechData.content) {
       return new NextResponse(
-        JSON.stringify({ message: "Missing required speech fields" }),
+        JSON.stringify({ message: "Missing required speech fields: title and content are required" }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
-
     const { data, error } = await supabase
       .from('Speech')
       .upsert(speechData)
@@ -53,21 +53,36 @@ export async function POST(request: Request) {
       .single();
 
     if (error) {
+      console.error("Supabase error:", error);
       return new NextResponse(
         JSON.stringify({ message: `Error saving speech: ${error.message}` }),
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
-
-    if (speechData.speechID) {
-
-      const { data: delegateSpeech } = await supabase
-        .from('Delegate-Speech')
-        .select('delegateID')
-        .eq('speechID', speechData.speechID)
-        .single();
-      if (delegateSpeech?.delegateID) {
-        await supabase.rpc('increment_speech_count', { delegate_id: delegateSpeech.delegateID });
+    if (data?.speechID) {
+      try {
+        const { data: delegateSpeech, error: delegateError } = await supabase
+          .from('Delegate-Speech')
+          .select('delegateID')
+          .eq('speechID', data.speechID)
+          .single();
+          
+        if (delegateError && !delegateError.message.includes('No rows found')) {
+          console.error("Error fetching delegate-speech relationship:", delegateError);
+        }
+        
+        if (delegateSpeech?.delegateID) {
+          const { error: incrementError } = await supabase.rpc(
+            'increment_speech_count', 
+            { delegate_id: delegateSpeech.delegateID }
+          );
+          
+          if (incrementError) {
+            console.error("Error incrementing speech count:", incrementError);
+          }
+        }
+      } catch (relationError) {
+        console.error("Error handling delegate-speech relationship:", relationError);
       }
     }
 
@@ -75,9 +90,12 @@ export async function POST(request: Request) {
       JSON.stringify({ response: "Speech added successfully", speech: data }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
-  } catch {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error in POST /api/speeches:", errorMessage);
+    
     return new NextResponse(
-      JSON.stringify({ message: "Error saving speech" }),
+      JSON.stringify({ message: `Error saving speech: ${errorMessage}` }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }

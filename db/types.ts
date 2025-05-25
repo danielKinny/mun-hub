@@ -9,6 +9,7 @@ export interface Delegate {
 export interface Committee {
   committeeID: string;
   name: string;
+  href: string;
 }
 
 export interface Country {
@@ -39,6 +40,7 @@ export interface Announcement {
   date: string;
   title: string;
   content: string;
+  href: string;
 }
 
 export interface SpeechTag {
