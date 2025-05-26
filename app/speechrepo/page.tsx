@@ -5,6 +5,7 @@ import { useSession } from "../context/sessionContext";
 import { Speech } from "@/db/types";
 import ProtectedRoute from "@/components/protectedroute";
 import { toast } from "sonner";
+import {createSpeechID} from "@/lib/createID";
 
 const Page = () => {
   const { user: currentUser } = useSession();
@@ -23,23 +24,28 @@ const Page = () => {
       };
 
   const addSpeech = async () => {
-
-    let speechData : Speech = {
+    if (!currentUser?.delegateID) {
+      toast.error("No delegateID found for current user");
+      return;
+    }
+    let speechData: Speech = {
       title: heading,
       content: content,
-      speechID: selectedSpeech? selectedSpeech.speechID :`${currentUser?.delegateID}-${(speechCount + 1)}`,
-    }
+      speechID: selectedSpeech ? selectedSpeech.speechID : createSpeechID(speechCount + 1),
+    };
     const response = await fetch("/api/speeches", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(speechData),
+      body: JSON.stringify({ speechData, delegateID: currentUser.delegateID }),
     });
     const data = await response.json();
     if (response.ok) {
       toast.success("Speech added successfully");
-      selectedSpeech ? setSpeechList((prev) => prev.map((speech) => speech.speechID === selectedSpeech.speechID ? speechData : speech)) : setSpeechList((prev) => [...prev, speechData])
+      selectedSpeech
+        ? setSpeechList((prev) => prev.map((speech) => speech.speechID === selectedSpeech.speechID ? speechData : speech))
+        : setSpeechList((prev) => [...prev, speechData]);
       setHeading("");
       setContent("");
       console.log(speechData.speechID);

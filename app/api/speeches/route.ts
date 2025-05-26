@@ -38,7 +38,9 @@ export async function DELETE(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const speechData: Speech = await request.json();
+    const body = await request.json();
+    const speechData: Speech = body.speechData;
+    const delegateID: string = body.delegateID;
 
     if (!speechData.title || !speechData.content) {
       return new NextResponse(
@@ -105,8 +107,6 @@ export async function POST(request: Request) {
           { status: 500, headers: { "Content-Type": "application/json" } }
         );
       }
-
-      const delegateID = insertedData.speechID.substring(0, 4);
 
       const { error: relationshipError } = await supabase
         .from("Delegate-Speech")
