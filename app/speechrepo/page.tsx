@@ -5,7 +5,12 @@ import { useSession } from "../context/sessionContext";
 import { Speech } from "@/db/types";
 import ProtectedRoute from "@/components/protectedroute";
 import { toast } from "sonner";
-import {createSpeechID} from "@/lib/createID";
+import { createSpeechID } from "@/lib/createID";
+
+import { ArchiveBoxXMarkIcon,
+  PlusCircleIcon,
+  DocumentPlusIcon
+ } from "@heroicons/react/24/outline";
 
 const Page = () => {
   const { user: currentUser } = useSession();
@@ -42,7 +47,7 @@ const Page = () => {
     });
     const data = await response.json();
     if (response.ok) {
-      toast.success("Speech added successfully");
+      toast.success(`Speech ${selectedSpeech ? "added" : "updated"} successfully`);
       selectedSpeech
         ? setSpeechList((prev) => prev.map((speech) => speech.speechID === selectedSpeech.speechID ? speechData : speech))
         : setSpeechList((prev) => [...prev, speechData]);
@@ -97,9 +102,8 @@ const Page = () => {
   return (
     <ProtectedRoute>
       <CustomNav />
-      <h1 className="text-white text-center text-4xl font-bold"> {currentUser?.firstname}'s Speech Repository </h1>
-      <div className="flex text-white h-screen p-4 bg-gradient-to-b from-black to-gray-950">
-        <ul className="outline w-1/4 h-full rounded-2xl p-4">
+      <div className="flex text-white p-4 bg-gradient-to-b from-black to-gray-950">
+        <ul className="outline w-1/4 rounded-2xl p-4">
           {
             (speechList && speechList.map((speech) => (
               <li
@@ -118,21 +122,28 @@ const Page = () => {
           }
         </ul>
         <div className="w-full h-screen space-y-2 p-4">
-          <div className="space-x-4 w-full mx-8">
+          <div className="w-8/9 mx-8 pb-2 flex">
+          <p className="text-white text-4xl font-bold mx-4">
+            {currentUser?.firstname}'s Speech Repo
+          </p>
+          <div className="flex space-x-4 ml-auto">
             <button
             onClick = {() => { setSelectedSpeech(null); setHeading(""); setContent(""); }}
             className="bg-gray-500 cursor-pointer text-white rounded-2xl p-2 hover:bg-gray-600"
-          >New Speech</button>
+          ><p className="inline-block">New Speech</p> <DocumentPlusIcon className="w-6 h-6 inline-block"/></button>
             <button
             onClick = {() => { addSpeech();}}
             className="bg-blue-500 cursor-pointer text-white rounded-2xl p-2 hover:bg-blue-600"
-          >Add/Update Speech </button>
+          >
+           <p className="inline-block"> {selectedSpeech ? 'Update' : 'Add'} Speech </p> <PlusCircleIcon className="h-6 w-6 inline-block" />
+            </button>
 
           <button 
           onClick = {() => { deleteSpeech(selectedSpeech?.speechID || "");}}
           className=" bg-red-500 cursor-pointer text-white rounded-2xl p-2 hover:bg-red-600">
-            Delete Speech
+            <p className="inline-block"> Delete Speech </p> <ArchiveBoxXMarkIcon className="h-6 w-6 inline-block" />
           </button>
+          </div>
           </div>
           <textarea
           className="block w-8/9 outline rounded-2xl mx-8 p-4"
@@ -143,11 +154,11 @@ const Page = () => {
           value={heading}
         ></textarea>
         <textarea
-          className="outline w-8/9 rounded-2xl mx-8 p-4"
+          className="outline w-8/9 rounded-2xl mx-8 p-4 h-187"
           placeholder="Write your speech here..."
           onChange={(e) => { setContent(e.target.value); }}
           value={content}
-          style={{ resize: "none", height: "86vh"}}
+          style={{ resize: "none"}}
         ></textarea>
         </div>
         
