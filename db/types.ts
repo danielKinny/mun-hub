@@ -28,6 +28,7 @@ export interface Speech {
   speechID: string;
   title: string;
   content: string;
+  tags: string[];
 }
 
 export interface DelegateSpeech {

@@ -41,6 +41,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const speechData: Speech = body.speechData;
     const delegateID: string = body.delegateID;
+    const tags: string[] = body.tags;
 
     if (!speechData.title || !speechData.content) {
       return new NextResponse(
@@ -56,7 +57,6 @@ export async function POST(request: Request) {
       .select()
       .eq("speechID", speechData.speechID)
       .single()) as { data: Speech | null; error: Error | null };
-
     if (existingSpeech) {
       const { data: updatedData, error: updatedError } = await supabase
         .from("Speech")
@@ -73,6 +73,41 @@ export async function POST(request: Request) {
           }),
           { status: 500, headers: { "Content-Type": "application/json" } }
         );
+      }
+
+      if (tags && tags.length >= 0) {
+        const { data: currentTags } = await supabase
+          .from("Speech-Tags")
+          .select("tag")
+          .eq("speechID", speechData.speechID);
+
+        const currentTagSet = new Set(currentTags?.map(t => t.tag) || []);
+        const newTagSet = new Set(tags);
+
+        const tagsToAdd = tags.filter(tag => !currentTagSet.has(tag));
+        const tagsToRemove = [...currentTagSet].filter(tag => !newTagSet.has(tag));
+
+        if (tagsToAdd.length > 0) {
+          const { error: insertTagsError } = await supabase
+            .from("Speech-Tags")
+            .insert(tagsToAdd.map(tag => ({ speechID: speechData.speechID, tag })));
+
+          if (insertTagsError) {
+            console.error("Error inserting tags:", insertTagsError);
+          }
+        }
+
+        if (tagsToRemove.length > 0) {
+          const { error: deleteTagsError } = await supabase
+            .from("Speech-Tags")
+            .delete()
+            .eq("speechID", speechData.speechID)
+            .in("tag", tagsToRemove);
+
+          if (deleteTagsError) {
+            console.error("Error deleting tags:", deleteTagsError);
+          }
+        }
       }
 
       return new NextResponse(
@@ -129,7 +164,6 @@ export async function POST(request: Request) {
           { status: 201, headers: { "Content-Type": "application/json" } }
         );
       }
-
       const { error: incrementError } = await supabase.rpc(
         "increment_speech_count",
         { delegate_id: delegateID }
@@ -137,6 +171,16 @@ export async function POST(request: Request) {
 
       if (incrementError) {
         console.error("Error incrementing speech count:", incrementError);
+      }
+
+      if (tags && tags.length > 0) {
+        const { error: insertTagsError } = await supabase
+          .from("Speech-Tags")
+          .insert(tags.map(tag => ({ speechID: insertedData.speechID, tag })));
+
+        if (insertTagsError) {
+          console.error("Error inserting tags:", insertTagsError);
+        }
       }
 
       return new NextResponse(
@@ -163,10 +207,10 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const delegateID = searchParams.get("delegateID");
-
     let query = supabase.from("Speech").select(`
-    *,
-    Delegate-Speech(delegateID)
+      *,
+      Delegate-Speech(delegateID),
+      Speech-Tags(tag)
     `);
 
     if (delegateID) {
@@ -183,7 +227,12 @@ export async function GET(request: Request) {
       );
     }
 
-    return new NextResponse(JSON.stringify({ speeches: data }), {
+    const speechesWithTags = (data || []).map((speech: any) => ({
+      ...speech,
+      tags: (speech["Speech-Tags"] || []).map((t: any) => t.tag),
+    }));
+
+    return new NextResponse(JSON.stringify({ speeches: speechesWithTags }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
