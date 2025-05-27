@@ -12,7 +12,21 @@ import {
   PlusCircleIcon,
   DocumentPlusIcon,
   MagnifyingGlassCircleIcon,
+  TagIcon,
 } from "@heroicons/react/24/outline";
+
+const COUNTRIES = [
+  { name: "United States", flag: "🇺🇸" },
+  { name: "United Kingdom", flag: "🇬🇧" },
+  { name: "France", flag: "🇫🇷" },
+  { name: "Germany", flag: "🇩🇪" },
+  { name: "India", flag: "🇮🇳" },
+  { name: "China", flag: "🇨🇳" },
+  { name: "Russia", flag: "🇷🇺" },
+  { name: "Brazil", flag: "🇧🇷" },
+  { name: "South Africa", flag: "🇿🇦" },
+  { name: "Japan", flag: "🇯🇵" },
+];
 
 const Page = () => {
   const { user: currentUser } = useSession();
@@ -28,6 +42,7 @@ const Page = () => {
     null
   );
   const [searchQuery, setSearchQuery] = React.useState<string>("");
+  const [showCountryOverlay, setShowCountryOverlay] = React.useState(false);
 
   const fetchSpeeches = async () => {
     const response = await fetch(
@@ -44,8 +59,7 @@ const Page = () => {
     return speechList.filter((speech) =>
       speech.title.toLowerCase().includes(query.toLowerCase())
     );
-  }
-
+  };
 
   const addSpeech = async () => {
     if (!currentUser?.delegateID) {
@@ -134,7 +148,13 @@ const Page = () => {
       <div className="flex text-white p-4 bg-gradient-to-b from-black to-gray-950">
         <ul className="outline w-1/4 rounded-2xl p-4">
         <div className="flex space-x-2 p-2">
-          <input type="text" placeholder="Enter your speech name..." onChange = {(e) => setSearchQuery(e.target.value)} value={searchQuery} className="outline w-full rounded-2xl p-2 mb-4"/>
+          <input
+            type="text"
+            placeholder="Enter your speech name..."
+            onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchQuery}
+            className="outline w-full rounded-2xl p-2 mb-4"
+          />
           <MagnifyingGlassCircleIcon className="w-10 h-10 text-white" />
         </div>
           {speechList &&
@@ -175,8 +195,15 @@ const Page = () => {
                 }}
                 className="bg-gray-500 cursor-pointer text-white rounded-2xl p-2 hover:bg-gray-600"
               >
-                <p className="inline-block">New Speech</p>{" "}
+                <p className="inline-block">New </p>{" "}
                 <DocumentPlusIcon className="w-6 h-6 inline-block" />
+              </button>
+              <button
+                onClick={() => setShowCountryOverlay(true)}
+                className="bg-purple-500 cursor-pointer text-white rounded-2xl p-2 hover:bg-purple-600"
+              >
+                <p className="inline-block"> Tags </p>{" "}
+                <TagIcon className="h-6 w-6 inline-block" />
               </button>
               <button
                 onClick={() => {
@@ -186,7 +213,7 @@ const Page = () => {
               >
                 <p className="inline-block">
                   {" "}
-                  {selectedSpeech ? "Update" : "Add"} Speech{" "}
+                  {selectedSpeech ? "Update " : "Add "}
                 </p>{" "}
                 <PlusCircleIcon className="h-6 w-6 inline-block" />
               </button>
@@ -197,7 +224,7 @@ const Page = () => {
                 }}
                 className=" bg-red-500 cursor-pointer text-white rounded-2xl p-2 hover:bg-red-600"
               >
-                <p className="inline-block"> Delete Speech </p>{" "}
+                <p className="inline-block"> Delete </p>{" "}
                 <ArchiveBoxXMarkIcon className="h-6 w-6 inline-block" />
               </button>
             </div>
@@ -222,6 +249,31 @@ const Page = () => {
           ></textarea>
         </div>
       </div>
+      {showCountryOverlay && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white text-gray-800 rounded-2xl p-8 max-h-[85vh] w-[90vw] max-w-md overflow-y-auto relative shadow-2xl border border-gray-200 animate-in slide-in-from-bottom-4 zoom-in-95 duration-300">
+            <button
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-xl font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors"
+              onClick={() => setShowCountryOverlay(false)}
+            >
+              ×
+            </button>
+            <h2 className="text-2xl font-bold mb-6 text-gray-900 pr-8">All Countries</h2>
+            <div className="flex flex-col gap-2">
+              {COUNTRIES.map((country, index) => (
+                <div
+                  key={country.name}
+                  className="px-4 py-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 hover:from-blue-50 hover:to-blue-100 text-gray-800 border border-gray-200 hover:border-blue-300 flex items-center gap-3 cursor-pointer transition-all duration-200 hover:shadow-md animate-in slide-in-from-left duration-300"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <span className="text-2xl">{country.flag}</span>
+                  <span className="font-medium">{country.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </ProtectedRoute>
   );
 };
