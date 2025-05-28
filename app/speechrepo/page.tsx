@@ -39,7 +39,6 @@ const Page = () => {
   const [selectedSpeech, setSelectedSpeech] = React.useState<Speech | null>(null);
   const [searchQuery, setSearchQuery] = React.useState<string>("");
   const [showCountryOverlay, setShowCountryOverlay] = React.useState(false);
-  const [countries, setCountries] = React.useState<Country[]>([]);
 
   const fetchSpeeches = async () => {
     const response = await fetch(
@@ -54,9 +53,31 @@ const Page = () => {
     if (!query) {
       return speechList;
     }
-    return speechList.filter((speech) =>
-      speech.title.toLowerCase().includes(query.toLowerCase())
+
+    //clean the query for comparison
+    
+    const lowerCaseQuery = query.toLowerCase().trim();
+    
+    // hashset to store all country IDs that match the query
+    // this seems unnecessary but may this might be used in the
+    //future to filter speeches through a query which has multiple countries.
+    
+    const matchingCountryIDs = new Set(
+      COUNTRIES
+        .filter(country => country.name.toLowerCase().includes(lowerCaseQuery))
+        .map(country => country.countryID)
     );
+
+    return speechList.filter((speech) => {
+      if (speech.title.toLowerCase().includes(lowerCaseQuery)) {
+        return true;
+      }
+      if (matchingCountryIDs.size === 0) {
+        return false;
+      }
+      
+      return speech.tags?.some(tag => matchingCountryIDs.has(tag)) || false;
+    });
   };
 
   const toggleCountrySelection = (countryID: string) => {
@@ -82,6 +103,7 @@ const Page = () => {
       speechID: selectedSpeech
         ? selectedSpeech.speechID
         : createSpeechID(speechCount + 1),
+      date: new Date().toISOString(), 
       tags: speechTags,
     };
     const response = await fetch("/api/speeches", {
@@ -102,7 +124,9 @@ const Page = () => {
               speech.speechID === selectedSpeech.speechID ? speechData : speech
             )
           )
-        : setSpeechList((prev) => [...prev, speechData]);
+        : setSpeechList((prev) => [speechData, ...prev]);
+      
+
       setHeading("");
       setContent("");
       setSpeechTags([]);
