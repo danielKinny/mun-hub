@@ -30,7 +30,6 @@ const COUNTRIES = [
   { countryID: "0010", flag: "🇯🇵", name: "Japan" },
 ];
 
-// Animation variants for staggered animations
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { 
@@ -57,7 +56,6 @@ const itemVariants = {
 const Page = () => {
   const { user: currentUser } = useSession();
   
-  const [speechCount, setSpeechCount] = useState<number>(currentUser?.speechCount || 0);
   const [speechTags, setSpeechTags] = useState<string[]>([]);
   const [speechList, setSpeechList] = useState<Speech[]>([]);
   const [heading, setHeading] = useState<string>("");
@@ -126,7 +124,7 @@ const Page = () => {
       content: content,
       speechID: selectedSpeech
         ? selectedSpeech.speechID
-        : createSpeechID(speechCount + 1),
+        : createSpeechID((currentUser?.speechCount || 0) + 1),
       date: new Date().toISOString(), 
       tags: speechTags,
     };
@@ -154,12 +152,11 @@ const Page = () => {
       setHeading("");
       setContent("");
       setSpeechTags([]);
-      selectedSpeech
-        ? setSpeechCount(speechCount)
-        : setSpeechCount(speechCount + 1);
+      
+      
       setSelectedSpeech(null);
     }
-  }, [currentUser?.delegateID, heading, content, selectedSpeech, speechCount, speechTags]);
+  }, [currentUser?.delegateID, heading, content, selectedSpeech, currentUser?.speechCount, speechTags]);
 
   const deleteSpeech = useCallback(async (speechID: string) => {
     if (!speechID) {
@@ -190,7 +187,6 @@ const Page = () => {
     fetchSpeeches();
   }, [fetchSpeeches]);
   
-  // Memoize the filtered speeches list to avoid duplicate useMemo calls in the render
   const filteredSpeeches = useMemo(() => searchEngine(searchQuery), [searchEngine, searchQuery]);
 
   return (
