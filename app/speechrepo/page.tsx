@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
+import { useEffect, useMemo, useCallback, useState } from "react";
 import { CustomNav } from "@/components/ui/customnav";
 import { useSession } from "../context/sessionContext";
 import { Speech, Country } from "@/db/types";
@@ -31,37 +32,35 @@ const COUNTRIES = [
 const Page = () => {
   const { user: currentUser } = useSession();
 
-  const [speechCount, setSpeechCount] = React.useState<number>(currentUser?.speechCount || 0);
-  const [speechTags, setSpeechTags] = React.useState<string[]>([]);
-  const [speechList, setSpeechList] = React.useState<Speech[]>([]);
-  const [heading, setHeading] = React.useState<string>("");
-  const [content, setContent] = React.useState<string>("");
-  const [selectedSpeech, setSelectedSpeech] = React.useState<Speech | null>(null);
-  const [searchQuery, setSearchQuery] = React.useState<string>("");
-  const [showCountryOverlay, setShowCountryOverlay] = React.useState(false);
+  const [speechCount, setSpeechCount] = useState<number>(currentUser?.speechCount || 0);
+  const [speechTags, setSpeechTags] = useState<string[]>([]);
+  const [speechList, setSpeechList] = useState<Speech[]>([]);
+  const [heading, setHeading] = useState<string>("");
+  const [content, setContent] = useState<string>("");
+  const [selectedSpeech, setSelectedSpeech] = useState<Speech | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [showCountryOverlay, setShowCountryOverlay] = useState(false);
 
-  const fetchSpeeches = async () => {
+  const fetchSpeeches = useCallback(async () => {
+    if (!currentUser?.delegateID) return;
+    
     const response = await fetch(
-      `/api/speeches?delegateID=${currentUser?.delegateID}`
+      `/api/speeches?delegateID=${currentUser.delegateID}`
     );
     let data = await response.json();
     setSpeechList(data.speeches);
-  };
+  }, [currentUser?.delegateID]);
 
 
-  const searchEngine = (query: string) => {
+  const searchEngine = useCallback((query: string) => {
     if (!query) {
       return speechList;
     }
 
     //clean the query for comparison
-    
     const lowerCaseQuery = query.toLowerCase().trim();
     
     // hashset to store all country IDs that match the query
-    // this seems unnecessary but may this might be used in the
-    //future to filter speeches through a query which has multiple countries.
-    
     const matchingCountryIDs = new Set(
       COUNTRIES
         .filter(country => country.name.toLowerCase().includes(lowerCaseQuery))
@@ -78,21 +77,21 @@ const Page = () => {
       
       return speech.tags?.some(tag => matchingCountryIDs.has(tag)) || false;
     });
-  };
+  }, [speechList]);
 
-  const toggleCountrySelection = (countryID: string) => {
+  const toggleCountrySelection = useCallback((countryID: string) => {
     setSpeechTags((prev) =>
       prev.includes(countryID)
         ? prev.filter((id) => id !== countryID)
         : [...prev, countryID]
     );
-  };
+  }, []);
 
-  const closeCountryOverlay = () => {
+  const closeCountryOverlay = useCallback(() => {
     setShowCountryOverlay(false);
-  };
+  }, []);
 
-  const addSpeech = async () => {
+  const addSpeech = useCallback(async () => {
     if (!currentUser?.delegateID) {
       toast.error("No delegateID found for current user");
       return;
@@ -135,9 +134,9 @@ const Page = () => {
         : setSpeechCount(speechCount + 1);
       setSelectedSpeech(null);
     }
-  };
+  }, [currentUser?.delegateID, heading, content, selectedSpeech, speechCount, speechTags]);
 
-  const deleteSpeech = async (speechID: string) => {
+  const deleteSpeech = useCallback(async (speechID: string) => {
     if (!speechID) {
       toast.error("No speech selected to delete");
       return;
@@ -160,21 +159,11 @@ const Page = () => {
         prev.filter((speech) => speech.speechID !== speechID)
       );
     }
-  };
-
-  useEffect(() => {
-    fetchSpeeches();
   }, []);
 
   useEffect(() => {
-    if (speechList.length > 0 && !selectedSpeech) {
-      const firstSpeech = speechList[0];
-      setSelectedSpeech(firstSpeech);
-      setHeading(firstSpeech.title);
-      setContent(firstSpeech.content);
-      setSpeechTags(firstSpeech.tags || []);
-    }
-  }, [speechList]);
+    fetchSpeeches();
+  }, [fetchSpeeches]);
 
   return (
     <ProtectedRoute>
@@ -192,7 +181,7 @@ const Page = () => {
             <MagnifyingGlassCircleIcon className="w-10 h-10 text-white" />
           </div>
           {speechList &&
-            searchEngine(searchQuery).map((speech) => (
+            useMemo(() => searchEngine(searchQuery), [searchEngine, searchQuery]).map((speech) => (
               <li
                 key={speech.speechID}
                 className={`outline rounded-2xl p-4 mb-2 cursor-pointer ${
@@ -267,7 +256,7 @@ const Page = () => {
           </div>
           {speechTags.length > 0 && (
             <div className="space-x-2 mb-2 mx-12 p-2">
-              <p className="text-xl text-gray-300 inline-block  mb-2">Tags:</p>
+              <p className="text-lg text-gray-300 inline-block  mb-2">Tags:</p>
               <div className="space-x-2 inline-block">
                 {speechTags.map((tag) => (
                   <span
