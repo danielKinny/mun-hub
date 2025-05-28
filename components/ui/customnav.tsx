@@ -1,6 +1,5 @@
 "use client";
-import React from "react";
-import { committees } from "@/db/index";
+import React, { useEffect } from "react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -9,10 +8,32 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import { Committee } from "@/db/types";
+import supabase from "@/lib/supabase";
 
 export function CustomNav() {
+
+  const [committees, setCommittees] = React.useState<Committee[]>([]);
+
+  useEffect(() => {
+    const fetchCommittees = async () => {
+      let res = await fetch("/api/committees");
+      if (res.ok) {
+        let data = await res.json();
+        setCommittees(
+          data.map((committee: Committee) => ({
+            committeeID: committee.committeeID,
+            name: committee.name,
+            href: committee.href,
+          }))
+        );
+      }
+    };
+    fetchCommittees();
+  }, []);
+
   return (
-    <NavigationMenu className="w-full text-white" viewport={false}>
+    <NavigationMenu className="w-full text-white border-b-1 border-gray-700" viewport={false}>
       <NavigationMenuList className="w-full flex justify-center gap-4">
         <NavigationMenuItem>
           <NavigationMenuTrigger className="text-xl">
@@ -40,7 +61,7 @@ export function CustomNav() {
           </NavigationMenuTrigger>
           <NavigationMenuContent className="min-w-[200px]">
             {committees.map((committee) => (
-              <NavigationMenuLink key={committee.name} href={committee.href}>
+              <NavigationMenuLink key={committee.committeeID} href={committee.href}>
                 {committee.name}
               </NavigationMenuLink>
             ))}

@@ -1,15 +1,29 @@
 "use client";
-
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useSession } from "../context/sessionContext";
 import Image from "next/image";
 import { CustomNav } from "@/components/ui/customnav";
 import ProtectedRoute from "@/components/protectedroute";
-import { announcements } from "@/db/index";
+import { Announcement } from "@/db/types";
 
 export default function Home() {
   const { user: currentUser } = useSession();
+  const [announcements, setAnnouncements] = React.useState<Announcement[]>([]);
+
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      const res = await fetch("/api/announcements");
+      if (res.ok) {
+        const data = await res.json();
+        setAnnouncements(data);
+      }
+        
+    }
+
+    fetchAnnouncements();
+  }, [])
   return (
     <ProtectedRoute>
       <div className="min-h-screen flex flex-col items-start justify-center bg-black text-white">
@@ -20,7 +34,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            MUN Hub - Welcome {currentUser?.firstname} {currentUser?.flag} !
+            MUN Hub - Welcome {currentUser?.firstname} placeholder for flag!
           </motion.h1>
 
           <motion.h2
@@ -29,8 +43,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            You are the delegate of {currentUser?.delegation} in the committee{" "}
-            {currentUser?.committee}.
+            placeholder for description
           </motion.h2>
         </header>
 
@@ -43,12 +56,12 @@ export default function Home() {
             <div className="flex flex-wrap">
               <section className="w-full md:w-1/2 text-white mb-4 p-2 flex flex-wrap">
                 <motion.div
-                  className="bg-gray-900 p-4 rounded-lg shadow-md"
+                  className="bg-gray-900 p-4 rounded-lg shadow-md w-[50vh]"
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  <h2 className="text-2xl font-semibold mb-4">Announcements</h2>
+                  <h2 className="text-2xl font-semibold mb-4 text-center">Announcements</h2>
                   <div className="h-128 overflow-y-auto">
                     <ul>
                       {announcements.map((announcement, index) => (
@@ -65,7 +78,7 @@ export default function Home() {
                           <div className="bg-gray-800 shadow-lg rounded-lg w-full p-4 transition-transform transform hover:scale-103 hover:shadow-xl">
                             <h3 className="text-xl font-bold text-white mb-2">
                               <a
-                                href={announcement.externallink}
+                                href={announcement.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="hover:underline"
@@ -74,7 +87,7 @@ export default function Home() {
                               </a>
                             </h3>
                             <p className="text-gray-300 mb-2">
-                              {announcement.description}
+                              {announcement.content}
                             </p>
                             <p className="text-gray-400 text-sm">
                               {announcement.date}
