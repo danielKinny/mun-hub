@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { Speech, Delegate } from "@/db/types";
+import { Speech } from "@/db/types";
 import supabase from "@/lib/supabase";
 
 export async function DELETE(request: Request) {
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     }
 
     // checking if delegate exists by querying db for delegateID
-    const { data: existingSpeech, error: existingError } = (await supabase
+    const { data: existingSpeech} = (await supabase
       .from("Speech")
       .select()
       .eq("speechID", speechData.speechID)

@@ -1,6 +1,6 @@
 import supabase from '@/lib/supabase';
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const { data, error } = await supabase
       .from('Committee')
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
       JSON.stringify(data),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
-  } catch (err) {
+  } catch{
     return new Response(
       JSON.stringify({ message: 'Error fetching committees' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }

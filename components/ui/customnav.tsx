@@ -9,7 +9,6 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Committee } from "@/db/types";
-import supabase from "@/lib/supabase";
 
 export function CustomNav() {
 
@@ -17,9 +16,9 @@ export function CustomNav() {
 
   useEffect(() => {
     const fetchCommittees = async () => {
-      let res = await fetch("/api/committees");
+      const res = await fetch("/api/committees");
       if (res.ok) {
-        let data = await res.json();
+        const data = await res.json();
         setCommittees(
           data.map((committee: Committee) => ({
             committeeID: committee.committeeID,

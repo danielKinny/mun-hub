@@ -3,7 +3,7 @@ import React from "react";
 import { useEffect, useMemo, useCallback, useState } from "react";
 import { CustomNav } from "@/components/ui/customnav";
 import { useSession } from "../context/sessionContext";
-import { Speech, Country } from "@/db/types";
+import { Speech } from "@/db/types";
 import ProtectedRoute from "@/components/protectedroute";
 import { toast } from "sonner";
 import { createSpeechID } from "@/lib/createID";
@@ -70,7 +70,7 @@ const Page = () => {
     const response = await fetch(
       `/api/speeches?delegateID=${currentUser.delegateID}`
     );
-    let data = await response.json();
+    const data = await response.json();
     setSpeechList(data.speeches);
   }, [currentUser?.delegateID]);
 
@@ -119,7 +119,7 @@ const Page = () => {
       toast.error("No delegateID found for current user");
       return;
     }
-    let speechData: Speech = {
+    const speechData: Speech = {
       title: heading,
       content: content,
       speechID: selectedSpeech
@@ -135,19 +135,20 @@ const Page = () => {
       },
       body: JSON.stringify({ speechData, delegateID: currentUser.delegateID, tags: speechTags }),
     });
-    const data = await response.json();
+    await response.json();
     if (response.ok) {
       toast.success(
         `Speech ${selectedSpeech ? "updated" : "added"} successfully`
       );
-      selectedSpeech
-        ? setSpeechList((prev) =>
+      if(selectedSpeech){
+         setSpeechList((prev) =>
             prev.map((speech) =>
               speech.speechID === selectedSpeech.speechID ? speechData : speech
             )
           )
-        : setSpeechList((prev) => [speechData, ...prev]);
-      
+     } else {
+       setSpeechList((prev) => [speechData, ...prev]);
+     }
 
       setHeading("");
       setContent("");
@@ -170,7 +171,7 @@ const Page = () => {
       },
       body: JSON.stringify({ speechID }),
     });
-    const data = await response.json();
+    await response.json();
     if (response.ok) {
       setContent("");
       setHeading("");
@@ -297,7 +298,7 @@ const Page = () => {
               animate={{ y: 0 }}
               transition={{ duration: 0.5, type: "spring" }}
             >
-              {currentUser?.firstname}'s Speech Repo
+              {currentUser?.firstname} Speech Repo
             </motion.p>
             <div className="flex space-x-4 ml-auto">
               <motion.button

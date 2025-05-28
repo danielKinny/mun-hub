@@ -1,7 +1,7 @@
 import supabase from "@/lib/supabase";
 import { Announcement } from "@/db/types";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const { data, error } = await supabase
       .from('Announcement')
@@ -18,7 +18,7 @@ export async function GET(request: Request) {
       JSON.stringify(data as Announcement[]),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
-  } catch (err) {
+  } catch {
     return new Response(
       JSON.stringify({ message: 'Error fetching announcements' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
