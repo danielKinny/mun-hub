@@ -1,28 +1,59 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { authenticate } from "../utils/auth";
 import { useRouter } from "next/navigation";
 import { useSession } from "../context/sessionContext";
 import Image from "next/image";
 import TypeWriter from "@/components/ui/typewriter";
+import supabase from "@/lib/supabase";
 
 const Login = () => {
   const [participantId, setParticipantId] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
   const router = useRouter();
   const { login } = useSession();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const delegate = authenticate(participantId, password);
+    setError("");
+    setLoading(true);
 
-    if (delegate) {
-      login(delegate);
+    // Trim the inputs to remove any accidental spaces
+    const trimmedId = participantId.trim();
+    const trimmedPassword = password.trim();
+
+    try {
+      // First, try to find the delegate by ID
+      const { data, error: idError } = await supabase
+        .from("Delegate")
+        .select("*")
+        .eq("delegateID", trimmedId)
+        .single();
+
+      if (idError || !data) {
+        console.log("Login error:", idError);
+        setError("Participant ID not found");
+        setLoading(false);
+        return;
+      }
+
+      // Then check if password matches
+      if (data.password !== trimmedPassword) {
+        setError("Incorrect password");
+        setLoading(false);
+        return;
+      }
+
+      // Login successful
+      login(data);
       router.push("/home");
-    } else {
-      setError("Invalid Participant ID or Password");
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("An error occurred during login. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,8 +106,9 @@ const Login = () => {
           <button
             type="submit"
             className="border-2 bg-white text-black border-gray-800 p-2 mb-4 rounded-md w-80 h-10 align-middle mt-12 font-extrabold"
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
       </motion.div>
