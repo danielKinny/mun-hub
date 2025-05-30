@@ -40,7 +40,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            MUN Hub - Welcome {currentUser?.firstname} placeholder for flag!
+            MUN Hub - Welcome {currentUser?.firstname + " " + currentUser?.country.flag}!
           </motion.h1>
 
           <motion.h2

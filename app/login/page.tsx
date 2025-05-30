@@ -24,35 +24,55 @@ const Login = () => {
     const trimmedPassword = password.trim();
 
     try {
-      const { data, error: idError } = await supabase
+      const { data: delegate, error: delegateError } = await supabase
         .from("Delegate")
-        .select(`*,
-          Delegation!Delegation_delegateID_fkey (
-            *,
-            Country:countryID (*),
-            Committee:committeeID (*)
-          )
-        `)
+        .select("delegateID, password")
         .eq("delegateID", trimmedId)
         .single();
 
-      if (idError || !data) {
-        console.log("Login error:", idError);
+      if (delegateError || !delegate) {
         setError("Participant ID not found");
         setLoading(false);
         return;
       }
 
-      if (data.password !== trimmedPassword) {
+      if (delegate.password !== trimmedPassword) {
         setError("Incorrect password");
         setLoading(false);
         return;
       }
 
+      const { data: fullDelegate, error: fullDelegateError } = await supabase
+        .from("Delegate")
+        .select("*")
+        .eq("delegateID", trimmedId)
+        .single();
+
+      if (fullDelegateError || !fullDelegate) {
+        setError("Delegate record not found");
+        setLoading(false);
+        return;
+      }
+
+      const { data: delegation, error: delegationError } = await supabase
+        .from("Delegation")
+        .select(`*,
+          Country:countryID (countryID, name, flag),
+          Committee:committeeID (committeeID, name, href)
+        `)
+        .eq("delegateID", trimmedId)
+        .single();
+
+      if (delegationError || !delegation) {
+        setError("Delegation not found");
+        setLoading(false);
+        return;
+      }
+
       const enrichedUser = {
-        ...data,
-        country: data.Delegation.Country,
-        committee: data.Delegation.Committee,
+        ...fullDelegate,
+        country: delegation.Country,
+        committee: delegation.Committee,
       };
 
       login(enrichedUser);
