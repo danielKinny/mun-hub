@@ -42,21 +42,21 @@ const Page = () => {
           </div>
           <div className="space-y-2 p-2 w-[200px] ">
             <h1
-              className="text-white text-3xl text-center font-extrabold bg-black cursor-pointer"
+              className="text-white text-2xl text-center font-extrabold bg-black cursor-pointer"
               onClick={() => handleScrollTo(1)}
             >
               {" "}
               POINTS{" "}
             </h1>
             <h1
-              className="text-white text-3xl text-center font-extrabold bg-black cursor-pointer"
+              className="text-white text-2xl text-center font-extrabold bg-black cursor-pointer"
               onClick={() => handleScrollTo(2)}
             >
               {" "}
               MOTIONS{" "}
             </h1>
             <h1
-              className="text-white text-3xl text-center font-extrabold bg-black cursor-pointer"
+              className="text-white text-2xl text-center font-extrabold bg-black cursor-pointer"
               onClick={() => handleScrollTo(3)}
             >
               {" "}

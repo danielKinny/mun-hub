@@ -1,10 +1,3 @@
-export interface Delegate {
-  delegateID: string;
-  firstname: string;
-  lastname: string;
-  speechCount: number;
-  password: string;
-}
 
 export interface Committee {
   committeeID: string;
@@ -53,4 +46,14 @@ export interface SpeechTag {
 export interface jargons {
   name: string;
   description: string;
+}
+
+export interface Delegate {
+  delegateID: string;
+  firstname: string;
+  lastname: string;
+  speechCount: number;
+  password: string;
+  country: Country;
+  committee: Committee;
 }

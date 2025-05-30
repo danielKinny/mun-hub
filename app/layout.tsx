@@ -30,7 +30,9 @@ export default function RootLayout({
       >
         {/* entire thingy is wrapped with session provider */}
         <SessionProvider>
-          <main>{children}</main>
+          <main>
+            {children}
+          </main>
           <Toaster />
         </SessionProvider>
       </body>

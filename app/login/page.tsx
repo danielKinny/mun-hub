@@ -26,7 +26,13 @@ const Login = () => {
     try {
       const { data, error: idError } = await supabase
         .from("Delegate")
-        .select("*")
+        .select(`*,
+          Delegation!Delegation_delegateID_fkey (
+            *,
+            Country:countryID (*),
+            Committee:committeeID (*)
+          )
+        `)
         .eq("delegateID", trimmedId)
         .single();
 
@@ -43,7 +49,13 @@ const Login = () => {
         return;
       }
 
-      login(data);
+      const enrichedUser = {
+        ...data,
+        country: data.Delegation.Country,
+        committee: data.Delegation.Committee,
+      };
+
+      login(enrichedUser);
       router.push("/home");
     } catch (err) {
       console.error("Login error:", err);

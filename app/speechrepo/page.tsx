@@ -73,8 +73,7 @@ const Page = () => {
     const data = await response.json();
     setSpeechList(data.speeches);
   }, [currentUser?.delegateID]);
-
-
+  
   const searchEngine = useCallback((query: string) => {
     if (!query) {
       return speechList;

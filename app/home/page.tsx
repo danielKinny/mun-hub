@@ -9,7 +9,7 @@ import ProtectedRoute from "@/components/protectedroute";
 import { Announcement } from "@/db/types";
 
 export default function Home() {
-  const { user: currentUser } = useSession();
+  const { user: currentUser, logout } = useSession();
   const [announcements, setAnnouncements] = React.useState<Announcement[]>([]);
 
   useEffect(() => {
@@ -21,12 +21,18 @@ export default function Home() {
       }
         
     }
-
     fetchAnnouncements();
   }, [])
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen flex flex-col items-start justify-center bg-black text-white">
+        <button 
+          className="absolute top-0 right-0 m-4 p-2 bg-red-500 text-white rounded hover:bg-red-700"
+          onClick={logout}
+        >
+          logout
+        </button>
         <header className="w-full text-center py-8 bg-black text-white border-b-3 border-gray-900">
           <motion.h1
             className="text-4xl font-bold"
