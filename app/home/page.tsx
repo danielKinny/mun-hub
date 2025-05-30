@@ -49,7 +49,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            placeholder for description
+            You are the delegate of {currentUser?.country.name} in {currentUser?.committee.name}
           </motion.h2>
         </header>
 
