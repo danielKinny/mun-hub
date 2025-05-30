@@ -28,10 +28,10 @@ export default function Home() {
     <ProtectedRoute>
       <div className="min-h-screen flex flex-col items-start justify-center bg-black text-white">
         <button 
-          className="absolute top-0 right-0 m-4 p-2 bg-red-500 text-white rounded hover:bg-red-700"
+          className="absolute top-0 right-0 m-4 p-2 text-lg cursor-pointer bg-red-500 text-white rounded-2xl hover:bg-red-700"
           onClick={logout}
         >
-          logout
+          Logout
         </button>
         <header className="w-full text-center py-8 bg-black text-white border-b-3 border-gray-900">
           <motion.h1

@@ -10,8 +10,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Committee } from "@/db/types";
 
-export function CustomNav() {
-
+const CustomNavComponent = () => {
   const [committees, setCommittees] = React.useState<Committee[]>([]);
 
   useEffect(() => {
@@ -86,4 +85,6 @@ export function CustomNav() {
       </NavigationMenuList>
     </NavigationMenu>
   );
-}
+};
+
+export const CustomNav = React.memo(CustomNavComponent);
