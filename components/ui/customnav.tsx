@@ -10,33 +10,42 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Committee } from "@/db/types";
 
+const committees: Committee[] = [
+  {
+    committeeID: "0001",
+    name: "UNHRC",
+    href: "/committee-overview/UNHRC",
+  },
+  {
+    committeeID: "0002",
+    name: "UNESCO",
+    href: "/committee-overview/UNESCO",
+  },
+  {
+    committeeID: "0003",
+    name: "UNSC",
+    href: "/committee-overview/UNSC",
+  },
+  {
+    committeeID: "0004",
+    name: "UNODC",
+    href: "/committee-overview/UNODC",
+  },
+  {
+    committeeID: "0005",
+    name: "ECOSOC",
+    href: "/committee-overview/ECOSOC",
+  },
+];
 const CustomNavComponent = () => {
-  const [committees, setCommittees] = React.useState<Committee[]>([]);
-
-  useEffect(() => {
-    const fetchCommittees = async () => {
-      const res = await fetch("/api/committees");
-      if (res.ok) {
-        const data = await res.json();
-        setCommittees(
-          data.map((committee: Committee) => ({
-            committeeID: committee.committeeID,
-            name: committee.name,
-            href: committee.href,
-          }))
-        );
-      }
-    };
-    fetchCommittees();
-  }, []);
-
   return (
-    <NavigationMenu className="w-full p-2 text-white border-b-1 border-gray-700" viewport={false}>
+    <NavigationMenu
+      className="w-full p-2 text-white border-b-1 border-gray-700"
+      viewport={false}
+    >
       <NavigationMenuList className="w-full flex justify-center gap-4">
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-xl">
-            Home
-          </NavigationMenuTrigger>
+          <NavigationMenuTrigger className="text-xl">Home</NavigationMenuTrigger>
           <NavigationMenuContent className="min-w-[200px]">
             <NavigationMenuLink href="/home">Your Dashboard</NavigationMenuLink>
           </NavigationMenuContent>
@@ -59,7 +68,10 @@ const CustomNavComponent = () => {
           </NavigationMenuTrigger>
           <NavigationMenuContent className="min-w-[200px]">
             {committees.map((committee) => (
-              <NavigationMenuLink key={committee.committeeID} href={committee.href}>
+              <NavigationMenuLink
+                key={committee.committeeID}
+                href={committee.href}
+              >
                 {committee.name}
               </NavigationMenuLink>
             ))}
@@ -67,9 +79,7 @@ const CustomNavComponent = () => {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-xl">
-            MUN Glossary
-          </NavigationMenuTrigger>
+          <NavigationMenuTrigger className="text-xl">MUN Glossary</NavigationMenuTrigger>
           <NavigationMenuContent className="min-w-[200px]">
             <NavigationMenuLink href="/glossary">
               Access the glossary
