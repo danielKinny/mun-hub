@@ -20,12 +20,10 @@ const Login = () => {
     setError("");
     setLoading(true);
 
-    // Trim the inputs to remove any accidental spaces
     const trimmedId = participantId.trim();
     const trimmedPassword = password.trim();
 
     try {
-      // First, try to find the delegate by ID
       const { data, error: idError } = await supabase
         .from("Delegate")
         .select("*")
@@ -39,14 +37,12 @@ const Login = () => {
         return;
       }
 
-      // Then check if password matches
       if (data.password !== trimmedPassword) {
         setError("Incorrect password");
         setLoading(false);
         return;
       }
 
-      // Login successful
       login(data);
       router.push("/home");
     } catch (err) {
@@ -105,7 +101,7 @@ const Login = () => {
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <button
             type="submit"
-            className="border-2 bg-white text-black border-gray-800 p-2 mb-4 rounded-md w-80 h-10 align-middle mt-12 font-extrabold"
+            className="border-2 cursor-pointer bg-white text-black border-gray-800 p-2 mb-4 rounded-md w-80 h-10 align-middle mt-12 font-extrabold"
             disabled={loading}
           >
             {loading ? "Logging in..." : "Login"}

@@ -41,10 +41,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     // storing it in cookies
     const storedUser = Cookies.get("user");
     if (storedUser) {
-      console.log("SessionProvider: Stored user found:", storedUser);
       setUser(JSON.parse(storedUser));
-    } else {
-      console.log("SessionProvider: No stored user found");
     }
     setIsLoading(false);
   }, []);
@@ -52,7 +49,6 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const login = (user: Delegate) => {
     setUser(user);
     Cookies.set("user", JSON.stringify(user));
-    console.log("SessionProvider: User logged in:", user);
   };
 
   //for now, though this is there, it doesnt have an implementation, might add it later,

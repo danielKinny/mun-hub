@@ -67,7 +67,7 @@ export default function Home() {
                       {announcements.map((announcement, index) => (
                         <motion.li
                           key={index}
-                          className="mb-4 overflow-x-hidden"
+                          className="mb-4 overflow-y-hidden overflow-x-hidden"
                           initial={{ opacity: 0, y: 50 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{
@@ -140,8 +140,8 @@ export default function Home() {
         <footer className="w-full text-center py-4 bg-black text-white">
           <p>
             Contact us:
-            <a href="danielkinny@gmail.com" className="underline">
-              info@munhub.com
+            <a href="https://youtu.be/dQw4w9WgXcQ">
+              {" "} danielkinny0214@gmail.com
             </a>
           </p>
         </footer>

@@ -32,7 +32,7 @@ export function CustomNav() {
   }, []);
 
   return (
-    <NavigationMenu className="w-full text-white border-b-1 border-gray-700" viewport={false}>
+    <NavigationMenu className="w-full p-2 text-white border-b-1 border-gray-700" viewport={false}>
       <NavigationMenuList className="w-full flex justify-center gap-4">
         <NavigationMenuItem>
           <NavigationMenuTrigger className="text-xl">
