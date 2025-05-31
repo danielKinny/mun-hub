@@ -22,12 +22,8 @@ export interface Speech {
   title: string;
   content: string;
   date: string;
-  tags: string[];
-}
-
-export interface DelegateSpeech {
   delegateID: string;
-  speechID: string;
+  tags: string[];
 }
 
 export interface Announcement {

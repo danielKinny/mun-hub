@@ -41,13 +41,11 @@ export async function POST(request: Request) {
     const body = await request.json();
     const speechData: Speech = body.speechData;
     const delegateID: string = body.delegateID;
-    const tags: string[] = body.tags;
-
-    if (!speechData.title || !speechData.content) {
+    const tags: string[] = body.tags;    if (!speechData.title || !speechData.content || !delegateID) {
       return new NextResponse(
         JSON.stringify({
           message:
-            "Missing required speech fields: title and content are required",
+            "Missing required speech fields: title, content and delegateID are required",
         }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
@@ -58,15 +56,14 @@ export async function POST(request: Request) {
       .from("Speech")
       .select()
       .eq("speechID", speechData.speechID)
-      .single()) as { data: Speech | null; error: Error | null };
-
-    //if there is an existing speech, enter this code block
+      .single()) as { data: Speech | null; error: Error | null };    //if there is an existing speech, enter this code block
     if (existingSpeech) {      const { data: updatedData, error: updatedError } = await supabase
         .from("Speech")
         .update({
           title: speechData.title,
           content: speechData.content,
           date: speechData.date,
+          // We don't update the delegateID here as it shouldn't change
         })
         .eq("speechID", speechData.speechID)
         .select()
@@ -128,11 +125,16 @@ export async function POST(request: Request) {
           speech: updatedData,
         }),
         { status: 200, headers: { "Content-Type": "application/json" } }
-      );
-    } else {      const { data: insertedData, error: insertedError } = await supabase
+      );    } else {      const { data: insertedData, error: insertedError } = await supabase
         .from("Speech")
         //over here we insert everything except the tags, cos it doesnt exist in the db
-        .insert({speechID: speechData.speechID, title: speechData.title, content: speechData.content, date: speechData.date}) // date is already an ISO string from frontend
+        .insert({
+          speechID: speechData.speechID, 
+          title: speechData.title, 
+          content: speechData.content, 
+          date: speechData.date,
+          delegateID: delegateID
+        }) // date is already an ISO string from frontend
         .select()
         .single();
 
@@ -153,29 +155,7 @@ export async function POST(request: Request) {
           }),
           { status: 500, headers: { "Content-Type": "application/json" } }
         );
-      }
-
-      const { error: relationshipError } = await supabase
-        .from("Delegate-Speech")
-        .insert({
-          delegateID: delegateID,
-          speechID: insertedData.speechID,
-        });
-
-      if (relationshipError) {
-        console.error(
-          "Error creating delegate-speech relationship:",
-          relationshipError
-        );
-        return new NextResponse(
-          JSON.stringify({
-            response:
-              "Speech added successfully, but failed to create relationship",
-            speech: insertedData,
-          }),
-          { status: 201, headers: { "Content-Type": "application/json" } }
-        );
-      }
+      }      // Still increment the speech count as before
       const { error: incrementError } = await supabase.rpc(
         "increment_speech_count",
         { delegate_id: delegateID }
@@ -221,38 +201,29 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const delegateID = searchParams.get("delegateID");
-    let speechIdsQuery = supabase
-      .from("Delegate-Speech")
-      .select("speechID");
+    
+    let speechesQuery = supabase
+      .from("Speech")
+      .select("*")
+      .order("date", { ascending: false });
     
     if (delegateID) {
-      speechIdsQuery = speechIdsQuery.eq("delegateID", delegateID);
+      speechesQuery = speechesQuery.eq("delegateID", delegateID);
     }
     
-    const { data: delegateSpeechIds, error: delegateSpeechError } = await speechIdsQuery;
+    const { data: speeches, error: speechesError } = await speechesQuery;
     
-    if (delegateSpeechError) {
-      throw delegateSpeechError;
+    if (speechesError) {
+      throw speechesError;
     }
     
-    if (!delegateSpeechIds || delegateSpeechIds.length === 0) {
+    if (!speeches || speeches.length === 0) {
       return new NextResponse(JSON.stringify({ speeches: [] }), {
         status: 200,
         headers: { "Content-Type": "application/json" },
       });
     }
-    
-    const speechIds = delegateSpeechIds.map(item => item.speechID);
-    
-    const { data: speeches, error: speechesError } = await supabase
-      .from("Speech")
-      .select("*")
-      .in("speechID", speechIds)
-      .order("date", { ascending: false });
-    
-    if (speechesError) {
-      throw speechesError;
-    }
+      const speechIds = speeches.map(speech => speech.speechID);
     
     const { data: allTags, error: tagsError } = await supabase
       .from("Speech-Tags")
