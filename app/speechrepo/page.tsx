@@ -126,6 +126,7 @@ const Page = () => {
         : createSpeechID((currentUser?.speechCount || 0) + 1),
       date: new Date().toISOString(), 
       tags: speechTags,
+      delegateID: currentUser.delegateID,
     };
     const response = await fetch("/api/speeches", {
       method: "POST",
