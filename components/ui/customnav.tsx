@@ -89,11 +89,12 @@ const CustomNavComponent = () => {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-xl">
+          <NavigationMenuTrigger className="text-xl"> Global Affairs</NavigationMenuTrigger>
+			<NavigationMenuContent className="min-w-[200px]">
             <NavigationMenuLink href="/global-affairs">
               Latest News
             </NavigationMenuLink>
-          </NavigationMenuTrigger>
+			</NavigationMenuContent>
         </NavigationMenuItem>
 
       </NavigationMenuList>

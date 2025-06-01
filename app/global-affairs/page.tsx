@@ -10,7 +10,7 @@ export default function Page() {
   const CACHE_DURATION = 20 * 60 * 1000;
   const [lastFetched, setLastFetched] = useState<number>(0);
 
-  const fetchSpeeches = useCallback(async () => {
+  const fetchArticles = useCallback(async () => {
     const now = Date.now();
     if (articles && now - lastFetched < CACHE_DURATION) {
       return;
@@ -25,15 +25,18 @@ export default function Page() {
   }, [articles, lastFetched]);
 
   useEffect(() => {
-    fetchSpeeches();
-  }, [fetchSpeeches]);
+    fetchArticles();
+  }, [fetchArticles]);
 
   return (
     <ProtectedRoute>
       <CustomNav />
-      <h1 className="text-7xl font-extrabold text-white text-center transition-all duration-300 ease-in-out hover:text-8xl">
-        GLOBAL AFFAIRS
-      </h1>
+      <div className=" flex items-center justify-center">
+        <h1 className="cursor-pointer text-7xl font-extrabold text-white text-center transition-all duration-300 ease-in-out hover:text-8xl">
+          GLOBAL AFFAIRS
+        </h1>
+      </div>
+
       <main className="min-h-screen text-white">
         <section className="columns-1 sm:columns-2 md:columns-3 lg:columns-5 gap-4 p-4 [column-fill:_balance]">
           {articles?.map((article) => (
