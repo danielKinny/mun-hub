@@ -7,7 +7,6 @@ import { Speech } from "@/db/types";
 import ProtectedRoute from "@/components/protectedroute";
 import { toast } from "sonner";
 import { createSpeechID } from "@/lib/createID";
-import { motion } from "framer-motion";
 
 import {
   ArchiveBoxXMarkIcon,
@@ -29,29 +28,6 @@ const COUNTRIES = [
   { countryID: "0009", flag: "🇿🇦", name: "South Africa" },
   { countryID: "0010", flag: "🇯🇵", name: "Japan" },
 ];
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { 
-    opacity: 1,
-    transition: { 
-      staggerChildren: 0.1
-    } 
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { 
-      type: "spring", 
-      stiffness: 260, 
-      damping: 20 
-    } 
-  }
-};
 
 const Page = () => {
   const { user: currentUser } = useSession();
@@ -193,19 +169,13 @@ const Page = () => {
   return (
     <ProtectedRoute>
       <CustomNav />
-      <motion.div 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }} 
-        transition={{ duration: 0.5 }}
+      <div 
         className="flex text-white p-4 bg-gradient-to-b from-black to-gray-950 min-h-screen relative overflow-hidden"
         style={{
           backgroundImage: "radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)"
         }}
       >
-        <motion.ul 
-          initial={{ x: -50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
+        <ul 
           className="outline w-1/4 rounded-2xl p-4 bg-gradient-to-b from-gray-900 to-gray-950 shadow-xl border border-gray-800"
         >
           <div className="flex space-x-2 p-2">
@@ -216,20 +186,14 @@ const Page = () => {
               value={searchQuery}
               className="outline w-full rounded-2xl p-2 mb-4 bg-gray-800 border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
             />
-            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+            <div>
               <MagnifyingGlassCircleIcon className="w-10 h-10 text-white" />
-            </motion.div>
+            </div>
           </div>
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="space-y-2"
-          >
+          <div className="space-y-2">
             {speechList && filteredSpeeches.length > 0 ? (
               filteredSpeeches.map((speech) => (
-                <motion.li
-                  variants={itemVariants}
+                <li
                   key={speech.speechID}
                   className={`outline rounded-2xl p-4 mb-2 cursor-pointer backdrop-blur-sm ${
                     selectedSpeech?.speechID === speech.speechID
@@ -242,8 +206,6 @@ const Page = () => {
                     setContent(speech.content);
                     setSpeechTags(speech.tags || []);
                   }}
-                  whileHover={{ scale: 1.02, x: 5 }}
-                  whileTap={{ scale: 0.98 }}
                 >
                   <h2 className="text-lg font-bold">{speech.title}</h2>
                   <p className="text-gray-300">
@@ -251,134 +213,83 @@ const Page = () => {
                       ? speech.content.slice(0, 16) + "..."
                       : speech.content}
                   </p>
-                </motion.li>
+                </li>
               ))
             ) : (
-              <motion.div
-                variants={itemVariants}
-                className="outline rounded-2xl p-6 text-center bg-gray-800/30 border border-gray-700"
-              >
+              <div className="outline rounded-2xl p-6 text-center bg-gray-800/30 border border-gray-700">
                 <p className="text-gray-400 mb-2">No speeches found</p>
-                <motion.div 
-                  className="text-4xl mb-3"
-                  animate={{ 
-                    rotate: [0, 10, 0, -10, 0],
-                    scale: [1, 1.1, 1, 1.1, 1],
-                  }}
-                  transition={{ 
-                    repeat: Infinity,
-                    repeatType: "loop",
-                    duration: 5,
-                  }}
-                >
-                  📝
-                </motion.div>
+                <div className="text-4xl mb-3">📝</div>
                 <p className="text-blue-400">
                   Create a new speech to get started
                 </p>
-              </motion.div>
+              </div>
             )}
-          </motion.div>
-        </motion.ul>
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="w-full h-screen space-y-2 p-4"
-        >
-          <motion.div 
-            className="w-8/9 mx-8 pb-2 flex items-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            <motion.p 
-              className="text-4xl font-bold mx-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 drop-shadow-lg"
-              initial={{ y: -20 }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.5, type: "spring" }}
-            >
+          </div>
+        </ul>
+        <div className="w-full h-screen space-y-2 p-4">
+          <div className="w-8/9 mx-8 pb-2 flex items-center">
+            <p className="text-4xl font-bold mx-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 drop-shadow-lg">
               {currentUser?.firstname} Speech Repo
-            </motion.p>
+            </p>
             <div className="flex space-x-4 ml-auto">
-              <motion.button
-                whileHover={{ scale: 1.05, backgroundColor: "rgb(107, 114, 128)" }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 onClick={() => {
                   setSelectedSpeech(null);
                   setHeading("");
                   setContent("");
                   setSpeechTags([]);
                 }}
-                className="bg-gray-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200"
+                className="bg-gray-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-gray-600"
               >
                 <p className="inline-block">New</p>
                 <DocumentPlusIcon className="w-6 h-6 inline-block" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05, backgroundColor: "rgb(147, 51, 234)" }}
-                whileTap={{ scale: 0.95 }}
+              </button>
+              <button
                 onClick={() => setShowCountryOverlay(true)}
-                className="bg-purple-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200"
+                className="bg-purple-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-purple-600"
               >
                 <p className="inline-block">Tags</p>
                 <TagIcon className="h-6 w-6 inline-block" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05, backgroundColor: "rgb(59, 130, 246)" }}
-                whileTap={{ scale: 0.95 }}
+              </button>
+              <button
                 onClick={() => {
                   addSpeech();
                 }}
-                className="bg-blue-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200"
+                className="bg-blue-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-blue-600"
               >
                 <p className="inline-block">
                   {selectedSpeech ? "Update" : "Add"}
                 </p>
                 <PlusCircleIcon className="h-6 w-6 inline-block" />
-              </motion.button>
+              </button>
 
-              <motion.button
-                whileHover={{ scale: 1.05, backgroundColor: "rgb(220, 38, 38)" }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 onClick={() => {
                   deleteSpeech(selectedSpeech?.speechID || "");
                 }}
-                className="bg-red-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200"
+                className="bg-red-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-red-600"
               >
                 <p className="inline-block">Delete</p>
                 <ArchiveBoxXMarkIcon className="h-6 w-6 inline-block" />
-              </motion.button>
+              </button>
             </div>
-          </motion.div>
+          </div>
           {speechTags.length > 0 && (
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="space-x-2 mb-2 mx-12 p-2"
-            >
+            <div className="space-x-2 mb-2 mx-12 p-2">
               <p className="text-lg text-gray-300 inline-block mb-2">Tags:</p>
               <div className="space-x-2 inline-block">
-                {speechTags.map((tag, index) => (
-                  <motion.span
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.1 }}
+                {speechTags.map((tag) => (
+                  <span
                     key={tag}
                     className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-full text-xl shadow-lg shadow-blue-500/20 inline-flex items-center justify-center"
                   >
                     {COUNTRIES.find((country) => country.countryID === tag)?.flag}
-                  </motion.span>
+                  </span>
                 ))}
               </div>
-            </motion.div>
+            </div>
           )}
-          <motion.textarea
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            whileFocus={{ boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.5)" }}
+          <textarea
             className="block w-8/9 outline rounded-2xl mx-8 p-4 bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300"
             placeholder="Write your title here..."
             onChange={(e) => {
@@ -386,12 +297,8 @@ const Page = () => {
             }}
             style={{ resize: "none" }}
             value={heading}
-          ></motion.textarea>
-          <motion.textarea
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            whileFocus={{ boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.5)" }}
+          ></textarea>
+          <textarea
             className="outline w-8/9 rounded-2xl mx-8 p-4 h-187 bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300"
             placeholder="Write your speech here..."
             onChange={(e) => {
@@ -399,53 +306,26 @@ const Page = () => {
             }}
             value={content}
             style={{ resize: "none" }}
-          ></motion.textarea>
-        </motion.div>
-      </motion.div>
+          ></textarea>
+        </div>
+      </div>
       {showCountryOverlay && (
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
-        >
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ type: "spring", bounce: 0.3 }}
-            className="bg-gradient-to-b from-gray-50 to-gray-100 text-gray-800 rounded-2xl p-8 max-h-[85vh] w-[90vw] max-w-md overflow-y-auto relative shadow-2xl border border-gray-200"
-          >
-            <motion.button
-              whileHover={{ scale: 1.1, backgroundColor: "rgba(239, 68, 68, 0.1)" }}
-              whileTap={{ scale: 0.9 }}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+          <div className="bg-gradient-to-b from-gray-50 to-gray-100 text-gray-800 rounded-2xl p-8 max-h-[85vh] w-[90vw] max-w-md overflow-y-auto relative shadow-2xl border border-gray-200">
+            <button
               className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-xl font-bold text-gray-500 hover:text-red-500 rounded-full transition-colors"
               onClick={closeCountryOverlay}
             >
               ×
-            </motion.button>
-            <motion.h2 
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-2xl font-bold mb-6 pr-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-800 to-purple-800"
-            >
+            </button>
+            <h2 className="text-2xl font-bold mb-6 pr-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-800 to-purple-800">
               Select Countries
-            </motion.h2>
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="flex flex-col gap-2"
-            >
-              {COUNTRIES.map((country, index) => (
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.03 }}
+            </h2>
+            <div className="flex flex-col gap-2">
+              {COUNTRIES.map((country) => (
+                <div
                   key={country.countryID}
                   className="px-4 py-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 hover:from-blue-50 hover:to-blue-100 text-gray-800 border border-gray-200 hover:border-blue-300 flex items-center gap-3 cursor-pointer transition-all duration-200 hover:shadow-md"
-                  whileHover={{ scale: 1.02, x: 5 }}
-                  whileTap={{ scale: 0.98 }}
                   onClick={() => toggleCountrySelection(country.countryID)}
                 >
                   <input
@@ -456,11 +336,11 @@ const Page = () => {
                   />
                   <span className="text-2xl">{country.flag}</span>
                   <span className="font-medium">{country.name}</span>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
-          </motion.div>
-        </motion.div>
+            </div>
+          </div>
+        </div>
       )}
     </ProtectedRoute>
   );
