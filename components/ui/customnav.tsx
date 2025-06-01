@@ -37,6 +37,7 @@ const committees: Committee[] = [
     href: "/committee-overview/ECOSOC",
   },
 ];
+
 const CustomNavComponent = () => {
   return (
     <NavigationMenu
@@ -89,9 +90,12 @@ const CustomNavComponent = () => {
 
         <NavigationMenuItem>
           <NavigationMenuTrigger className="text-xl">
-            Global Affairs
+            <NavigationMenuLink href="/global-affairs">
+              Latest News
+            </NavigationMenuLink>
           </NavigationMenuTrigger>
         </NavigationMenuItem>
+
       </NavigationMenuList>
     </NavigationMenu>
   );
