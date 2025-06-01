@@ -3,26 +3,14 @@ import React, { useEffect, useState } from "react";
 import ProtectedRoute from "@/components/protectedroute";
 import { CustomNav } from "@/components/ui/customnav";
 import Image from "next/image";
-
-interface Article {
-
-  source: {
-    id: string;
-    name: string;
-  };
-  author: string;
-  title: string;
-  description: string;
-  url: string;
-  urlToImage: string;
-  publishedAt: string;
-  content: string;
-}
+import { Article } from "@/db/types";
 
 export default function Page() {
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
-
   const [articles, setArticles] = useState<Article[] | null>(null);
+
+
+  
 
   useEffect(() => {
     const fetchSpeeches = async () =>
@@ -44,7 +32,7 @@ export default function Page() {
         <section className="columns-1 sm:columns-2 md:columns-3 lg:columns-5 gap-4 p-4 [column-fill:_balance]">
           {articles?.map((article) => (
             <div
-              key={article.source.id + article.publishedAt}
+              key={article.source.id}
               className="mb-4 break-inside-avoid p-4 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600 w-full inline-block"
               onClick={() => setSelectedArticle(article)}
             >
