@@ -29,9 +29,12 @@ export default function Page() {
       <main className="min-h-screen text-white">
         <section className="columns-1 sm:columns-2 md:columns-3 lg:columns-5 gap-4 p-4 [column-fill:_balance]">
           {articles?.map((article) => (
-            <div
+            <a
+              href={article.url}
+              target="_blank"
+              rel="noopener noreferrer"
               key={article.source.id + article.title}
-              className="mb-4 break-inside-avoid p-4 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600 w-full inline-block"
+              className="mb-4 break-inside-avoid p-4 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600 w-full inline-block block"
               onClick={() => setSelectedArticle(article)}
             >
               <h2 className="text-xl font-bold">{article.title}</h2>
@@ -46,7 +49,7 @@ export default function Page() {
                 {new Date(article.publishedAt).toLocaleDateString()}
               </p>
               <p className="mt-2">{article.description}</p>
-            </div>
+            </a>
           ))}
         </section>
       </main>
