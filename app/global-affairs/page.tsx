@@ -9,19 +9,17 @@ export default function Page() {
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [articles, setArticles] = useState<Article[] | null>(null);
 
-
-  
-
-  useEffect(() => {
-    const fetchSpeeches = async () =>
-    {const res = await fetch("/api/articles");
+  const fetchSpeeches = async () => {
+    const res = await fetch("/api/articles");
     if (!res.ok) {
-      console.error("Failed to fetch articles");
-      return;
+        console.error("Failed to fetch articles");
+        return;
     }
     const data = await res.json();
-    setArticles(data);}
+    setArticles(data);
+  };
 
+  useEffect(() => {
     fetchSpeeches();
   }, []);
 
@@ -32,7 +30,7 @@ export default function Page() {
         <section className="columns-1 sm:columns-2 md:columns-3 lg:columns-5 gap-4 p-4 [column-fill:_balance]">
           {articles?.map((article) => (
             <div
-              key={article.source.id}
+              key={article.source.id + article.title}
               className="mb-4 break-inside-avoid p-4 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600 w-full inline-block"
               onClick={() => setSelectedArticle(article)}
             >
