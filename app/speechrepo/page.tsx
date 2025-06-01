@@ -30,8 +30,8 @@ const COUNTRIES = [
 ];
 
 const Page = () => {
-  const { user: currentUser } = useSession();
-  
+  const { user: currentUser, login } = useSession();
+
   const [speechTags, setSpeechTags] = useState<string[]>([]);
   const [speechList, setSpeechList] = useState<Speech[]>([]);
   const [heading, setHeading] = useState<string>("");
@@ -42,40 +42,43 @@ const Page = () => {
 
   const fetchSpeeches = useCallback(async () => {
     if (!currentUser?.delegateID) return;
-    
+
     const response = await fetch(
       `/api/speeches?delegateID=${currentUser.delegateID}`
     );
     const data = await response.json();
     setSpeechList(data.speeches);
   }, [currentUser?.delegateID]);
-  
-  const searchEngine = useCallback((query: string) => {
-    if (!query) {
-      return speechList;
-    }
 
-    //clean the query for comparison
-    const lowerCaseQuery = query.toLowerCase().trim();
-    
-    // hashset to store all country IDs that match the query
-    const matchingCountryIDs = new Set(
-      COUNTRIES
-        .filter(country => country.name.toLowerCase().includes(lowerCaseQuery))
-        .map(country => country.countryID)
-    );
+  const searchEngine = useCallback(
+    (query: string) => {
+      if (!query) {
+        return speechList;
+      }
 
-    return speechList.filter((speech) => {
-      if (speech.title.toLowerCase().includes(lowerCaseQuery)) {
-        return true;
-      }
-      if (matchingCountryIDs.size === 0) {
-        return false;
-      }
-      
-      return speech.tags?.some(tag => matchingCountryIDs.has(tag)) || false;
-    });
-  }, [speechList]);
+      //clean the query for comparison
+      const lowerCaseQuery = query.toLowerCase().trim();
+
+      // hashset to store all country IDs that match the query
+      const matchingCountryIDs = new Set(
+        COUNTRIES.filter((country) =>
+          country.name.toLowerCase().includes(lowerCaseQuery)
+        ).map((country) => country.countryID)
+      );
+
+      return speechList.filter((speech) => {
+        if (speech.title.toLowerCase().includes(lowerCaseQuery)) {
+          return true;
+        }
+        if (matchingCountryIDs.size === 0) {
+          return false;
+        }
+
+        return speech.tags?.some((tag) => matchingCountryIDs.has(tag)) || false;
+      });
+    },
+    [speechList]
+  );
 
   const toggleCountrySelection = useCallback((countryID: string) => {
     setSpeechTags((prev) =>
@@ -100,7 +103,7 @@ const Page = () => {
       speechID: selectedSpeech
         ? selectedSpeech.speechID
         : createSpeechID((currentUser?.speechCount || 0) + 1),
-      date: new Date().toISOString(), 
+      date: new Date().toISOString(),
       tags: speechTags,
       delegateID: currentUser.delegateID,
     };
@@ -109,31 +112,46 @@ const Page = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ speechData, delegateID: currentUser.delegateID, tags: speechTags }),
+      body: JSON.stringify({
+        speechData,
+        delegateID: currentUser.delegateID,
+        tags: speechTags,
+      }),
     });
     await response.json();
     if (response.ok) {
       toast.success(
         `Speech ${selectedSpeech ? "updated" : "added"} successfully`
       );
-      if(selectedSpeech){
-         setSpeechList((prev) =>
-            prev.map((speech) =>
-              speech.speechID === selectedSpeech.speechID ? speechData : speech
-            )
+      if (selectedSpeech) {
+        setSpeechList((prev) =>
+          prev.map((speech) =>
+            speech.speechID === selectedSpeech.speechID ? speechData : speech
           )
-     } else {
-       setSpeechList((prev) => [speechData, ...prev]);
-     }
-
+        );
+      } else {
+        setSpeechList((prev) => [speechData, ...prev]);
+        if (login && currentUser) {
+          login({
+            ...currentUser,
+            speechCount: (currentUser.speechCount || 0) + 1,
+          });
+        }
+      }
       setHeading("");
       setContent("");
       setSpeechTags([]);
-      
-      
+
       setSelectedSpeech(null);
     }
-  }, [currentUser?.delegateID, heading, content, selectedSpeech, currentUser?.speechCount, speechTags]);
+  }, [
+    currentUser,
+    heading,
+    content,
+    selectedSpeech,
+    speechTags,
+    login,
+  ]);
 
   const deleteSpeech = useCallback(async (speechID: string) => {
     if (!speechID) {
@@ -163,21 +181,23 @@ const Page = () => {
   useEffect(() => {
     fetchSpeeches();
   }, [fetchSpeeches]);
-  
-  const filteredSpeeches = useMemo(() => searchEngine(searchQuery), [searchEngine, searchQuery]);
+
+  const filteredSpeeches = useMemo(
+    () => searchEngine(searchQuery),
+    [searchEngine, searchQuery]
+  );
 
   return (
     <ProtectedRoute>
       <CustomNav />
-      <div 
+      <div
         className="flex text-white p-4 bg-gradient-to-b from-black to-gray-950 min-h-screen relative overflow-hidden"
         style={{
-          backgroundImage: "radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)"
+          backgroundImage:
+            "radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)",
         }}
       >
-        <ul 
-          className="outline w-1/4 rounded-2xl p-4 bg-gradient-to-b from-gray-900 to-gray-950 shadow-xl border border-gray-800"
-        >
+        <ul className="outline w-1/4 rounded-2xl p-4 bg-gradient-to-b from-gray-900 to-gray-950 shadow-xl border border-gray-800">
           <div className="flex space-x-2 p-2">
             <input
               type="text"
@@ -283,7 +303,10 @@ const Page = () => {
                     key={tag}
                     className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-full text-xl shadow-lg shadow-blue-500/20 inline-flex items-center justify-center"
                   >
-                    {COUNTRIES.find((country) => country.countryID === tag)?.flag}
+                    {
+                      COUNTRIES.find((country) => country.countryID === tag)
+                        ?.flag
+                    }
                   </span>
                 ))}
               </div>
