@@ -7,8 +7,13 @@ import Image from "next/image";
 import { CustomNav } from "@/components/ui/customnav";
 import ProtectedRoute from "@/components/protectedroute";
 import { Announcement } from "@/db/types";
-
+import { UserIcon,
+  MegaphoneIcon,
+  CalendarIcon,
+  EnvelopeIcon,
+ } from "@heroicons/react/24/outline";
 export default function Home() {
+
   const { user: currentUser, logout } = useSession();
   const [announcements, setAnnouncements] = React.useState<Announcement[]>([]);
 
@@ -31,11 +36,11 @@ export default function Home() {
           className="absolute top-0 right-0 m-4 p-2 text-lg cursor-pointer bg-red-500 text-white rounded-2xl hover:bg-red-700"
           onClick={logout}
         >
-          Logout
+          <UserIcon className="w-6 h-6 inline-block" /> Logout 
         </button>
         <header className="w-full text-center py-8 bg-black text-white border-b-3 border-gray-900">
           <motion.h1
-            className="text-4xl font-bold"
+            className="text-5xl font-bold"
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -53,7 +58,7 @@ export default function Home() {
           </motion.h2>
         </header>
 
-        <main className="flex-grow w-full max-w-4xl mx-auto mt-8">
+        <main className="flex-grow w-full max-w-4xl mx-auto">
           {/* dis is da beginning of da page content ya feel me */}
           <section className="w-full block mb-8">
             <CustomNav />
@@ -67,7 +72,7 @@ export default function Home() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  <h2 className="text-2xl font-semibold mb-4 text-center">Announcements</h2>
+                  <h2 className="text-2xl font-semibold mb-4 "> <MegaphoneIcon className="w-8 h-8 inline-block" /> Announcements </h2>
                   <div className="h-128 overflow-y-auto">
                     <ul>
                       {announcements.map((announcement, index) => (
@@ -114,7 +119,7 @@ export default function Home() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   <h2 className="text-2xl font-semibold mb-4">
-                    Conference Schedule
+                    <CalendarIcon className="w-6 mr-2 h-6 inline-block"/>Conference Schedule
                   </h2>
                   <div className="bg-gray-800 shadow-lg rounded-lg w-full p-4 transition-transform transform hover:scale-103 hover:shadow-xl">
                     <h3 className="text-xl font-bold text-white mb-2">
@@ -145,9 +150,10 @@ export default function Home() {
 
         <footer className="w-full text-center py-4 bg-black text-white">
           <p>
+            <EnvelopeIcon className="w-6 h-6 mr-2 inline-block"/>
             Contact us:
             <a href="https://youtu.be/dQw4w9WgXcQ">
-              {" "} danielkinny0214@gmail.com
+             {" "}danielkinny0214@gmail.com
             </a>
           </p>
         </footer>
