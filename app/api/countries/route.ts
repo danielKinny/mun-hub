@@ -20,7 +20,7 @@ export async function GET(req: Request) {
                 headers: { 'Content-Type': 'application/json' },
             });
         }
-        const countryIDs = (delegationData || []).map((row: any) => row.countryID);
+        const countryIDs = (delegationData || []).map((row: {countryID : string}) => row.countryID);
         if (countryIDs.length === 0) {
             return new Response(JSON.stringify([]), {
                 status: 200,
