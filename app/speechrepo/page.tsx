@@ -301,7 +301,7 @@ const Page = () => {
                 {speechTags.map((tag, idx) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-full text-xl shadow-lg shadow-blue-500/20 inline-flex items-center justify-center animate-bounce-slow"
+                    className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-full text-xl shadow-lg shadow-blue-500/20 inline-flex items-center justify-center"
                     style={{ animationDelay: `${idx * 80}ms` }}
                   >
                     {
