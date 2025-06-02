@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
+    const newsApiKey = process.env.NEWS_API_KEY;
     const res = await fetch(
-      "https://newsapi.org/v2/top-headlines?sources=bbc-news,cnn&pageSize=20&apiKey=552d6b1ba18e46b3973512d03fb114aa"
+      `https://newsapi.org/v2/top-headlines?sources=bbc-news,cnn&pageSize=20&apiKey=${newsApiKey}`
     );
     if (!res.ok) {
       console.error("Failed to fetch articles");
