@@ -39,6 +39,13 @@ const Page = () => {
   const [selectedSpeech, setSelectedSpeech] = useState<Speech | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [showCountryOverlay, setShowCountryOverlay] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [showUnsavedChangesModal, setShowUnsavedChangesModal] = useState(false);
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+  const [pendingSpeechAction, setPendingSpeechAction] = useState<{
+    type: "new" | "select";
+    speech?: Speech;
+  } | null>(null);
 
   const fetchSpeeches = useCallback(async () => {
     if (!currentUser?.delegateID) return;
@@ -92,6 +99,66 @@ const Page = () => {
     setShowCountryOverlay(false);
   }, []);
 
+  const handleSpeechSwitch = useCallback((newSpeech: Speech | null) => {
+    if (hasUnsavedChanges) {
+      setPendingSpeechAction({
+        type: newSpeech ? "select" : "new",
+        speech: newSpeech || undefined,
+      });
+      setShowUnsavedChangesModal(true);
+    } else {
+      if (newSpeech) {
+        setSelectedSpeech(newSpeech);
+        setHeading(newSpeech.title);
+        setContent(newSpeech.content);
+        setSpeechTags(newSpeech.tags || []);
+      } else {
+        setSelectedSpeech(null);
+        setHeading("");
+        setContent("");
+        setSpeechTags([]);
+      }
+    }
+  }, [hasUnsavedChanges]);
+
+  const confirmDiscardChanges = useCallback(() => {
+    if (pendingSpeechAction?.type === "select" && pendingSpeechAction.speech) {
+      const speech = pendingSpeechAction.speech;
+      setSelectedSpeech(speech);
+      setHeading(speech.title);
+      setContent(speech.content);
+      setSpeechTags(speech.tags || []);
+    } else {
+      setSelectedSpeech(null);
+      setHeading("");
+      setContent("");
+      setSpeechTags([]);
+    }
+    
+    setHasUnsavedChanges(false);
+    setShowUnsavedChangesModal(false);
+    setPendingSpeechAction(null);
+  }, [pendingSpeechAction]);
+
+  const cancelSpeechSwitch = useCallback(() => {
+    const modal = document.getElementById('unsavedChangesModal');
+    const modalContent = document.getElementById('unsavedChangesModalContent');
+    
+    if (modal && modalContent) {
+      modalContent.classList.remove('animate-slidein-up');
+      modalContent.classList.add('opacity-0', 'translate-y-10', 'transition-all', 'duration-300');
+      modal.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+      
+      setTimeout(() => {
+        setShowUnsavedChangesModal(false);
+        setPendingSpeechAction(null);
+      }, 300);
+    } else {
+      setShowUnsavedChangesModal(false);
+      setPendingSpeechAction(null);
+    }
+  }, []);
+
   const addSpeech = useCallback(async () => {
     if (!currentUser?.delegateID) {
       toast.error("No delegateID found for current user");
@@ -141,8 +208,8 @@ const Page = () => {
       setHeading("");
       setContent("");
       setSpeechTags([]);
-
       setSelectedSpeech(null);
+      setHasUnsavedChanges(false);
     }
   }, [
     currentUser,
@@ -153,11 +220,25 @@ const Page = () => {
     login,
   ]);
 
-  const deleteSpeech = useCallback(async (speechID: string) => {
-    if (!speechID) {
+  const handleDeleteClick = useCallback(() => {
+    if (!selectedSpeech?.speechID) {
       toast.error("No speech selected to delete");
       return;
     }
+    setShowDeleteConfirmModal(true);
+  }, [selectedSpeech]);
+
+  const cancelSpeechDelete = useCallback(() => {
+    setShowDeleteConfirmModal(false);
+  }, []);
+
+  const confirmSpeechDelete = useCallback(async () => {
+    if (!selectedSpeech?.speechID) {
+      toast.error("No speech selected to delete");
+      return;
+    }
+
+    const speechID = selectedSpeech.speechID;
     const response = await fetch("/api/speeches", {
       method: "DELETE",
       headers: {
@@ -171,16 +252,30 @@ const Page = () => {
       setHeading("");
       setSpeechTags([]);
       setSelectedSpeech(null);
+      setHasUnsavedChanges(false);
+      setShowDeleteConfirmModal(false);
       toast.success("Speech deleted successfully");
       setSpeechList((prev) =>
         prev.filter((speech) => speech.speechID !== speechID)
       );
     }
-  }, []);
+  }, [selectedSpeech]);
 
   useEffect(() => {
     fetchSpeeches();
   }, [fetchSpeeches]);
+
+  useEffect(() => {
+    if (!selectedSpeech) {
+      setHasUnsavedChanges(heading !== "" || content !== "" || speechTags.length > 0);
+    } else {
+      const titleChanged = heading !== selectedSpeech.title;
+      const contentChanged = content !== selectedSpeech.content;
+      const tagsChanged = JSON.stringify(speechTags) !== JSON.stringify(selectedSpeech.tags || []);
+      
+      setHasUnsavedChanges(titleChanged || contentChanged || tagsChanged);
+    }
+  }, [heading, content, speechTags, selectedSpeech]);
 
   const filteredSpeeches = useMemo(
     () => searchEngine(searchQuery),
@@ -219,12 +314,7 @@ const Page = () => {
                     (selectedSpeech?.speechID === speech.speechID
                       ? "bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg shadow-blue-500/30 scale-[1.03]"
                       : "hover:bg-gray-700/70 bg-gray-800/50 hover:scale-105")}
-                  onClick={() => {
-                    setSelectedSpeech(speech);
-                    setHeading(speech.title);
-                    setContent(speech.content);
-                    setSpeechTags(speech.tags || []);
-                  }}
+                  onClick={() => handleSpeechSwitch(speech)}
                   style={{ transition: 'transform 0.2s, box-shadow 0.2s' }}
                 >
                   <h2 className="text-lg font-bold animate-text-pop">{speech.title}</h2>
@@ -253,12 +343,7 @@ const Page = () => {
             </p>
             <div className="flex space-x-4 ml-auto">
               <button
-                onClick={() => {
-                  setSelectedSpeech(null);
-                  setHeading("");
-                  setContent("");
-                  setSpeechTags([]);
-                }}
+                onClick={() => handleSpeechSwitch(null)}
                 className="bg-gray-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-gray-600 active:scale-95 focus:scale-105 animate-btn-pop"
               >
                 <p className="inline-block">New</p>
@@ -284,9 +369,7 @@ const Page = () => {
               </button>
 
               <button
-                onClick={() => {
-                  deleteSpeech(selectedSpeech?.speechID || "");
-                }}
+                onClick={handleDeleteClick}
                 className="bg-red-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-red-600 active:scale-95 focus:scale-105 animate-btn-pop"
               >
                 <p className="inline-block">Delete</p>
@@ -363,6 +446,83 @@ const Page = () => {
                   <span className="font-medium animate-text-pop">{country.name}</span>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+      {showUnsavedChangesModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm animate-fadein">
+          <div className="bg-gradient-to-b from-gray-800 to-gray-900 text-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-gray-700 animate-slidein-up relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-purple-500"></div>
+            <div className="absolute top-0 right-0 p-3">
+              <div className="w-2 h-2 rounded-full bg-red-500 mr-1 inline-block"></div>
+              <div className="w-2 h-2 rounded-full bg-yellow-500 mr-1 inline-block"></div>
+              <div className="w-2 h-2 rounded-full bg-green-500 inline-block"></div>
+            </div>
+            
+            <div className="text-yellow-400 text-5xl mb-6 animate-pulse">⚠️</div>
+            
+            <h2 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-blue-500">
+              Unsaved Changes Detected
+            </h2>
+            
+            <p className="text-gray-300 mb-8">
+              You have unsaved changes in your current speech. 
+              Do you want to discard these changes and switch to another speech?
+            </p>
+            
+            <div className="flex justify-between space-x-4">
+              <button
+                onClick={cancelSpeechSwitch}
+                className="bg-gray-700 hover:bg-gray-600 text-white rounded-xl px-5 py-2.5 transition-all duration-200 flex-1 border border-gray-600 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20"
+              >
+                Keep Editing
+              </button>
+              <button
+                onClick={confirmDiscardChanges}
+                className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-400 hover:to-red-600 text-white rounded-xl px-5 py-2.5 transition-all duration-200 flex-1 shadow-md hover:shadow-lg hover:shadow-red-500/30"
+              >
+                Discard Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {showDeleteConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm animate-fadein">
+          <div className="bg-gradient-to-b from-gray-800 to-gray-900 text-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-gray-700 animate-slidein-up relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-400 to-red-600"></div>
+            <div className="absolute top-0 right-0 p-3">
+              <div className="w-2 h-2 rounded-full bg-red-500 mr-1 inline-block"></div>
+              <div className="w-2 h-2 rounded-full bg-yellow-500 mr-1 inline-block"></div>
+              <div className="w-2 h-2 rounded-full bg-green-500 inline-block"></div>
+            </div>
+            
+            <div className="text-red-400 text-5xl mb-6 animate-bounce-slow">🗑️</div>
+            
+            <h2 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-red-300 to-red-500">
+              Confirm Delete
+            </h2>
+            
+            <p className="text-gray-300 mb-8">
+              Are you sure you want to delete <span className="text-white font-semibold">"{selectedSpeech?.title}"</span>? 
+              <br />This action cannot be undone.
+            </p>
+            
+            <div className="flex justify-between space-x-4">
+              <button
+                onClick={cancelSpeechDelete}
+                className="bg-gray-700 hover:bg-gray-600 text-white rounded-xl px-5 py-2.5 transition-all duration-200 flex-1 border border-gray-600 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmSpeechDelete}
+                className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-400 hover:to-red-600 text-white rounded-xl px-5 py-2.5 transition-all duration-200 flex-1 shadow-md hover:shadow-lg hover:shadow-red-500/30"
+              >
+                Delete Forever
+              </button>
             </div>
           </div>
         </div>

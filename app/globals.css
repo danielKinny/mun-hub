@@ -139,6 +139,8 @@ body {
 @keyframes btn-pop { 0% { transform: scale(0.95); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes bounce-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 @keyframes wiggle { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+@keyframes fadeout { from { opacity: 1; } to { opacity: 0; } }
+@keyframes slideout-down { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(40px); } }
 
 .animate-fadein { animation: fadein 0.7s cubic-bezier(.4,0,.2,1) both; }
 .animate-fadein-up { animation: fadein-up 0.7s cubic-bezier(.4,0,.2,1) both; }
@@ -148,3 +150,5 @@ body {
 .animate-btn-pop { animation: btn-pop 0.4s cubic-bezier(.4,0,.2,1) both; }
 .animate-bounce-slow { animation: bounce-slow 1.8s infinite cubic-bezier(.4,0,.2,1); }
 .animate-wiggle { animation: wiggle 1.2s infinite cubic-bezier(.4,0,.2,1); }
+.animate-fadeout { animation: fadeout 0.5s cubic-bezier(.4,0,.2,1) forwards paused; }
+.animate-slideout-down { animation: slideout-down 0.5s cubic-bezier(.4,0,.2,1) forwards paused; }
