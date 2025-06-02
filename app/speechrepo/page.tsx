@@ -7,6 +7,9 @@ import { Speech } from "@/db/types";
 import ProtectedRoute from "@/components/protectedroute";
 import { toast } from "sonner";
 import { createSpeechID } from "@/lib/createID";
+import CountryOverlay from "@/components/ui/countryoverlay";
+import UnsavedChangesModal from "@/components/ui/unsavedchangesmodal";
+import DeleteConfirmModal from "@/components/ui/deleteconfirmmodal";
 
 import {
   ArchiveBoxXMarkIcon,
@@ -417,115 +420,25 @@ const Page = () => {
         </div>
       </div>
       {showCountryOverlay && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm animate-fadein">
-          <div className="bg-gradient-to-b from-gray-50 to-gray-100 text-gray-800 rounded-2xl p-8 max-h-[85vh] w-[90vw] max-w-md overflow-y-auto relative shadow-2xl border border-gray-200 animate-slidein-up">
-            <button
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-xl font-bold text-gray-500 hover:text-red-500 rounded-full transition-colors animate-btn-pop"
-              onClick={closeCountryOverlay}
-            >
-              ×
-            </button>
-            <h2 className="text-2xl font-bold mb-6 pr-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-800 to-purple-800 animate-text-pop">
-              Select Countries
-            </h2>
-            <div className="flex flex-col gap-2">
-              {COUNTRIES.map((country, idx) => (
-                <div
-                  key={country.countryID}
-                  className="px-4 py-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 hover:from-blue-50 hover:to-blue-100 text-gray-800 border border-gray-200 hover:border-blue-300 flex items-center gap-3 cursor-pointer transition-all duration-200 hover:shadow-md animate-fadein-up"
-                  style={{ animationDelay: `${idx * 40}ms` }}
-                  onClick={() => toggleCountrySelection(country.countryID)}
-                >
-                  <input
-                    type="checkbox"
-                    checked={speechTags.includes(country.countryID)}
-                    onChange={() => toggleCountrySelection(country.countryID)}
-                    className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 animate-btn-pop"
-                  />
-                  <span className="text-2xl animate-bounce-slow">{country.flag}</span>
-                  <span className="font-medium animate-text-pop">{country.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <CountryOverlay
+          countries={COUNTRIES}
+          speechTags={speechTags}
+          toggleCountrySelection={toggleCountrySelection}
+          closeCountryOverlay={closeCountryOverlay}
+        />
       )}
       {showUnsavedChangesModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm animate-fadein">
-          <div className="bg-gradient-to-b from-gray-800 to-gray-900 text-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-gray-700 animate-slidein-up relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-purple-500"></div>
-            <div className="absolute top-0 right-0 p-3">
-              <div className="w-2 h-2 rounded-full bg-red-500 mr-1 inline-block"></div>
-              <div className="w-2 h-2 rounded-full bg-yellow-500 mr-1 inline-block"></div>
-              <div className="w-2 h-2 rounded-full bg-green-500 inline-block"></div>
-            </div>
-            
-            <div className="text-yellow-400 text-5xl mb-6 animate-pulse">⚠️</div>
-            
-            <h2 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-blue-500">
-              Unsaved Changes Detected
-            </h2>
-            
-            <p className="text-gray-300 mb-8">
-              You have unsaved changes in your current speech. 
-              Do you want to discard these changes and switch to another speech?
-            </p>
-            
-            <div className="flex justify-between space-x-4">
-              <button
-                onClick={cancelSpeechSwitch}
-                className="bg-gray-700 hover:bg-gray-600 text-white rounded-xl px-5 py-2.5 transition-all duration-200 flex-1 border border-gray-600 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20"
-              >
-                Keep Editing
-              </button>
-              <button
-                onClick={confirmDiscardChanges}
-                className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-400 hover:to-red-600 text-white rounded-xl px-5 py-2.5 transition-all duration-200 flex-1 shadow-md hover:shadow-lg hover:shadow-red-500/30"
-              >
-                Discard Changes
-              </button>
-            </div>
-          </div>
-        </div>
+        <UnsavedChangesModal
+          onCancel={cancelSpeechSwitch}
+          onDiscard={confirmDiscardChanges}
+        />
       )}
-      
       {showDeleteConfirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm animate-fadein">
-          <div className="bg-gradient-to-b from-gray-800 to-gray-900 text-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-gray-700 animate-slidein-up relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-400 to-red-600"></div>
-            <div className="absolute top-0 right-0 p-3">
-              <div className="w-2 h-2 rounded-full bg-red-500 mr-1 inline-block"></div>
-              <div className="w-2 h-2 rounded-full bg-yellow-500 mr-1 inline-block"></div>
-              <div className="w-2 h-2 rounded-full bg-green-500 inline-block"></div>
-            </div>
-            
-            <div className="text-red-400 text-5xl mb-6 animate-bounce-slow">🗑️</div>
-            
-            <h2 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-red-300 to-red-500">
-              Confirm Delete
-            </h2>
-            
-            <p className="text-gray-300 mb-8">
-              Are you sure you want to delete <span className="text-white font-semibold">-{selectedSpeech?.title}-</span>? 
-              <br />This action cannot be undone.
-            </p>
-            
-            <div className="flex justify-between space-x-4">
-              <button
-                onClick={cancelSpeechDelete}
-                className="bg-gray-700 hover:bg-gray-600 text-white rounded-xl px-5 py-2.5 transition-all duration-200 flex-1 border border-gray-600 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmSpeechDelete}
-                className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-400 hover:to-red-600 text-white rounded-xl px-5 py-2.5 transition-all duration-200 flex-1 shadow-md hover:shadow-lg hover:shadow-red-500/30"
-              >
-                Delete Forever
-              </button>
-            </div>
-          </div>
-        </div>
+        <DeleteConfirmModal
+          speechTitle={selectedSpeech?.title}
+          onCancel={cancelSpeechDelete}
+          onDelete={confirmSpeechDelete}
+        />
       )}
     </ProtectedRoute>
   );
