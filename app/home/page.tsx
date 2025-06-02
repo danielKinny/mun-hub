@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useSession } from "../context/sessionContext";
@@ -7,36 +7,36 @@ import Image from "next/image";
 import { CustomNav } from "@/components/ui/customnav";
 import ProtectedRoute from "@/components/protectedroute";
 import { Announcement } from "@/db/types";
-import { UserIcon,
+import {
+  UserIcon,
   MegaphoneIcon,
   CalendarIcon,
   EnvelopeIcon,
- } from "@heroicons/react/24/outline";
+} from "@heroicons/react/24/outline";
 export default function Home() {
-
   const { user: currentUser, logout } = useSession();
   const [announcements, setAnnouncements] = React.useState<Announcement[]>([]);
 
-  useEffect(() => {
-    const fetchAnnouncements = async () => {
-      const res = await fetch("/api/announcements");
-      if (res.ok) {
-        const data = await res.json();
-        setAnnouncements(data);
-      }
-        
+  const fetchAnnouncements = useCallback(async () => {
+    const res = await fetch("/api/announcements");
+    if (res.ok) {
+      const data = await res.json();
+      setAnnouncements(data);
     }
+  }, []);
+
+  useEffect(() => {
     fetchAnnouncements();
-  }, [])
+  }, [fetchAnnouncements]);
 
   return (
     <ProtectedRoute>
       <div className="min-h-screen flex flex-col items-start justify-center bg-black text-white">
-        <button 
+        <button
           className="absolute top-0 right-0 m-4 p-2 text-lg cursor-pointer bg-red-500 text-white rounded-2xl hover:bg-red-700"
           onClick={logout}
         >
-          <UserIcon className="w-6 h-6 inline-block" /> Logout 
+          <UserIcon className="w-6 h-6 inline-block" /> Logout
         </button>
         <header className="w-full text-center py-8 bg-black text-white border-b-3 border-gray-900">
           <motion.h1
@@ -45,7 +45,8 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            MUN Hub - Welcome {currentUser?.firstname + " " + currentUser?.country.flag}!
+            MUN Hub - Welcome{" "}
+            {currentUser?.firstname + " " + currentUser?.country.flag}!
           </motion.h1>
 
           <motion.h2
@@ -54,7 +55,8 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            You are the delegate of {currentUser?.country.name} in {currentUser?.committee.name}
+            You are the delegate of {currentUser?.country.name} in{" "}
+            {currentUser?.committee.name}
           </motion.h2>
         </header>
 
@@ -72,7 +74,11 @@ export default function Home() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  <h2 className="text-2xl font-semibold mb-4 "> <MegaphoneIcon className="w-8 h-8 inline-block" /> Announcements </h2>
+                  <h2 className="text-2xl font-semibold mb-4 ">
+                    {" "}
+                    <MegaphoneIcon className="w-8 h-8 inline-block" />{" "}
+                    Announcements{" "}
+                  </h2>
                   <div className="h-128 overflow-y-auto">
                     <ul>
                       {announcements.map((announcement, index) => (
@@ -119,7 +125,8 @@ export default function Home() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   <h2 className="text-2xl font-semibold mb-4">
-                    <CalendarIcon className="w-6 mr-2 h-6 inline-block"/>Conference Schedule
+                    <CalendarIcon className="w-6 mr-2 h-6 inline-block" />
+                    Conference Schedule
                   </h2>
                   <div className="bg-gray-800 shadow-lg rounded-lg w-full p-4 transition-transform transform hover:scale-103 hover:shadow-xl">
                     <h3 className="text-xl font-bold text-white mb-2">
@@ -150,10 +157,11 @@ export default function Home() {
 
         <footer className="w-full text-center py-4 bg-black text-white">
           <p>
-            <EnvelopeIcon className="w-6 h-6 mr-2 inline-block"/>
+            <EnvelopeIcon className="w-6 h-6 mr-2 inline-block" />
             Contact us:
             <a href="https://youtu.be/dQw4w9WgXcQ">
-             {" "}danielkinny0214@gmail.com
+              {" "}
+              danielkinny0214@gmail.com
             </a>
           </p>
         </footer>
