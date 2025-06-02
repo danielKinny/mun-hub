@@ -19,22 +19,12 @@ import {
   TagIcon,
 } from "@heroicons/react/24/outline";
 
-const COUNTRIES = [
-  { countryID: "0001", flag: "🇺🇸", name: "United States" },
-  { countryID: "0002", flag: "🇬🇧", name: "United Kingdom" },
-  { countryID: "0003", flag: "🇫🇷", name: "France" },
-  { countryID: "0004", flag: "🇩🇪", name: "Germany" },
-  { countryID: "0005", flag: "🇮🇳", name: "India" },
-  { countryID: "0006", flag: "🇨🇳", name: "China" },
-  { countryID: "0007", flag: "🇷🇺", name: "Russia" },
-  { countryID: "0008", flag: "🇧🇷", name: "Brazil" },
-  { countryID: "0009", flag: "🇿🇦", name: "South Africa" },
-  { countryID: "0010", flag: "🇯🇵", name: "Japan" },
-];
+type Country = { countryID: string; flag: string; name: string };
 
 const Page = () => {
   const { user: currentUser, login } = useSession();
 
+  const [countries, setCountries] = useState<Country[] | null>(null);
   const [speechTags, setSpeechTags] = useState<string[]>([]);
   const [speechList, setSpeechList] = useState<Speech[]>([]);
   const [heading, setHeading] = useState<string>("");
@@ -60,6 +50,21 @@ const Page = () => {
     setSpeechList(data.speeches);
   }, [currentUser?.delegateID]);
 
+  const fetchCountries = useCallback(async () => {
+    if (!currentUser?.committee) return;
+    try {
+      const response = await fetch(`/api/countries?committeeID=${currentUser.committee.committeeID}`);
+      if (response.ok) {
+        const data = await response.json();
+        setCountries([...data]);
+      } else {
+        setCountries([]);
+      }
+    } catch {
+      setCountries([]);
+    }
+  }, [currentUser?.committee]);
+
   const searchEngine = useCallback(
     (query: string) => {
       if (!query) {
@@ -71,7 +76,7 @@ const Page = () => {
 
       // hashset to store all country IDs that match the query
       const matchingCountryIDs = new Set(
-        COUNTRIES.filter((country) =>
+        countries?.filter((country) =>
           country.name.toLowerCase().includes(lowerCaseQuery)
         ).map((country) => country.countryID)
       );
@@ -87,7 +92,7 @@ const Page = () => {
         return speech.tags?.some((tag) => matchingCountryIDs.has(tag)) || false;
       });
     },
-    [speechList]
+    [speechList, countries]
   );
 
   const toggleCountrySelection = useCallback((countryID: string) => {
@@ -269,6 +274,10 @@ const Page = () => {
   }, [fetchSpeeches]);
 
   useEffect(() => {
+    fetchCountries();
+  }, [fetchCountries]);
+
+  useEffect(() => {
     if (!selectedSpeech) {
       setHasUnsavedChanges(heading !== "" || content !== "" || speechTags.length > 0);
     } else {
@@ -391,7 +400,7 @@ const Page = () => {
                     style={{ animationDelay: `${idx * 80}ms` }}
                   >
                     {
-                      COUNTRIES.find((country) => country.countryID === tag)
+                      countries?.find((country) => country.countryID === tag)
                         ?.flag
                     }
                   </span>
@@ -419,9 +428,9 @@ const Page = () => {
           ></textarea>
         </div>
       </div>
-      {showCountryOverlay && (
+      {showCountryOverlay && countries && (
         <CountryOverlay
-          countries={COUNTRIES}
+          countries={countries}
           speechTags={speechTags}
           toggleCountrySelection={toggleCountrySelection}
           closeCountryOverlay={closeCountryOverlay}
