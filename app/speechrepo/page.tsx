@@ -506,7 +506,7 @@ const Page = () => {
             </h2>
             
             <p className="text-gray-300 mb-8">
-              Are you sure you want to delete <span className="text-white font-semibold">"{selectedSpeech?.title}"</span>? 
+              Are you sure you want to delete <span className="text-white font-semibold">-{selectedSpeech?.title}-</span>? 
               <br />This action cannot be undone.
             </p>
             
