@@ -191,13 +191,13 @@ const Page = () => {
     <ProtectedRoute>
       <CustomNav />
       <div
-        className="flex text-white p-4 bg-gradient-to-b from-black to-gray-950 min-h-screen relative overflow-hidden"
+        className="flex text-white p-4 bg-gradient-to-b from-black to-gray-950 min-h-screen relative overflow-hidden animate-fadein"
         style={{
           backgroundImage:
             "radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)",
         }}
       >
-        <ul className="outline w-1/4 rounded-2xl p-4 bg-gradient-to-b from-gray-900 to-gray-950 shadow-xl border border-gray-800">
+        <ul className="outline w-1/4 rounded-2xl p-4 bg-gradient-to-b from-gray-900 to-gray-950 shadow-xl border border-gray-800 animate-slidein-left">
           <div className="flex space-x-2 p-2">
             <input
               type="text"
@@ -207,27 +207,27 @@ const Page = () => {
               className="outline w-full rounded-2xl p-2 mb-4 bg-gray-800 border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
             />
             <div>
-              <MagnifyingGlassCircleIcon className="w-10 h-10 text-white" />
+              <MagnifyingGlassCircleIcon className="w-10 h-10 text-white animate-bounce-slow" />
             </div>
           </div>
           <div className="space-y-2">
             {speechList && filteredSpeeches.length > 0 ? (
-              filteredSpeeches.map((speech) => (
+              filteredSpeeches.map((speech, idx) => (
                 <li
                   key={speech.speechID}
-                  className={`outline rounded-2xl p-4 mb-2 cursor-pointer backdrop-blur-sm ${
-                    selectedSpeech?.speechID === speech.speechID
-                      ? "bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg shadow-blue-500/30"
-                      : "hover:bg-gray-700/70 bg-gray-800/50"
-                  } transition-all duration-200 border border-gray-700 hover:border-blue-500`}
+                  className={`outline rounded-2xl p-4 mb-2 cursor-pointer backdrop-blur-sm transition-all duration-300 border border-gray-700 hover:border-blue-500 animate-fadein-up delay-[${idx * 50}ms] ` +
+                    (selectedSpeech?.speechID === speech.speechID
+                      ? "bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg shadow-blue-500/30 scale-[1.03]"
+                      : "hover:bg-gray-700/70 bg-gray-800/50 hover:scale-105")}
                   onClick={() => {
                     setSelectedSpeech(speech);
                     setHeading(speech.title);
                     setContent(speech.content);
                     setSpeechTags(speech.tags || []);
                   }}
+                  style={{ transition: 'transform 0.2s, box-shadow 0.2s' }}
                 >
-                  <h2 className="text-lg font-bold">{speech.title}</h2>
+                  <h2 className="text-lg font-bold animate-text-pop">{speech.title}</h2>
                   <p className="text-gray-300">
                     {speech.content.length > 18
                       ? speech.content.slice(0, 16) + "..."
@@ -236,9 +236,9 @@ const Page = () => {
                 </li>
               ))
             ) : (
-              <div className="outline rounded-2xl p-6 text-center bg-gray-800/30 border border-gray-700">
+              <div className="outline rounded-2xl p-6 text-center bg-gray-800/30 border border-gray-700 animate-fadein-up">
                 <p className="text-gray-400 mb-2">No speeches found</p>
-                <div className="text-4xl mb-3">📝</div>
+                <div className="text-4xl mb-3 animate-wiggle">📝</div>
                 <p className="text-blue-400">
                   Create a new speech to get started
                 </p>
@@ -246,9 +246,9 @@ const Page = () => {
             )}
           </div>
         </ul>
-        <div className="w-full h-screen space-y-2 p-4">
+        <div className="w-full h-screen space-y-2 p-4 animate-slidein-up">
           <div className="w-8/9 mx-8 pb-2 flex items-center">
-            <p className="text-4xl font-bold mx-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 drop-shadow-lg">
+            <p className="text-4xl font-bold mx-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 drop-shadow-lg animate-text-pop">
               {currentUser?.firstname} Speech Repo
             </p>
             <div className="flex space-x-4 ml-auto">
@@ -259,14 +259,14 @@ const Page = () => {
                   setContent("");
                   setSpeechTags([]);
                 }}
-                className="bg-gray-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-gray-600"
+                className="bg-gray-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-gray-600 active:scale-95 focus:scale-105 animate-btn-pop"
               >
                 <p className="inline-block">New</p>
                 <DocumentPlusIcon className="w-6 h-6 inline-block" />
               </button>
               <button
                 onClick={() => setShowCountryOverlay(true)}
-                className="bg-purple-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-purple-600"
+                className="bg-purple-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-purple-600 active:scale-95 focus:scale-105 animate-btn-pop"
               >
                 <p className="inline-block">Tags</p>
                 <TagIcon className="h-6 w-6 inline-block" />
@@ -275,7 +275,7 @@ const Page = () => {
                 onClick={() => {
                   addSpeech();
                 }}
-                className="bg-blue-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-blue-600"
+                className="bg-blue-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-blue-600 active:scale-95 focus:scale-105 animate-btn-pop"
               >
                 <p className="inline-block">
                   {selectedSpeech ? "Update" : "Add"}
@@ -287,7 +287,7 @@ const Page = () => {
                 onClick={() => {
                   deleteSpeech(selectedSpeech?.speechID || "");
                 }}
-                className="bg-red-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-red-600"
+                className="bg-red-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-red-600 active:scale-95 focus:scale-105 animate-btn-pop"
               >
                 <p className="inline-block">Delete</p>
                 <ArchiveBoxXMarkIcon className="h-6 w-6 inline-block" />
@@ -295,13 +295,14 @@ const Page = () => {
             </div>
           </div>
           {speechTags.length > 0 && (
-            <div className="space-x-2 mb-2 mx-12 p-2">
+            <div className="space-x-2 mb-2 mx-12 p-2 animate-fadein">
               <p className="text-lg text-gray-300 inline-block mb-2">Tags:</p>
               <div className="space-x-2 inline-block">
-                {speechTags.map((tag) => (
+                {speechTags.map((tag, idx) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-full text-xl shadow-lg shadow-blue-500/20 inline-flex items-center justify-center"
+                    className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-full text-xl shadow-lg shadow-blue-500/20 inline-flex items-center justify-center animate-bounce-slow"
+                    style={{ animationDelay: `${idx * 80}ms` }}
                   >
                     {
                       COUNTRIES.find((country) => country.countryID === tag)
@@ -313,7 +314,7 @@ const Page = () => {
             </div>
           )}
           <textarea
-            className="block w-8/9 outline rounded-2xl mx-8 p-4 bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300"
+            className="block w-8/9 outline rounded-2xl mx-8 p-4 bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300 animate-fadein-up"
             placeholder="Write your title here..."
             onChange={(e) => {
               setHeading(e.target.value);
@@ -322,7 +323,7 @@ const Page = () => {
             value={heading}
           ></textarea>
           <textarea
-            className="outline w-8/9 rounded-2xl mx-8 p-4 h-187 bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300"
+            className="outline w-8/9 rounded-2xl mx-8 p-4 h-187 bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300 animate-fadein-up"
             placeholder="Write your speech here..."
             onChange={(e) => {
               setContent(e.target.value);
@@ -333,32 +334,33 @@ const Page = () => {
         </div>
       </div>
       {showCountryOverlay && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-          <div className="bg-gradient-to-b from-gray-50 to-gray-100 text-gray-800 rounded-2xl p-8 max-h-[85vh] w-[90vw] max-w-md overflow-y-auto relative shadow-2xl border border-gray-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm animate-fadein">
+          <div className="bg-gradient-to-b from-gray-50 to-gray-100 text-gray-800 rounded-2xl p-8 max-h-[85vh] w-[90vw] max-w-md overflow-y-auto relative shadow-2xl border border-gray-200 animate-slidein-up">
             <button
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-xl font-bold text-gray-500 hover:text-red-500 rounded-full transition-colors"
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-xl font-bold text-gray-500 hover:text-red-500 rounded-full transition-colors animate-btn-pop"
               onClick={closeCountryOverlay}
             >
               ×
             </button>
-            <h2 className="text-2xl font-bold mb-6 pr-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-800 to-purple-800">
+            <h2 className="text-2xl font-bold mb-6 pr-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-800 to-purple-800 animate-text-pop">
               Select Countries
             </h2>
             <div className="flex flex-col gap-2">
-              {COUNTRIES.map((country) => (
+              {COUNTRIES.map((country, idx) => (
                 <div
                   key={country.countryID}
-                  className="px-4 py-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 hover:from-blue-50 hover:to-blue-100 text-gray-800 border border-gray-200 hover:border-blue-300 flex items-center gap-3 cursor-pointer transition-all duration-200 hover:shadow-md"
+                  className="px-4 py-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 hover:from-blue-50 hover:to-blue-100 text-gray-800 border border-gray-200 hover:border-blue-300 flex items-center gap-3 cursor-pointer transition-all duration-200 hover:shadow-md animate-fadein-up"
+                  style={{ animationDelay: `${idx * 40}ms` }}
                   onClick={() => toggleCountrySelection(country.countryID)}
                 >
                   <input
                     type="checkbox"
                     checked={speechTags.includes(country.countryID)}
                     onChange={() => toggleCountrySelection(country.countryID)}
-                    className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                    className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 animate-btn-pop"
                   />
-                  <span className="text-2xl">{country.flag}</span>
-                  <span className="font-medium">{country.name}</span>
+                  <span className="text-2xl animate-bounce-slow">{country.flag}</span>
+                  <span className="font-medium animate-text-pop">{country.name}</span>
                 </div>
               ))}
             </div>
