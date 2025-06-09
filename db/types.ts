@@ -69,3 +69,10 @@ export interface Article {
   publishedAt: string;
   content: string;
 }
+
+export interface Admin {
+  adminID :string;
+  firstname: string;
+  lastname: string;
+  password: string;
+}
