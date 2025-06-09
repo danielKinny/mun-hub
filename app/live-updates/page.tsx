@@ -1,32 +1,28 @@
-import React from 'react'
+"use client";
+import React, {useEffect} from 'react'
 import {CustomNav} from '@/components/ui/customnav'
 import { Update } from '@/db/types'
 import Image from 'next/image'
 
-const updates : Update[] = [
-    {
-        updateID: "001",
-        date: "2023-10-01",
-        title: "New Committee Established",
-        content: "A new committee has been established to address global climate change.",
-        href: "none",
-    },
-    {
-        updateID: "002",
-        date: "2023-10-02",
-        title: "Resolution Passed",
-        content: "A resolution has been passed to enhance international cooperation on cybersecurity.",
-        href: "none",
-    },
-    {
-        updateID: "003",
-        date: "2023-10-03",
-        title: "Special Session Scheduled",
-        content: "A special session has been scheduled to discuss the ongoing humanitarian crisis in region X.",
-        href: "none",
-    },
-]
 const Page = () => {
+
+    const [updates, setUpdates] = React.useState<Update[]>([]);
+
+    useEffect( () => {
+        const fetchUpdates = async () => {
+            const res = await fetch('/api/updates');
+            const data = await res.json();
+            if (res.ok) {
+                setUpdates(data);
+            }
+            else {
+                console.error("Failed to fetch updates:", data);
+            }
+        }
+
+        fetchUpdates();
+    },[]);
+
   return (
     <div>
         <CustomNav />
@@ -44,7 +40,7 @@ const Page = () => {
                         </div>
                         <div className='w-1/2 flex justify-center'>
                             <Image
-                                src="/images/UN.jpg"
+                                src={update.href}
                                 alt="Update Image"
                                 width={500}
                                 height={700}
