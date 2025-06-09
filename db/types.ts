@@ -26,6 +26,14 @@ export interface Speech {
   tags: string[];
 }
 
+export interface Update {
+  updateID: string;
+  date: string;
+  title: string;
+  content: string;
+  href: string;
+}
+
 export interface Announcement {
   announcementID: string;
   date: string;
