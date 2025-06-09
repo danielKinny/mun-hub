@@ -10,11 +10,6 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({ speechTitle, on
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm animate-fadein">
     <div className="bg-gradient-to-b from-gray-800 to-gray-900 text-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-gray-700 animate-slidein-up relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-400 to-red-600"></div>
-      <div className="absolute top-0 right-0 p-3">
-        <div className="w-2 h-2 rounded-full bg-red-500 mr-1 inline-block"></div>
-        <div className="w-2 h-2 rounded-full bg-yellow-500 mr-1 inline-block"></div>
-        <div className="w-2 h-2 rounded-full bg-green-500 inline-block"></div>
-      </div>
       <div className="text-red-400 text-5xl mb-6 animate-bounce-slow">🗑️</div>
       <h2 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-red-300 to-red-500">
         Confirm Delete
