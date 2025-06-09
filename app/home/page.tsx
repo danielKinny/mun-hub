@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSession } from "../context/sessionContext";
 import Image from "next/image";
 import { CustomNav } from "@/components/ui/customnav";
+import { AdminNav } from "@/components/ui/adminnav";
 import ProtectedRoute from "@/components/protectedroute";
 import { Announcement } from "@/db/types";
 import {
@@ -16,6 +17,7 @@ import {
 export default function Home() {
   const { user: currentUser, logout } = useSession();
   const [announcements, setAnnouncements] = React.useState<Announcement[]>([]);
+  const isAdmin = 'adminID' in (currentUser || {});
 
   const fetchAnnouncements = useCallback(async () => {
     const res = await fetch("/api/announcements");
@@ -32,12 +34,14 @@ export default function Home() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen flex flex-col items-start justify-center bg-black text-white">
-        <button
-          className="absolute top-0 right-0 m-4 p-2 text-lg cursor-pointer bg-red-500 text-white rounded-2xl hover:bg-red-700"
-          onClick={logout}
-        >
-          <UserIcon className="w-6 h-6 inline-block" /> Logout
-        </button>
+        <div className="absolute top-0 right-0 m-4 flex flex-col items-end gap-2">
+          <button
+            className="p-2 text-lg cursor-pointer bg-red-500 text-white rounded-2xl hover:bg-red-700"
+            onClick={logout}
+          >
+            <UserIcon className="w-6 h-6 inline-block" /> Logout
+          </button>
+        </div>
         <header className="w-full text-center py-8 bg-black text-white border-b-3 border-gray-900">
           <motion.h1
             className="text-5xl font-bold"
@@ -46,24 +50,27 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
             MUN Hub - Welcome{" "}
-            {currentUser?.firstname + " " + currentUser?.country.flag}!
+            {currentUser?.firstname}
+            {!isAdmin && currentUser && 'country' in currentUser && " " + currentUser.country.flag}
           </motion.h1>
 
-          <motion.h2
-            className="text-xl font-light"
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            You are the delegate of {currentUser?.country.name} in{" "}
-            {currentUser?.committee.name}
-          </motion.h2>
+            <motion.h2
+              className="text-xl font-light"
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              {!isAdmin && currentUser && 'country' in currentUser && 'committee' in currentUser
+                ? `You are the delegate of ${currentUser.country.name} ${currentUser.committee.name}`
+                : 'Admin Access'}
+            </motion.h2>
+          
         </header>
 
         <main className="flex-grow w-full max-w-4xl mx-auto">
           {/* dis is da beginning of da page content ya feel me */}
           <section className="w-full block mb-8">
-            <CustomNav />
+            {!isAdmin ? <CustomNav /> : <AdminNav />}
           </section>
           <section className="w-full block mb-8">
             <div className="flex flex-wrap">

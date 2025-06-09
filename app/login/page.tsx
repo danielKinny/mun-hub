@@ -12,6 +12,7 @@ const Login = () => {
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const [role, setRole] = React.useState("delegate");
   const router = useRouter();
   const { login } = useSession();
 
@@ -24,59 +25,95 @@ const Login = () => {
     const trimmedPassword = password.trim();
 
     try {
-      const { data: delegate, error: delegateError } = await supabase
-        .from("Delegate")
-        .select("delegateID, password")
-        .eq("delegateID", trimmedId)
-        .single();
+      if (role === "admin") {
+        const { data: admin, error: adminError } = await supabase
+          .from("Admin")
+          .select("adminID, firstname, lastname, password")
+          .eq("adminID", trimmedId)
+          .single();
 
-      if (delegateError || !delegate) {
-        setError("Participant ID not found");
+        if (adminError || !admin) {
+          setError("Admin ID not found");
+          setLoading(false);
+          return;
+        }
+
+        console.log(admin);
+
+        if (admin.password !== trimmedPassword) {
+          setError("Incorrect password");
+          setLoading(false);
+          return;
+        }
+
+        const adminUser = {
+          ...admin,
+          role: "admin",
+        };
+
+        login(adminUser);
+        router.push("/home");
+        return;
+      } else if (role === "chair") {
+        setError("Chair login not implemented yet");
         setLoading(false);
         return;
+      } else {
+        const { data: delegate, error: delegateError } = await supabase
+          .from("Delegate")
+          .select("delegateID, password")
+          .eq("delegateID", trimmedId)
+          .single();
+
+        if (delegateError || !delegate) {
+          setError("Participant ID not found");
+          setLoading(false);
+          return;
+        }
+
+        if (delegate.password !== trimmedPassword) {
+          setError("Incorrect password");
+          setLoading(false);
+          return;
+        }
+
+        const { data: fullDelegate, error: fullDelegateError } = await supabase
+          .from("Delegate")
+          .select("*")
+          .eq("delegateID", trimmedId)
+          .single();
+
+        if (fullDelegateError || !fullDelegate) {
+          setError("Delegate record not found");
+          setLoading(false);
+          return;
+        }
+
+        const { data: delegation, error: delegationError } = await supabase
+          .from("Delegation")
+          .select(`*,
+            Country:countryID (countryID, name, flag),
+            Committee:committeeID (committeeID, name, href)
+          `)
+          .eq("delegateID", trimmedId)
+          .single();
+
+        if (delegationError || !delegation) {
+          setError("Delegation not found");
+          setLoading(false);
+          return;
+        }
+
+        const enrichedUser = {
+          ...fullDelegate,
+          country: delegation.Country,
+          committee: delegation.Committee,
+          role: "delegate",
+        };
+
+        login(enrichedUser);
+        router.push("/home");
       }
-
-      if (delegate.password !== trimmedPassword) {
-        setError("Incorrect password");
-        setLoading(false);
-        return;
-      }
-
-      const { data: fullDelegate, error: fullDelegateError } = await supabase
-        .from("Delegate")
-        .select("*")
-        .eq("delegateID", trimmedId)
-        .single();
-
-      if (fullDelegateError || !fullDelegate) {
-        setError("Delegate record not found");
-        setLoading(false);
-        return;
-      }
-
-      const { data: delegation, error: delegationError } = await supabase
-        .from("Delegation")
-        .select(`*,
-          Country:countryID (countryID, name, flag),
-          Committee:committeeID (committeeID, name, href)
-        `)
-        .eq("delegateID", trimmedId)
-        .single();
-
-      if (delegationError || !delegation) {
-        setError("Delegation not found");
-        setLoading(false);
-        return;
-      }
-
-      const enrichedUser = {
-        ...fullDelegate,
-        country: delegation.Country,
-        committee: delegation.Committee,
-      };
-
-      login(enrichedUser);
-      router.push("/home");
     } catch (err) {
       console.error("Login error:", err);
       setError("An error occurred during login. Please try again.");
@@ -109,16 +146,25 @@ const Login = () => {
         transition={{ duration: 0.5 }}
       >
         <h1 className="p-3 items-center justify-center flex flex-col font-extrabold text-2xl mb-4 text-white">
-          Access your Delegation
+          {role === 'admin' ? 'Admin Login' : role === 'chair' ? 'Chair Login' : 'Access your Delegation'}
         </h1>
 
         <form
           className="flex flex-col items-center justify-center text-white"
           onSubmit={handleSubmit}
         >
+          <select
+            className="border-1 cursor-pointer border-gray-800 p-2 mb-4 rounded-md w-80 h-10 font-light bg-gray-900 text-white"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="delegate">Delegate</option>
+            <option value="chair">Chair</option>
+            <option value="admin">Admin</option>
+          </select>
           <input
             type="text"
-            placeholder="Participant ID"
+            placeholder={role === 'admin' ? 'Admin ID' : role === 'chair' ? 'Chair ID' : 'Participant ID'}
             className="border-1 border-gray-800 p-2 mb-4 rounded-md w-80 h-10 font-light"
             value={participantId}
             onChange={(e) => setParticipantId(e.target.value)}

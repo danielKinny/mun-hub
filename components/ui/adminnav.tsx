@@ -33,7 +33,7 @@ const committees: Committee[] = [
   },
 ];
 
-const CustomNavComponent = () => {
+const AdminNavComponent = () => {
   return (
     <>
       <nav className="w-full p-2 text-white border-b border-gray-700 bg-transparent">
@@ -45,15 +45,6 @@ const CustomNavComponent = () => {
             >
               <HomeModernIcon className="w-5 h-5 mr-1" />
               Home
-            </a>
-          </li>
-          <li className="inline-block hover:bg-white hover:text-black p-2 rounded-lg">
-            <a
-              href="/speechrepo"
-              className="flex items-center text-xl cursor-pointer"
-            >
-              <DocumentIcon className="w-5 h-5 mr-1" />
-              Speech Repo
             </a>
           </li>
           <li className="inline-block relative group hover:bg-white hover:text-black p-2 rounded-lg">
@@ -79,29 +70,17 @@ const CustomNavComponent = () => {
           </li>
           <li className="inline-block hover:bg-white hover:text-black p-2 rounded-lg">
             <a
-              href="/glossary"
+              href="/admin"
               className="flex items-center text-xl cursor-pointer"
             >
-              <BookOpenIcon className="w-5 h-5 mr-1" />
-              MUN Glossary
+              <WrenchIcon className="w-5 h-5 mr-1" />
+              Admin Tool
             </a>
-          </li>
-          <li className="inline-block hover:bg-white hover:text-black p-2 rounded-lg">
-            <a
-              href="/global-affairs"
-              className="flex items-center text-xl cursor-pointer"
-            >
-              <NewspaperIcon className="w-5 h-5 mr-1" />
-              Global Affairs
-            </a>
-          </li>
-          <li>
-            
-          </li>
+            </li>
         </ul>
       </nav>
     </>
   );
 };
 
-export const CustomNav = React.memo(CustomNavComponent);
+export const AdminNav = React.memo(AdminNavComponent);
