@@ -8,16 +8,14 @@ export default function TypeWriter() {
   const [isTyping, setIsTyping] = useState(false);
 
   const words = useMemo<string[]>(() => [
-    "innovating",
-    "collaborating",
-    "communicating",
-    "negotiating",
-    "debating",
-    "resolving",
-    "advocating",
-    "networking",
-    "connecting",
-    "engaging",
+    "Welcome to MUN-hub",
+    "Your one stop hub for collaboration",
+    "Your one stop hub for innovation",
+    "Your one stop hub for inspiration",
+    "Your one stop hub for all information",
+    "Your one stop hub for ideas",
+    "Your one stop hub for interaction",
+    "Your one stop hub for integration",
   ], []);
 
   const returnIndex = useCallback((index: number) => index % words.length, [words.length]);
@@ -102,7 +100,7 @@ export default function TypeWriter() {
   return (
     <>
       <h1 className="text-4xl text-center font-bold text-white">
-        example MUN is all about {text}
+        {text}
         <span>{blinker}</span>
       </h1>
     </>

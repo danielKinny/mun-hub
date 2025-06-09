@@ -20,28 +20,8 @@ import {
 const committees: Committee[] = [
   {
     committeeID: "0001",
-    name: "UNHRC",
-    href: "/committee-overview/UNHRC",
-  },
-  {
-    committeeID: "0002",
-    name: "UNESCO",
-    href: "/committee-overview/UNESCO",
-  },
-  {
-    committeeID: "0003",
     name: "UNSC",
     href: "/committee-overview/UNSC",
-  },
-  {
-    committeeID: "0004",
-    name: "UNODC",
-    href: "/committee-overview/UNODC",
-  },
-  {
-    committeeID: "0005",
-    name: "ECOSOC",
-    href: "/committee-overview/ECOSOC",
   },
 ];
 
