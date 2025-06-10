@@ -4,12 +4,12 @@ import { useSession } from '../context/sessionContext'
 import AdminRoute from '@/components/adminroute'
 import { AdminNav } from '@/components/ui/adminnav'
 import supabase from '@/lib/supabase'
+import {toast} from 'sonner'
 const Page = () => {
     const [content, setContent] = React.useState<string>("");
     const [title, setTitle] = React.useState<string>("");
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
     const [error, setError] = React.useState<string>("");
-    const [success, setSuccess] = React.useState<boolean>(false);
     const { user: currentUser } = useSession()
 
     //note to danny 
@@ -17,35 +17,30 @@ const Page = () => {
 
     const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setContent(e.target.value);
-        setError("");
     }
     const handleTitleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setTitle(e.target.value);
-        setError("");
     }
     
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setSelectedFile(e.target.files[0]);
-            setError("");
         }
     }
 
     const handleAddUpdate = async () => {
-        setError("");
-        setSuccess(false);
         if (!title.trim()) {
-            setError("Title is required");
+            toast.error("Title is required");
             return;
         }
         
         if (!content.trim()) {
-            setError("Content is required");
+            toast.error("Content is required");
             return;
         }
         
         if (!selectedFile) {
-            setError("Image file is required");
+            toast.error("Image file is required");
             return;
         }
 
@@ -87,13 +82,9 @@ const Page = () => {
             setTitle("");
             setContent("");
             setSelectedFile(null);
-            setSuccess(true);
+            toast.success("Update added successfully!");
             const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
             if (fileInput) fileInput.value = "";
-            
-            setTimeout(() => {
-                setSuccess(false);
-            }, 3000);
             
         } catch (error) {
             console.error('Error adding update:', error);
@@ -108,12 +99,6 @@ const Page = () => {
         {error && (
           <div className="w-full max-w-4xl mb-6 p-4 bg-red-600 rounded-lg text-white">
             <p className="font-semibold">{error}</p>
-          </div>
-        )}
-        
-        {success && (
-          <div className="w-full max-w-4xl mb-6 p-4 bg-green-600 rounded-lg text-white">
-            <p className="font-semibold">Update added successfully!</p>
           </div>
         )}
         
@@ -136,7 +121,7 @@ const Page = () => {
           <div className='flex flex-col flex-1'>
             <p className="mb-2 font-medium">Title</p>
             <textarea 
-              className='p-4 rounded-lg outline outline-gray-800 bg-gray-900 text-white resize-none h-[10rem]' 
+              className='p-4 rounded-lg outline outline-gray-800 bg-gray-900 text-white resize-none h-[10rem] hover-scale-105' 
               value={title} 
               placeholder='Write your update title here...' 
               onChange={handleTitleChange}
