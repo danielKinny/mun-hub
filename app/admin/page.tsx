@@ -12,8 +12,7 @@ const Page = () => {
     const [error, setError] = React.useState<string>("");
     const { user: currentUser } = useSession()
 
-    //note to danny 
-    // change the success message to the toast thingy whenev youre free
+    // animations need to be added here
 
     const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setContent(e.target.value);

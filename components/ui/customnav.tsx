@@ -18,7 +18,7 @@ import {
   GlobeAltIcon,
   NewspaperIcon,
   BookOpenIcon,
-  WrenchIcon,
+  BoltIcon,
 } from "@heroicons/react/24/outline";
 const committees: Committee[] = [
   {
@@ -96,6 +96,13 @@ const CustomNavComponent = () => {
             </a>
           </li>
           <li>
+            <a
+              href="/live-updates"
+              className="flex items-center text-xl cursor-pointer hover:bg-white hover:text-black p-2 rounded-lg"
+            >
+              <BoltIcon className="w-5 h-5 mr-1" />
+              Live Updates
+            </a>
             
           </li>
         </ul>

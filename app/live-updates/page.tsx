@@ -3,11 +3,12 @@ import React, {useEffect} from 'react'
 import {CustomNav} from '@/components/ui/customnav'
 import { Update } from '@/db/types'
 import Image from 'next/image'
-
+import { useSession } from '../context/sessionContext'
+import { AdminNav } from '@/components/ui/adminnav'
 const Page = () => {
-
+    const {user: currentUser}= useSession();
     const [updates, setUpdates] = React.useState<Update[]>([]);
-
+    const isAdmin = 'adminID' in (currentUser || {});
     useEffect( () => {
         const fetchUpdates = async () => {
             const res = await fetch('/api/updates');
@@ -26,7 +27,7 @@ const Page = () => {
 
   return (
     <div>
-        <CustomNav />
+        {isAdmin ? <AdminNav/> : <CustomNav />}
         <div className="h-screen text-white">
             <h1 className="text-6xl font-bold text-center p-4">Live Updates</h1>
 
