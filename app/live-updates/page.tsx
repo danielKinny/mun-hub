@@ -14,6 +14,7 @@ const Page = () => {
             const data = await res.json();
             if (res.ok) {
                 setUpdates(data);
+                console.log(data);
             }
             else {
                 console.error("Failed to fetch updates:", data);
@@ -34,8 +35,8 @@ const Page = () => {
                     <li key={update.updateID} 
                         className={`outline outline-gray-800 p-4 w-full h-[30rem] rounded-lg shadow-md flex items-center ${index % 2 !== 0 ? 'flex-row-reverse' : ''} transition-transform duration-300 hover:scale-102`}>
                         <div className='w-1/2 px-4 text-center'>
-                            <h2 className="text-2xl font-semibold mb-2">{update.title}</h2>
-                            <p className="text-gray-400 mb-2">{new Date(update.date).toLocaleDateString()}</p>
+                            <h2 className="text-2xl text-white font-semibold mb-2">{update.title}</h2>
+                            <p className="text-gray-400 mb-2">{new Date(update.time.slice(0,10)).toLocaleDateString() + " " + new Date(update.time).toLocaleTimeString()}</p>
                             <p className="text-lg">{update.content}</p>
                         </div>
                         <div className='w-1/2 flex justify-center'>

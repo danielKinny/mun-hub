@@ -28,7 +28,7 @@ export interface Speech {
 
 export interface Update {
   updateID: string;
-  date: string;
+  time: string;
   title: string;
   content: string;
   href: string;
