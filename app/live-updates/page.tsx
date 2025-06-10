@@ -27,7 +27,8 @@ const Page = () => {
 
   return (
     <div>
-        {isAdmin ? <AdminNav/> : <CustomNav />}
+        {isAdmin ? <AdminNav/> : 
+        <CustomNav />}
         <div className="h-screen text-white">
             <h1 className="text-6xl font-bold text-center p-4">Live Updates</h1>
 
