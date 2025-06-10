@@ -11,8 +11,6 @@ import Cookies from "js-cookie";
 
 // lot to explain here lolz
 
-type UserType = (Delegate | Admin) & { role?: string };
-
 interface SessionContextProps {
   user: Delegate | Admin | null;
   login: (user: Delegate | Admin) => void;

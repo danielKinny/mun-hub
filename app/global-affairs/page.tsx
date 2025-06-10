@@ -22,7 +22,7 @@ export default function Page() {
     const data = await res.json();
     setArticles(data);
     setLastFetched(now);
-  }, [articles, lastFetched]);
+  }, [articles, lastFetched, CACHE_DURATION]);
 
   useEffect(() => {
     fetchArticles();

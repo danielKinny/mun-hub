@@ -2,22 +2,11 @@
 
 "use client";
 import React from "react";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
 import { Committee } from "@/db/types";
 
 import {
   HomeModernIcon,
-  DocumentIcon,
   GlobeAltIcon,
-  NewspaperIcon,
-  BookOpenIcon,
   WrenchIcon,
   BoltIcon,
 } from "@heroicons/react/24/outline";

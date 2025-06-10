@@ -1,6 +1,5 @@
 "use client";
 import React from 'react'
-import { useSession } from '../context/sessionContext'
 import AdminRoute from '@/components/adminroute'
 import { AdminNav } from '@/components/ui/adminnav'
 import supabase from '@/lib/supabase'
@@ -10,7 +9,6 @@ const Page = () => {
     const [title, setTitle] = React.useState<string>("");
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
     const [error, setError] = React.useState<string>("");
-    const { user: currentUser } = useSession()
 
     // Animations have been added throughout the component using classes from globals.css
 
@@ -50,7 +48,7 @@ const Page = () => {
             
             const imageFilePath = `/images/updates/${safeFileName}`;
             
-            const { data, error: dbError } = await supabase
+            const { error: dbError } = await supabase
                 .from('Updates')
                 .insert({
                     updateID: `update_${timestamp}`,
