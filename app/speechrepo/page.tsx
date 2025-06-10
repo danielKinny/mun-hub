@@ -4,13 +4,13 @@ import { useEffect, useMemo, useCallback, useState } from "react";
 import { CustomNav } from "@/components/ui/customnav";
 import { useSession } from "../context/sessionContext";
 import { Speech } from "@/db/types";
-import ProtectedRoute from "@/components/protectedroute";
+import DelegateRoute from "@/components/delegateroute";
 import { toast } from "sonner";
 import { createSpeechID } from "@/lib/createID";
 import CountryOverlay from "@/components/ui/countryoverlay";
 import UnsavedChangesModal from "@/components/ui/unsavedchangesmodal";
 import DeleteConfirmModal from "@/components/ui/deleteconfirmmodal";
-
+import { Admin, Delegate } from "@/db/types";
 import {
   ArchiveBoxXMarkIcon,
   PlusCircleIcon,
@@ -19,7 +19,14 @@ import {
   TagIcon,
 } from "@heroicons/react/24/outline";
 
+// this page needs to be refactored
+
 type Country = { countryID: string; flag: string; name: string };
+
+type UserType = Delegate | Admin | null;
+function isDelegate(user: UserType): user is Delegate {
+  return !!user && "delegateID" in user;
+}
 
 const Page = () => {
   const { user: currentUser, login } = useSession();
@@ -41,17 +48,17 @@ const Page = () => {
   } | null>(null);
 
   const fetchSpeeches = useCallback(async () => {
-    if (!currentUser?.delegateID) return;
+    if (!isDelegate(currentUser)) return;
 
     const response = await fetch(
       `/api/speeches?delegateID=${currentUser.delegateID}`
     );
     const data = await response.json();
     setSpeechList(data.speeches);
-  }, [currentUser?.delegateID]);
+  }, [currentUser]);
 
   const fetchCountries = useCallback(async () => {
-    if (!currentUser?.committee) return;
+    if (!isDelegate(currentUser) || !currentUser.committee) return;
     try {
       const response = await fetch(`/api/countries?committeeID=${currentUser.committee.committeeID}`);
       if (response.ok) {
@@ -63,7 +70,7 @@ const Page = () => {
     } catch {
       setCountries([]);
     }
-  }, [currentUser?.committee]);
+  }, [currentUser]);
 
   const searchEngine = useCallback(
     (query: string) => {
@@ -168,7 +175,7 @@ const Page = () => {
   }, []);
 
   const addSpeech = useCallback(async () => {
-    if (!currentUser?.delegateID) {
+    if (!isDelegate(currentUser)) {
       toast.error("No delegateID found for current user");
       return;
     }
@@ -177,7 +184,7 @@ const Page = () => {
       content: content,
       speechID: selectedSpeech
         ? selectedSpeech.speechID
-        : createSpeechID((currentUser?.speechCount || 0) + 1),
+        : createSpeechID((currentUser.speechCount || 0) + 1),
       date: new Date().toISOString(),
       tags: speechTags,
       delegateID: currentUser.delegateID,
@@ -219,14 +226,7 @@ const Page = () => {
       setSelectedSpeech(null);
       setHasUnsavedChanges(false);
     }
-  }, [
-    currentUser,
-    heading,
-    content,
-    selectedSpeech,
-    speechTags,
-    login,
-  ]);
+  }, [currentUser, heading, content, selectedSpeech, speechTags, login]);
 
   const handleDeleteClick = useCallback(() => {
     if (!selectedSpeech?.speechID) {
@@ -295,7 +295,7 @@ const Page = () => {
   );
 
   return (
-    <ProtectedRoute>
+    <DelegateRoute>
       <CustomNav />
       <div
         className="flex text-white p-4 bg-gradient-to-b from-black to-gray-950 min-h-screen relative overflow-hidden animate-fadein"
@@ -351,7 +351,7 @@ const Page = () => {
         <div className="w-full h-screen space-y-2 p-4 animate-slidein-up">
           <div className="w-8/9 mx-8 pb-2 flex items-center">
             <p className="text-4xl font-bold mx-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 drop-shadow-lg animate-text-pop">
-              {currentUser?.firstname} Speech Repo
+              {isDelegate(currentUser) ? currentUser.firstname : ""} Speech Repo
             </p>
             <div className="flex space-x-4 ml-auto">
               <button
@@ -449,7 +449,7 @@ const Page = () => {
           onDelete={confirmSpeechDelete}
         />
       )}
-    </ProtectedRoute>
+    </DelegateRoute>
   );
 };
 export default Page;
