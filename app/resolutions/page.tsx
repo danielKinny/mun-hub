@@ -5,6 +5,7 @@ import { useSession } from '../context/sessionContext'
 import isDelegate from '@/lib/isdelegate';
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { SimpleEditor } from '../../components/tiptap-templates/simple/simple-editor'
 
 const Page = () => {
   const { user: currentUser } = useSession();
@@ -21,7 +22,7 @@ const Page = () => {
           RESOLUTIONS
         </h1>
         <div className="w-full h-[80vh] max-w-2xl mt-8 bg-black text-white outline outline-gray-800 roundedshadow p-4">
-          <EditorContent editor={editor} />
+          <SimpleEditor />
         </div>
       </div>
     </ProtectedRoute>
