@@ -1,5 +1,5 @@
 "use client";
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import ProtectedRoute from '@/components/protectedroute'
 import { useSession } from '../context/sessionContext'
 import isDelegate from '@/lib/isdelegate';
@@ -9,27 +9,53 @@ import { SimpleEditor } from '../../components/tiptap-templates/simple/simple-ed
 const Page = () => {
   const { user: currentUser } = useSession();
   const editorRef = React.useRef<Editor | null>(null)
-
+  const [fetchedResos, setFetchedResos] = useState<any[]>([]);
   // Example: fetchedContent would come from your database
-  const fetchedContent = {"type":"doc",
-    "content":
-    [
-      {
-        "type":"heading",
-        "attrs":{"textAlign":null,"level":1},
-        "content":[
-          {"type":"text","text":"Resolution from DB"}
-        ]
-      },
-      {
-        "type":"paragraph",
-        "attrs":{"textAlign":null},
-        "content":[
-          {"type":"text","text":"this has been changed oaky?"}
-        ]
+  useEffect( () => {
+    const fetchResos = async () => {
+      const res = await fetch(`/api/resos/delegate?delegateID=${isDelegate(currentUser) ? currentUser?.delegateID : '0000'}`);
+      if (!res.ok) {
+        console.error('Failed to fetch resolutions');
+        return;
       }
-    ]
-  } 
+      const data = await res.json();
+      setFetchedResos(data);
+      console.log(data[0])
+    }
+
+    fetchResos();
+
+  }, [currentUser]);
+
+
+  const postReso = async () => {
+    if (!editorRef.current) {
+      console.error('Editor not initialized');
+      return;
+    }
+
+    const content = editorRef.current.getJSON();
+    const res = await fetch('/api/resos/delegate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content,
+        delegateID: isDelegate(currentUser) ? currentUser?.delegateID : '0000',
+      }),
+    });
+
+    if (!res.ok) {
+      console.error('Failed to post resolution');
+      return;
+    }
+
+    const data = await res.json();
+    console.log('Resolution posted:', data);
+    
+  }
+
 
 
   const handlePrintContent = () => {
@@ -49,7 +75,7 @@ const Page = () => {
           RESOLUTIONS
         </h1>
         <div className="w-full h-[80vh] max-w-2xl mt-8 bg-black text-white outline outline-gray-800 rounded shadow p-4">
-          <SimpleEditor ref={editorRef} content={fetchedContent} />
+          <SimpleEditor ref={editorRef} content={fetchedResos[0]?.content}/>
         </div>
         <button onClick={handlePrintContent} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded">Print Content</button>
       </div>

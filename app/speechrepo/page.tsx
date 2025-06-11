@@ -10,7 +10,6 @@ import { createSpeechID } from "@/lib/createID";
 import CountryOverlay from "@/components/ui/countryoverlay";
 import UnsavedChangesModal from "@/components/ui/unsavedchangesmodal";
 import DeleteConfirmModal from "@/components/ui/deleteconfirmmodal";
-import { Admin, Delegate } from "@/db/types";
 import {
   ArchiveBoxXMarkIcon,
   PlusCircleIcon,

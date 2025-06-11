@@ -230,7 +230,13 @@ export const SimpleEditor = React.forwardRef(function SimpleEditor({ content }: 
       content: content || require("@/components/tiptap-templates/simple/data/content.json"),
     })
 
-    React.useImperativeHandle(ref, () => editor!, [editor]) // Non-null assertion: ref is only used when editor is ready
+    React.useEffect(() => {
+      if (editor && content) {
+        editor.commands.setContent(content)
+      }
+    }, [content, editor])
+
+    React.useImperativeHandle(ref, () => editor!, [editor])
 
     const bodyRect = useCursorVisibility({
       editor,
