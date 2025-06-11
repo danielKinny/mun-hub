@@ -17,6 +17,8 @@ export interface Delegation {
   countryID: string;
 }
 
+export type UserType = Delegate | Admin | null;
+
 export interface Speech {
   speechID: string;
   title: string;

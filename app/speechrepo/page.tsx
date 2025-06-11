@@ -18,15 +18,10 @@ import {
   MagnifyingGlassCircleIcon,
   TagIcon,
 } from "@heroicons/react/24/outline";
-
+import isDelegate from "@/lib/isdelegate";
 // this page needs to be refactored
 
 type Country = { countryID: string; flag: string; name: string };
-
-type UserType = Delegate | Admin | null;
-function isDelegate(user: UserType): user is Delegate {
-  return !!user && "delegateID" in user;
-}
 
 const Page = () => {
   const { user: currentUser, login } = useSession();
