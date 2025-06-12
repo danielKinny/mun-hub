@@ -56,7 +56,7 @@ export async function POST(request: Request) {
         delegateID,
         committeeID,
         content
-    }); // insert the reso, lets hop it work
+    }); // insert the reso, lets hope it work
     if (error) {
         console.error('Error inserting resolution:', error);
         return NextResponse.json({ error: 'Failed to insert resolution' }, { status: 500 });

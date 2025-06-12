@@ -17,7 +17,15 @@ export interface Delegation {
   countryID: string;
 }
 
-export type UserType = Delegate | Admin | null;
+export interface Chair {
+  chairID: string;
+  firstname: string;
+  lastname: string;
+  password: string;
+  commmittee: Committee;
+}
+
+export type UserType = Delegate | Admin | Committee | null;
 
 export interface Speech {
   speechID: string;

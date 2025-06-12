@@ -4,7 +4,7 @@ import { useEffect, useMemo, useCallback, useState } from "react";
 import { CustomNav } from "@/components/ui/customnav";
 import { useSession } from "../context/sessionContext";
 import { Speech } from "@/db/types";
-import DelegateRoute from "@/components/delegateroute";
+import {DelegateRoute} from "@/components/protectedroute";
 import { toast } from "sonner";
 import { createSpeechID } from "@/lib/createID";
 import CountryOverlay from "@/components/ui/countryoverlay";

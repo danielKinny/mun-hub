@@ -38,8 +38,6 @@ const Login = () => {
           return;
         }
 
-        console.log(admin);
-
         if (admin.password !== trimmedPassword) {
           setError("Incorrect password");
           setLoading(false);
@@ -106,12 +104,10 @@ const Login = () => {
           },
         };
 
-        
 
-
-
-
-
+        login(enrichedUser);
+        console.log(enrichedUser);
+        router.push("/home");
 
       } else {
         const { data: delegate, error: delegateError } = await supabase
