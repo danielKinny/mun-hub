@@ -1,6 +1,6 @@
 import { CustomNav } from "@/components/ui/customnav";
 import { ECOSOCComp } from "@/components/ui/committeeComponents";
-import ProtectedRoute from "@/components/protectedroute";
+import {ProtectedRoute} from "@/components/protectedroute";
 
 const Page = () => {
   return (

@@ -6,7 +6,7 @@ import { useSession } from "../context/sessionContext";
 import Image from "next/image";
 import { CustomNav } from "@/components/ui/customnav";
 import { AdminNav } from "@/components/ui/adminnav";
-import ProtectedRoute from "@/components/protectedroute";
+import {ProtectedRoute} from "@/components/protectedroute";
 import { Announcement } from "@/db/types";
 import {
   UserIcon,

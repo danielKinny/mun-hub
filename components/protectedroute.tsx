@@ -3,7 +3,9 @@ import React, { useEffect } from "react";
 import { useSession } from "../app/context/sessionContext";
 import { useRouter } from "next/navigation";
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+
+// this route protects from all unauthorized
+export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user: currentUser } = useSession();
   const router = useRouter();
 
@@ -14,11 +16,47 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     }
   }, [currentUser, router]);
 
-  if (currentUser === null) {
-    return null;
-  }
+  return <>{children}</>;
+};
+
+// protects from any1 who aint a delegate
+export const DelegateRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user: currentUser } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!('delegateID' in (currentUser || {})) || currentUser === null) {
+      router.push("/login");
+    }
+  }, [currentUser, router]);
 
   return <>{children}</>;
 };
 
-export default ProtectedRoute;
+// protects from any1 who aint an admin
+export const AdminRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user: currentUser } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!('adminID' in (currentUser || {})) || currentUser === null) {
+      router.push("/login");
+    }
+  }, [currentUser, router]);
+
+  return <>{children}</>;
+};
+
+export const ParticipantRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user: currentUser } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (('adminID' in (currentUser || {})) || currentUser === null) {
+      router.push("/login");
+    }
+  }, [currentUser, router]);
+
+  return <>{children}</>;
+}
+

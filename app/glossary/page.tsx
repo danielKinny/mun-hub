@@ -2,7 +2,7 @@
 import React, { useRef } from "react";
 
 import { CustomNav } from "@/components/ui/customnav";
-import ProtectedRoute from "@/components/protectedroute";
+import {ProtectedRoute} from "@/components/protectedroute";
 
 import { Parallax, ParallaxLayer, IParallax } from "@react-spring/parallax";
 

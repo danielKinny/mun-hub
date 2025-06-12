@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
-import ProtectedRoute from "@/components/protectedroute";
+import {ProtectedRoute} from "@/components/protectedroute";
 import { CustomNav } from "@/components/ui/customnav";
 import Image from "next/image";
 import { Article } from "@/db/types";

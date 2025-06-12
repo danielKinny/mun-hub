@@ -1,6 +1,6 @@
 "use client";
 import React, {useEffect, useState} from 'react'
-import ProtectedRoute from '@/components/protectedroute'
+import {ProtectedRoute} from '@/components/protectedroute'
 import { useSession } from '../context/sessionContext'
 import isDelegate from '@/lib/isdelegate';
 import { Editor } from '@tiptap/react'
@@ -20,7 +20,6 @@ const Page = () => {
       }
       const data = await res.json();
       setFetchedResos(data);
-      console.log(data[0])
     }
 
     fetchResos();
@@ -41,8 +40,9 @@ const Page = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        content,
         delegateID: isDelegate(currentUser) ? currentUser?.delegateID : '0000',
+        committeeID: isDelegate(currentUser) ? currentUser?.committee.committeeID : '0000',
+        content,
       }),
     });
 
@@ -58,26 +58,30 @@ const Page = () => {
 
 
 
-  const handlePrintContent = () => {
-    //using this for logging
-    const text = "<h1>Write your resolution here !</h1><p>placeholder cos idk what to say</p><ol><li><p>hahaha</p></li><li><p>hehehe</p></li><li><p>hohoho</p></li></ol><blockquote><p>this </p><p>is </p><p>going to be a list</p></blockquote><p><strong>does</strong> <em>this</em> <s>work</s></p> page.tsx:15:14"
-    if (editorRef.current) {
-      console.log(JSON.stringify(editorRef.current.getJSON()))
-    } else {
-      console.log('Editor not ready')
-    }
-  }
+  // this is specifically for logging and debugging, commenting it out until needed again, might be removed during refactor
+
+  // const handlePrintContent = () => {
+  //   //using this for logging
+  //   const text = "<h1>Write your resolution here !</h1><p>placeholder cos idk what to say</p><ol><li><p>hahaha</p></li><li><p>hehehe</p></li><li><p>hohoho</p></li></ol><blockquote><p>this </p><p>is </p><p>going to be a list</p></blockquote><p><strong>does</strong> <em>this</em> <s>work</s></p> page.tsx:15:14"
+  //   if (editorRef.current) {
+  //     console.log(JSON.stringify(editorRef.current.getJSON()))
+  //   } else {
+  //     console.log('Editor not ready')
+  //   }
+  // }
 
   return (
     <ProtectedRoute>
-      <div className="flex flex-col items-center justify-center w-full">
+      <div className="flex flex-col items-center justify-center w-full min-h-screen overflow-auto">
         <h1 className="cursor-pointer text-7xl font-extrabold text-white text-center transition-all">
           RESOLUTIONS
         </h1>
         <div className="w-full h-[80vh] max-w-2xl mt-8 bg-black text-white outline outline-gray-800 rounded shadow p-4">
           <SimpleEditor ref={editorRef} content={fetchedResos[0]?.content}/>
         </div>
-        <button onClick={handlePrintContent} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded">Print Content</button>
+        <div className='flex gap-6'>
+        <button onClick={postReso} className="mt-4 rounded-2xl px-4 py-2 cursor-pointer bg-green-600 text-white">Post Resolution</button>
+        </div>
       </div>
     </ProtectedRoute>
   )

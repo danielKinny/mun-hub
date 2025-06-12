@@ -1,6 +1,6 @@
 "use client";
 import React from 'react'
-import AdminRoute from '@/components/adminroute'
+import {AdminRoute} from '@/components/protectedroute'
 import { AdminNav } from '@/components/ui/adminnav'
 import supabase from '@/lib/supabase'
 import {toast} from 'sonner'

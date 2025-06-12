@@ -4,6 +4,7 @@ import {CustomNav} from '@/components/ui/customnav'
 import { Update } from '@/db/types'
 import Image from 'next/image'
 import { useSession } from '../context/sessionContext'
+import { ProtectedRoute } from '@/components/protectedroute'
 import { AdminNav } from '@/components/ui/adminnav'
 const Page = () => {
     const {user: currentUser}= useSession();
@@ -26,7 +27,7 @@ const Page = () => {
     },[]);
 
   return (
-    <div>
+    <ProtectedRoute>
         {isAdmin ? <AdminNav/> : 
         <CustomNav />}
         <div className="h-screen text-white">
@@ -55,7 +56,7 @@ const Page = () => {
             </ul>
             
         </div>
-    </div>
+    </ProtectedRoute>
   )
 }
 
