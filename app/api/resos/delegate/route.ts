@@ -25,3 +25,20 @@ export async function GET(url: Request) {
     
 
 }
+
+export async function POST(request: Request) {
+    const { delegateID, committeeID, content } = await request.json();
+    const { data, error } = await supabase.
+    from('Resos')
+    .insert({
+        delegateID,
+        committeeID,
+        content
+    });
+    if (error) {
+        console.error('Error inserting resolution:', error);
+        return NextResponse.json({ error: 'Failed to insert resolution' }, { status: 500 });
+    }
+    return NextResponse.json(data, { status: 201 })
+    ;
+}
