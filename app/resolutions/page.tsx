@@ -10,6 +10,8 @@ const Page = () => {
   const { user: currentUser } = useSession();
   const editorRef = React.useRef<Editor | null>(null);
   const [fetchedResos, setFetchedResos] = useState<any[]>([]);
+  const [selectedReso, setSelectedReso] = useState<any | null>(null);
+  
   // Example: fetchedContent would come from your database
   useEffect(() => {
     const fetchResos = async () => {
@@ -93,7 +95,6 @@ const Page = () => {
               ))
             )}
           </div>
-          {/* Main editor */}
           <div>
             <div className=" h-[80vh] w-325 bg-black text-white outline outline-gray-800 rounded shadow p-4">
               <SimpleEditor
