@@ -25,7 +25,7 @@ export interface Chair {
   commmittee: Committee;
 }
 
-export type UserType = Delegate | Admin | Committee | null;
+export type UserType = Delegate | Admin | Chair | null;
 
 export interface Speech {
   speechID: string;

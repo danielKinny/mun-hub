@@ -70,11 +70,11 @@ const ResosComp = () => {
         className="flex items-center justify-center w-full h-full"
       >
         <div className="flex flex-row items-center justify-center bg-white w-full p-2 gap-2">
-          <div className="grid grid-cols-2 grid-rows-5 gap-2">
+          <div className="grid grid-cols-2 grid-rows-5 gap-2 mx-4 my-8">
             {resos.map((reso, index) => (
               <button
                 key={index}
-                className=" text-blue-900 outline outline-gray-800 p-1 cursor-pointer rounded-lg text-xl"
+                className=" text-blue-900 font-bold outline outline-gray-800 p-1 cursor-pointer rounded-lg text-xl"
                 onClick={() => setReso(reso)}
               >
                 {reso.name}
@@ -89,7 +89,7 @@ const ResosComp = () => {
             </div>
           </div>
           <div className="flex flex-col items-center justify-center h-full ml-2">
-            <div className="text-xl text-blue-900 outline outline-gray-900 p-4 min-h-[100px] w-[320px] rounded transition-all duration-300 flex items-center justify-center">
+            <div className="text-xl font-bold text-blue-900 outline outline-gray-900 p-4 w-[320px] h-[25rem] rounded-lg transition-all duration-300 flex items-center justify-center">
               {reso ? (
                 reso.description
               ) : (

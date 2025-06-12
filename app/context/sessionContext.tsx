@@ -10,10 +10,10 @@ import { Admin, Delegate, Chair } from "@/db/types";
 import Cookies from "js-cookie";
 
 // lot to explain here lolz
-
+type userType = Delegate | Admin | Chair;
 interface SessionContextProps {
-  user: Delegate | Admin | Chair | null;
-  login: (user: Delegate | Admin | Chair) => void;
+  user: userType | null;
+  login: (user: userType) => void;
   logout: () => void;
 }
 
@@ -46,7 +46,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(false);
   }, []);
 
-  const login = (user: Admin | Delegate | Chair) => {
+  const login = (user: userType) => {
     setUser(user);
     Cookies.set("user", JSON.stringify(user));
   };

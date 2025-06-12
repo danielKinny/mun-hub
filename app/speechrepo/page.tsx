@@ -25,6 +25,10 @@ type Country = { countryID: string; flag: string; name: string };
 const Page = () => {
   const { user: currentUser, login } = useSession();
 
+  if (!isDelegate(currentUser)) {
+    return <div className="text-white text-center p-8">Only delegates can access this page.</div>;
+  } //typeguard so that typescript stops being a bum
+
   const [countries, setCountries] = useState<Country[] | null>(null);
   const [speechTags, setSpeechTags] = useState<string[]>([]);
   const [speechList, setSpeechList] = useState<Speech[]>([]);
