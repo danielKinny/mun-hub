@@ -6,14 +6,13 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { Admin, Delegate, Chair } from "@/db/types";
+import { Admin, Delegate, Chair, UserType } from "@/db/types";
 import Cookies from "js-cookie";
 
 // lot to explain here lolz
-type userType = Delegate | Admin | Chair;
 interface SessionContextProps {
-  user: userType | null;
-  login: (user: userType) => void;
+  user: UserType | null;
+  login: (user: UserType) => void;
   logout: () => void;
 }
 
@@ -46,7 +45,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(false);
   }, []);
 
-  const login = (user: userType) => {
+  const login = (user: UserType) => {
     setUser(user);
     Cookies.set("user", JSON.stringify(user));
   };
