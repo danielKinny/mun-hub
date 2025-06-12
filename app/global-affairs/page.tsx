@@ -45,7 +45,7 @@ export default function Page() {
               target="_blank"
               rel="noopener noreferrer"
               key={article.source.id + article.title}
-              className="mb-4 break-inside-avoid p-4 bg-gray-700 bg-opacity-60 rounded-lg cursor-pointer hover:bg-gray-600 hover:bg-opacity-80 w-full inline-block block transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl hover:z-10"
+              className="mb-4 break-inside-avoid p-4 bg-gray-700 bg-opacity-60 rounded-lg cursor-pointer hover:bg-gray-600 hover:bg-opacity-80 w-full inline-block  transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl hover:z-10"
             >
               <h2 className="text-xl font-bold transition-colors duration-300 group-hover:text-blue-300">
                 {article.title}
