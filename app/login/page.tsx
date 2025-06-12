@@ -55,9 +55,64 @@ const Login = () => {
         router.push("/home");
         return;
       } else if (role === "chair") {
-        setError("Chair login not implemented yet");
-        setLoading(false);
-        return;
+
+
+
+        const { data: chair, error: chairError } = await supabase
+          .from("Chair")
+          .select("*")
+          .eq("chairID", trimmedId)
+          .single();
+        if (chairError || !chair) {
+          setError("Chair ID not found");
+          setLoading(false);
+          return;
+        }
+        if (chair.password !== trimmedPassword) {
+          setError("Incorrect password");
+          setLoading(false);
+          return;
+        }
+
+        const { data: committeeID, error: IDerror } = await supabase
+          .from("Committee-Chair")
+          .select("chairID, committeeID")
+          .eq("chairID", trimmedId)
+          .single();
+
+          if (IDerror || !committeeID) {
+            setError("Committee ID not found");
+            setLoading(false);
+            return;
+          }
+
+          const { data: committee, error: committeeError } = await supabase
+          .from("Committee")
+          .select("committeeID, name, href")
+          .eq("committeeID", committeeID.committeeID)
+          .single();
+        if (committeeError || !committee) {
+          setError("Committee not found");
+          setLoading(false);
+          return;
+        }
+
+        const enrichedUser = {
+          ...chair,
+          committee: {
+            committeeID: committee.committeeID,
+            name: committee.name,
+            href: committee.href,
+          },
+        };
+
+        
+
+
+
+
+
+
       } else {
         const { data: delegate, error: delegateError } = await supabase
           .from("Delegate")
