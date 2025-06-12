@@ -28,13 +28,30 @@ export async function GET(url: Request) {
 
 export async function POST(request: Request) {
     const { delegateID, committeeID, content } = await request.json();
+
+    const { data : existingResos, error : resoError } = await supabase
+        .from('Resos')
+        .select('resoID')
+
+    if (existingResos && existingResos.length > 0) {
+    existingResos.sort((a, b) => a.resoID.localeCompare(b.resoID));
+} // look into refactoring this
+
+    if (resoError) {
+        console.error('Error fetching existing resolutions:', resoError);
+        return NextResponse.json({ error: 'Failed to fetch existing resolutions' }, { status: 500 });
+    }
+
+    const highestResoID = existingResos.length > 0 ? (parseInt(existingResos[- 1].resoID)+1).toString().padStart(4,'0') : '0001';
+
     const { data, error } = await supabase.
     from('Resos')
     .insert({
+        highestResoID,
         delegateID,
         committeeID,
         content
-    });
+    }); // insert the reso, lets hop it work
     if (error) {
         console.error('Error inserting resolution:', error);
         return NextResponse.json({ error: 'Failed to insert resolution' }, { status: 500 });
