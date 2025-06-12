@@ -69,12 +69,12 @@ const ResosComp = () => {
         speed={0.9}
         className="flex items-center justify-center w-full h-full"
       >
-        <div className="flex flex-row items-center justify-center h-full w-full gap-2">
-          <div className="flex flex-col items-center justify-center h-full space-y-2">
+        <div className="flex flex-row items-center justify-center bg-white w-full p-2 gap-2">
+          <div className="grid grid-cols-2 grid-rows-5 gap-2">
             {resos.map((reso, index) => (
               <button
                 key={index}
-                className="bg-black text-white cursor-pointer p-2 text-2xl"
+                className=" text-blue-900 outline outline-gray-800 p-1 cursor-pointer rounded-lg text-xl"
                 onClick={() => setReso(reso)}
               >
                 {reso.name}
@@ -82,14 +82,14 @@ const ResosComp = () => {
             ))}
           </div>
           <div className="flex flex-col items-center justify-center h-full mx-2">
-            <div className="bg-black p-2 mb-2">
-              <h1 className="text-white text-9xl text-center font-extrabold">
+            <div className=" p-2 mb-2">
+              <h1 className="text-blue-900 text-9xl text-center font-extrabold">
                 RESOLUTIONS
               </h1>
             </div>
           </div>
           <div className="flex flex-col items-center justify-center h-full ml-2">
-            <div className="text-xl text-white bg-black p-3 min-h-[100px] w-[320px] rounded transition-all duration-300 flex items-center justify-center">
+            <div className="text-xl text-blue-900 outline outline-gray-900 p-4 min-h-[100px] w-[320px] rounded transition-all duration-300 flex items-center justify-center">
               {reso ? (
                 reso.description
               ) : (
