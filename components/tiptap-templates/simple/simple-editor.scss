@@ -52,23 +52,30 @@ body {
     border-radius: 4px;
   }
 
-  /* Firefox scrollbar */
   scrollbar-width: thin;
   scrollbar-color: var(--tt-scrollbar-color) transparent;
 }
 
 .simple-editor-content {
-  max-width: 640px;
+  max-width: 1000px; 
+  min-height: 600px; 
   width: 100%;
   margin: 0 auto;
 }
 
 .simple-editor-content .tiptap.ProseMirror {
+  min-height: 500px; 
+  font-size: 1.15rem;
   padding: 3rem 3rem;
 }
 
 @media screen and (max-width: 480px) {
+  .simple-editor-content {
+    max-width: 100vw;
+    min-height: 300px;
+  }
   .simple-editor-content .tiptap.ProseMirror {
+    min-height: 200px;
     padding: 1rem 1.5rem;
   }
 }
