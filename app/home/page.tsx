@@ -17,7 +17,7 @@ import {
 export default function Home() {
   const { user: currentUser, logout } = useSession();
   const [announcements, setAnnouncements] = React.useState<Announcement[]>([]);
-  const isAdmin = 'adminID' in (currentUser || {});
+  const role =  currentUser && ('delegateID' in currentUser ? 'delegate' : 'chairID' in currentUser ? 'chair' : 'admin');
 
   const fetchAnnouncements = useCallback(async () => {
     const res = await fetch("/api/announcements");
@@ -51,7 +51,7 @@ export default function Home() {
           >
             MUN Hub - Welcome{" "}
             {currentUser?.firstname}
-            {!isAdmin && currentUser && 'country' in currentUser && " " + currentUser.country.flag}
+            { role==="delegate" && currentUser && 'country' in currentUser && " " + currentUser.country.flag}
           </motion.h1>
 
             <motion.h2
@@ -60,9 +60,12 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              {!isAdmin && currentUser && 'country' in currentUser && 'committee' in currentUser
-                ? `You are the delegate of ${currentUser.country.name} ${currentUser.committee.name}`
-                : 'Admin Access'}
+              {currentUser && 'delegateID' in currentUser
+                ? `You are the delegate of ${currentUser?.country.name} ${currentUser?.committee?.name}`
+                : currentUser && 'chairID' in currentUser
+                ? `You are the chair of ${currentUser?.committee?.name}`
+                : "Admin Access"
+              }
             </motion.h2>
           
         </header>
@@ -70,7 +73,7 @@ export default function Home() {
         <main className="flex-grow w-full max-w-4xl mx-auto">
           {/* dis is da beginning of da page content ya feel me */}
           <section className="w-full block mb-8">
-            {!isAdmin ? <CustomNav /> : <AdminNav />}
+            {!(role === "admin") ? <CustomNav /> : <AdminNav />}
           </section>
           <section className="w-full block mb-8">
             <div className="flex flex-wrap">
