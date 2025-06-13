@@ -8,7 +8,10 @@ import { Editor } from "@tiptap/react";
 import { SimpleEditor } from "../../components/tiptap-templates/simple/simple-editor";
 import { ParticipantRoute } from "@/components/protectedroute";
 import {toast} from 'sonner';
+import { CustomNav } from "@/components/ui/customnav";
 // this page assumes that delegates can only post 1 reso, might be changed later
+
+
 const Page = () => {
   const { user: currentUser } = useSession();
   const editorRef = React.useRef<Editor | null>(null);
@@ -90,44 +93,45 @@ const Page = () => {
 
   return (
     <ParticipantRoute>
-      <div className="flex flex-col items-center justify-center w-full min-h-screen overflow-auto">
-        <h1 className="cursor-pointer text-7xl font-extrabold text-white text-center transition-all mb-8">
-          RESOLUTIONS
-        </h1>
-        <div className="flex w-full gap-8 ">
-          <div className="min-w-1/6 max-w-xs h-[80vh] overflow-y-auto outline-2 outline-gray-900 text-white rounded shadow p-4 mr-4 flex flex-col gap-2">
-            <h2 className="text-xl text-center font-bold mb-2">All Resolutions</h2>
-            {fetchedResos.length === 0 ? (
-              <div className="text-gray-400 text-center">No resolutions found.</div>
-            ) : (
-              fetchedResos.map((reso, idx) => (
-                <button
-                  key={reso.resoID}
-                  className="font-extrabold outline outline-gray-800 rounded-lg px-3 py-2 mb-2 hover:bg-gray-700 cursor-pointer transition-colors"
-                  onClick={() => { setSelectedReso(reso); }}
-                >
-                  {`Resolution #${idx + 1}`}
-                </button>
-              ))
-            )}
-          </div>
-          <div>
-            <div className=" h-[80vh] w-325 bg-black text-white outline outline-gray-800 rounded shadow p-4">
+      <div className="min-h-screen w-full bg-black flex flex-col">
+        <CustomNav />
+        <main className="flex-1 flex flex-col items-center justify-start px-2 py-6 md:py-10">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white text-center mb-6 md:mb-10 tracking-tight drop-shadow-lg">
+            RESOLUTIONS
+          </h1>
+          <div className="flex flex-col md:flex-row w-full max-w-8xl gap-6 md:gap-10">
+            <aside className="w-full md:max-w-xs h-[350px] md:h-[80vh] overflow-y-auto bg-gray-900/80 text-white rounded-lg shadow-lg p-4 flex flex-col gap-2 mb-4 md:mb-0">
+              <h2 className="text-lg md:text-xl text-center font-bold mb-2">All Resolutions</h2>
+              {fetchedResos.length === 0 ? (
+                <div className="text-gray-400 text-center">No resolutions found.</div>
+              ) : (
+                fetchedResos.map((reso, idx) => (
+                  <button
+                    key={reso.resoID}
+                    className="font-bold outline outline-gray-800 rounded-lg px-3 py-2 mb-2 hover:bg-gray-700 cursor-pointer transition-colors text-left w-full"
+                    onClick={() => { setSelectedReso(reso); }}
+                  >
+                    {`Resolution #${idx + 1}`}
+                  </button>
+                ))
+              )}
+            </aside>
+            <section className="flex-1 flex flex-col bg-black/90 text-white outline outline-gray-800 rounded-lg shadow-lg p-4 min-h-[350px] h-[80vh] w-full md:w-[700px] mx-auto">
               <SimpleEditor
                 ref={editorRef}
                 content={ selectedReso?.content || undefined }
               />
-            </div>
-            <div className="flex gap-6">
+              <div className="flex justify-end mt-4">
                 <button
-                onClick={postReso}
-                className={`mt-4 rounded-2xl px-4 py-2 cursor-pointer bg-green-600 text-white`}
+                  onClick={postReso}
+                  className="rounded-2xl px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold shadow transition-colors"
                 >
-                Post Resolution
+                  Post Resolution
                 </button>
-            </div>
+              </div>
+            </section>
           </div>
-        </div>
+        </main>
       </div>
     </ParticipantRoute>
   );
