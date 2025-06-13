@@ -10,8 +10,8 @@ const Page = () => {
   const { user: currentUser } = useSession();
   const editorRef = React.useRef<Editor | null>(null);
   const [fetchedResos, setFetchedResos] = useState<any[]>([]);
-  const [selectedReso, setSelectedReso] = useState<any | null>(null);
-  
+  const [selectedReso, setSelectedReso] = useState<any | null>(0);
+
   // Example: fetchedContent would come from your database
   useEffect(() => {
     const fetchResos = async () => {
@@ -49,6 +49,7 @@ const Page = () => {
           ? currentUser?.committee.committeeID
           : "0000",
         content,
+        isNew: selectedReso? true : false,
       }),
     });
 
@@ -80,18 +81,19 @@ const Page = () => {
           RESOLUTIONS
         </h1>
         <div className="flex w-full gap-8 ">
-          <div className="min-w-1/6 max-w-xs h-[80vh] overflow-y-auto bg-gray-900 text-white rounded shadow p-4 mr-4 flex flex-col gap-2">
-            <h2 className="text-xl font-bold mb-2">All Resolutions</h2>
+          <div className="min-w-1/6 max-w-xs h-[80vh] overflow-y-auto outline-2 outline-gray-900 text-white rounded shadow p-4 mr-4 flex flex-col gap-2">
+            <h2 className="text-xl text-center font-bold mb-2">All Resolutions</h2>
             {fetchedResos.length === 0 ? (
               <div className="text-gray-400">No resolutions found.</div>
             ) : (
               fetchedResos.map((reso, idx) => (
-                <div
-                  key={reso.id || idx}
-                  className="bg-gray-800 rounded px-3 py-2 mb-2 hover:bg-gray-700 cursor-pointer transition-colors"
+                <button
+                  key={idx}
+                  className="font-extrabold outline outline-gray-800 rounded-lg px-3 py-2 mb-2 hover:bg-gray-700 cursor-pointer transition-colors"
+                  onClick={() => { setSelectedReso(idx); }}
                 >
                   {reso.title || `Resolution #${idx + 1}`}
-                </div>
+                </button>
               ))
             )}
           </div>
@@ -99,7 +101,7 @@ const Page = () => {
             <div className=" h-[80vh] w-325 bg-black text-white outline outline-gray-800 rounded shadow p-4">
               <SimpleEditor
                 ref={editorRef}
-                content={fetchedResos[0]?.content}
+                content={fetchedResos[selectedReso]?.content || ""}
               />
             </div>
             <div className="flex gap-6">
