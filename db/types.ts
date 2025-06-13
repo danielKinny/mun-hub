@@ -22,7 +22,7 @@ export interface Chair {
   firstname: string;
   lastname: string;
   password: string;
-  commmittee: Committee;
+  committee: Committee;
 }
 
 export type UserType = Delegate | Admin | Chair | null;

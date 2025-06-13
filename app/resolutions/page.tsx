@@ -23,8 +23,9 @@ const Page = () => {
   useEffect(() => {
     const fetchResos = async () => {
       const res = await fetch(
-        `/api/resos/delegate?delegateID=${
-          isDelegate(currentUser) ? currentUser?.delegateID : "0000"
+        isDelegate(currentUser) ?
+          `/api/resos/delegate?delegateID=${currentUser?.delegateID}` :
+          `/api/resos/chair?committeeID=${currentUser?.committee.committeeID
         }`
       );
       if (!res.ok) {
