@@ -59,21 +59,20 @@ export async function POST(request: Request) {
 
     const highestResoID = existingResos.length > 0 ? (parseInt(existingResos[existingResos.length-1].resoID)+1).toString().padStart(4,'0') : '0001';
 
-
-    console.log(highestResoID);
-
-    const { data, error } = await supabase.
-    from('Resos')
-    .insert({
-        resoID : highestResoID,
+    const newReso = {
+        resoID: highestResoID,
         delegateID,
         committeeID,
         content
-    }); // insert the reso, lets hope it work
+    }
+
+    const { data, error } = await supabase.
+    from('Resos')
+    .insert(newReso); // insert the reso, lets hope it work
     if (error) {
         console.error('Error inserting resolution:', error);
         return NextResponse.json({ error: 'Failed to insert resolution' }, { status: 500 });
     }
-    return NextResponse.json(data, { status: 201 })
+    return NextResponse.json(newReso, { status: 201 })
     ;
 }

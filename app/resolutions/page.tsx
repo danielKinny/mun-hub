@@ -7,10 +7,11 @@ import isParticipant from "@/lib/isparticipant";
 import { Editor } from "@tiptap/react";
 import { SimpleEditor } from "../../components/tiptap-templates/simple/simple-editor";
 import { ParticipantRoute } from "@/components/protectedroute";
-import {toast} from 'sonner';
+import { toast } from "sonner";
 import { CustomNav } from "@/components/ui/customnav";
+// Removed Card imports
+// Removed ArrowRightIcon import, using a simple arrow instead
 // this page assumes that delegates can only post 1 reso, might be changed later
-
 
 const Page = () => {
   const { user: currentUser } = useSession();
@@ -18,18 +19,21 @@ const Page = () => {
   const [fetchedResos, setFetchedResos] = useState<Reso[]>([]);
   const [selectedReso, setSelectedReso] = useState<Reso | null>(null);
 
-   if (!isParticipant(currentUser)) {
-      return <div className="text-white bg-black min-h-screen text-center p-8">Only delegates or chairs can access this page.</div>;
-    }
+  if (!isParticipant(currentUser)) {
+    return (
+      <div className="text-white bg-black min-h-screen text-center p-8">
+        Only delegates or chairs can access this page.
+      </div>
+    );
+  }
 
   // Example: fetchedContent would come from your database
   useEffect(() => {
     const fetchResos = async () => {
       const res = await fetch(
-        isDelegate(currentUser) ?
-          `/api/resos/delegate?delegateID=${currentUser?.delegateID}` :
-          `/api/resos/chair?committeeID=${currentUser?.committee.committeeID
-        }`
+        isDelegate(currentUser)
+          ? `/api/resos/delegate?delegateID=${currentUser?.delegateID}`
+          : `/api/resos/chair?committeeID=${currentUser?.committee.committeeID}`
       );
       if (!res.ok) {
         console.error("Failed to fetch resolutions");
@@ -38,6 +42,8 @@ const Page = () => {
       const data = await res.json();
       setFetchedResos(data);
     };
+
+    console.log(fetchedResos);
 
     fetchResos();
   }, [currentUser]);
@@ -49,8 +55,8 @@ const Page = () => {
     }
 
     const content = editorRef.current.getJSON();
-    
-    if (fetchedResos.length >= 1 && !selectedReso){
+
+    if (fetchedResos.length >= 1 && !selectedReso) {
       toast.error("You can only post one resolution as a delegate.");
       return;
     }
@@ -61,7 +67,7 @@ const Page = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        resoID : selectedReso ? selectedReso.resoID : -1,
+        resoID: selectedReso ? selectedReso.resoID : -1,
         delegateID: isDelegate(currentUser) ? currentUser?.delegateID : "0000",
         committeeID: isDelegate(currentUser)
           ? currentUser?.committee.committeeID
@@ -75,8 +81,14 @@ const Page = () => {
       console.error("Failed to post resolution");
       return;
     }
-    await res.json();
-    toast.success(`Resolution ${selectedReso ? "updated" : "posted"} successfully!`);
+    const newReso = await res.json();
+    toast.success(
+      `Resolution ${selectedReso ? "updated" : "posted"} successfully!`
+    );
+
+    if (!selectedReso && !fetchedResos.some(r => r.resoID === newReso.resoID)) {
+      setFetchedResos(prev => [...prev, newReso]);
+    }
   };
 
   // this is specifically for logging and debugging, commenting it out until needed again, might be removed during refactor
@@ -100,31 +112,46 @@ const Page = () => {
             RESOLUTIONS
           </h1>
           <div className="flex flex-col md:flex-row w-full max-w-8xl gap-6 md:gap-10">
-            <aside className="w-full md:max-w-xs h-[350px] md:h-[80vh] overflow-y-auto bg-gray-900/80 text-white rounded-lg shadow-lg p-4 flex flex-col gap-2 mb-4 md:mb-0">
-              <h2 className="text-lg md:text-xl text-center font-bold mb-2">All Resolutions</h2>
+            <aside className="w-full md:max-w-xs h-[350px] md:h-[80vh] overflow-y-auto bg-gradient-to-b from-gray-900/90 to-gray-800/80 text-white rounded-2xl shadow-2xl p-4 flex flex-col gap-3 mb-4 md:mb-0 border border-gray-700 backdrop-blur-md">
+              <h2 className="text-xl md:text-2xl text-center font-extrabold mb-3 tracking-tight text-blue-400 drop-shadow">
+                All Resolutions
+              </h2>
               {fetchedResos.length === 0 ? (
-                <div className="text-gray-400 text-center">No resolutions found.</div>
+                <div className="text-gray-400 text-center italic">
+                  No resolutions found.
+                </div>
               ) : (
-                fetchedResos.map((reso, idx) => (
-                  <button
-                    key={reso.resoID}
-                    className="font-bold outline outline-gray-800 rounded-lg px-3 py-2 mb-2 hover:bg-gray-700 cursor-pointer transition-colors text-left w-full"
-                    onClick={() => { setSelectedReso(reso); }}
-                  >
-                    {`Resolution #${idx + 1}`}
-                  </button>
-                ))
+                fetchedResos.map((reso, idx) => {
+                  if (!reso) return null; // Skip null/undefined entries
+                  return (
+                    <button
+                      key={reso.resoID}
+                      className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 cursor-pointer border-2 shadow-md text-left font-semibold text-white mb-2
+                        ${selectedReso?.resoID === reso.resoID
+                          ? "border-blue-500 bg-gray-800/90 scale-[1.03]"
+                          : "border-gray-700 bg-gray-900/80 hover:scale-[1.03] hover:border-blue-400/80 hover:bg-gray-800/80"}
+                      `}
+                      onClick={() => setSelectedReso(reso)}
+                    >
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-600/80 text-white font-bold shadow">
+                        {idx + 1}
+                      </span>
+                      <span className="text-lg flex-1">Resolution #{idx + 1}</span>
+                      <span className="text-blue-400 text-xl">&gt;</span>
+                    </button>
+                  );
+                })
               )}
             </aside>
             <section className="flex-1 flex flex-col bg-black/90 text-white outline outline-gray-800 rounded-lg shadow-lg p-4 min-h-[350px] h-[80vh] w-full md:w-[700px] mx-auto">
               <SimpleEditor
                 ref={editorRef}
-                content={ selectedReso?.content || undefined }
+                content={selectedReso?.content || undefined}
               />
               <div className="flex justify-end mt-4">
                 <button
                   onClick={postReso}
-                  className="rounded-2xl px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold shadow transition-colors"
+                  className="rounded-2xl  cursor-pointer px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow transition-colors"
                 >
                   Post Resolution
                 </button>
