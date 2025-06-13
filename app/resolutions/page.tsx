@@ -101,7 +101,7 @@ const Page = () => {
             ) : (
               fetchedResos.map((reso, idx) => (
                 <button
-                  key={idx}
+                  key={reso.resoID}
                   className="font-extrabold outline outline-gray-800 rounded-lg px-3 py-2 mb-2 hover:bg-gray-700 cursor-pointer transition-colors"
                   onClick={() => { setSelectedReso(reso); }}
                 >
@@ -114,7 +114,7 @@ const Page = () => {
             <div className=" h-[80vh] w-325 bg-black text-white outline outline-gray-800 rounded shadow p-4">
               <SimpleEditor
                 ref={editorRef}
-                content={ selectedReso?.content || {}}
+                content={ selectedReso?.content || undefined }
               />
             </div>
             <div className="flex gap-6">

@@ -10,7 +10,7 @@ export async function GET(url: Request) {
 
     const { data, error } = await supabase
         .from('Resos')
-        .select('content')
+        .select('*')
         .eq('delegateID', author);
 
 
@@ -27,15 +27,14 @@ export async function GET(url: Request) {
 }
 
 export async function POST(request: Request) {
-    const { delegateID, committeeID, content, isNew } = await request.json();
+    const { resoID, delegateID, committeeID, content } = await request.json();
 
-    if (!isNew){
-        console.log("this triggers");
+    if (resoID !== -1){
+        console.log('trying to update');
         const { error } = await supabase
             .from('Resos')
-            .update({ content })
-            .eq('delegateID', delegateID)
-            .eq('committeeID', committeeID);
+            .update({content})
+            .eq('resoID', resoID)
         if (error) {
             console.error('Error updating resolution:', error);
             return NextResponse.json({ error: 'Failed to update resolution' }, { status: 500 });
