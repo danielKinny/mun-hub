@@ -4,7 +4,7 @@ import { useEffect, useMemo, useCallback, useState } from "react";
 import { CustomNav } from "@/components/ui/customnav";
 import { useSession } from "../context/sessionContext";
 import { Speech } from "@/db/types";
-import {DelegateRoute} from "@/components/protectedroute";
+import { ParticipantRoute } from "@/components/protectedroute";
 import { toast } from "sonner";
 import { createSpeechID } from "@/lib/createID";
 import CountryOverlay from "@/components/ui/countryoverlay";
@@ -293,7 +293,7 @@ const Page = () => {
   );
 
   return (
-    <DelegateRoute>
+    <ParticipantRoute>
       <CustomNav />
       <div
         className="flex text-white p-4 bg-gradient-to-b from-black to-gray-950 min-h-screen relative overflow-hidden animate-fadein"
@@ -447,7 +447,7 @@ const Page = () => {
           onDelete={confirmSpeechDelete}
         />
       )}
-    </DelegateRoute>
+    </ParticipantRoute>
   );
 };
 export default Page;

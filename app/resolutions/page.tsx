@@ -1,16 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ProtectedRoute } from "@/components/protectedroute";
 import { useSession } from "../context/sessionContext";
 import isDelegate from "@/lib/isdelegate";
+import isPartiticpant from "@/lib/isparticipant";
 import { Editor } from "@tiptap/react";
 import { SimpleEditor } from "../../components/tiptap-templates/simple/simple-editor";
-
+import { ParticipantRoute } from "@/components/protectedroute";
 const Page = () => {
   const { user: currentUser } = useSession();
   const editorRef = React.useRef<Editor | null>(null);
   const [fetchedResos, setFetchedResos] = useState<any[]>([]);
   const [selectedReso, setSelectedReso] = useState<any | null>(0);
+
+   if (!isDelegate(currentUser)) {
+      return <div className="text-white bg-black min-h-screen text-center p-8">Only delegates or chairs can access this page.</div>;
+    }
 
   // Example: fetchedContent would come from your database
   useEffect(() => {
@@ -75,7 +79,7 @@ const Page = () => {
   // }
 
   return (
-    <ProtectedRoute>
+    <ParticipantRoute>
       <div className="flex flex-col items-center justify-center w-full min-h-screen overflow-auto">
         <h1 className="cursor-pointer text-7xl font-extrabold text-white text-center transition-all mb-8">
           RESOLUTIONS
@@ -115,7 +119,7 @@ const Page = () => {
           </div>
         </div>
       </div>
-    </ProtectedRoute>
+    </ParticipantRoute>
   );
 };
 
