@@ -94,3 +94,11 @@ export interface Admin {
   lastname: string;
   password: string;
 }
+
+export interface Reso {
+  resoID: string;
+  delegateID: string;
+  committeeID: string;
+  content: Object;
+  isNew: boolean;
+}

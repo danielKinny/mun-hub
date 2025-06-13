@@ -1,18 +1,21 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { Reso } from "@/db/types";
 import { useSession } from "../context/sessionContext";
 import isDelegate from "@/lib/isdelegate";
-import isPartiticpant from "@/lib/isparticipant";
+import isParticipant from "@/lib/isparticipant";
 import { Editor } from "@tiptap/react";
 import { SimpleEditor } from "../../components/tiptap-templates/simple/simple-editor";
 import { ParticipantRoute } from "@/components/protectedroute";
+import {toast} from 'sonner';
+// this page assumes that delegates can only post 1 reso, might be changed later
 const Page = () => {
   const { user: currentUser } = useSession();
   const editorRef = React.useRef<Editor | null>(null);
-  const [fetchedResos, setFetchedResos] = useState<any[]>([]);
-  const [selectedReso, setSelectedReso] = useState<any | null>(0);
+  const [fetchedResos, setFetchedResos] = useState<Reso[]>([]);
+  const [selectedReso, setSelectedReso] = useState<Reso | null>(null);
 
-   if (!isDelegate(currentUser)) {
+   if (!isParticipant(currentUser)) {
       return <div className="text-white bg-black min-h-screen text-center p-8">Only delegates or chairs can access this page.</div>;
     }
 
@@ -37,23 +40,30 @@ const Page = () => {
 
   const postReso = async () => {
     if (!editorRef.current) {
-      console.error("Editor not initialized");
+      toast.error("Editor not initialized");
       return;
     }
 
     const content = editorRef.current.getJSON();
+    
+    if (fetchedResos.length >= 1 && !selectedReso){
+      toast.error("You can only post one resolution as a delegate.");
+      return;
+    }
+
     const res = await fetch("/api/resos/delegate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        resoID : selectedReso ? selectedReso.resoID : -1,
         delegateID: isDelegate(currentUser) ? currentUser?.delegateID : "0000",
         committeeID: isDelegate(currentUser)
           ? currentUser?.committee.committeeID
           : "0000",
         content,
-        isNew: selectedReso? true : false,
+        isNew: !selectedReso,
       }),
     });
 
@@ -61,9 +71,8 @@ const Page = () => {
       console.error("Failed to post resolution");
       return;
     }
-
-    const data = await res.json();
-    console.log("Resolution posted:", data);
+    await res.json();
+    toast.success(`Resolution ${selectedReso ? "updated" : "posted"} successfully!`);
   };
 
   // this is specifically for logging and debugging, commenting it out until needed again, might be removed during refactor
@@ -88,15 +97,15 @@ const Page = () => {
           <div className="min-w-1/6 max-w-xs h-[80vh] overflow-y-auto outline-2 outline-gray-900 text-white rounded shadow p-4 mr-4 flex flex-col gap-2">
             <h2 className="text-xl text-center font-bold mb-2">All Resolutions</h2>
             {fetchedResos.length === 0 ? (
-              <div className="text-gray-400">No resolutions found.</div>
+              <div className="text-gray-400 text-center">No resolutions found.</div>
             ) : (
               fetchedResos.map((reso, idx) => (
                 <button
                   key={idx}
                   className="font-extrabold outline outline-gray-800 rounded-lg px-3 py-2 mb-2 hover:bg-gray-700 cursor-pointer transition-colors"
-                  onClick={() => { setSelectedReso(idx); }}
+                  onClick={() => { setSelectedReso(reso); }}
                 >
-                  {reso.title || `Resolution #${idx + 1}`}
+                  {`Resolution #${idx + 1}`}
                 </button>
               ))
             )}
@@ -105,16 +114,16 @@ const Page = () => {
             <div className=" h-[80vh] w-325 bg-black text-white outline outline-gray-800 rounded shadow p-4">
               <SimpleEditor
                 ref={editorRef}
-                content={fetchedResos[selectedReso]?.content || ""}
+                content={ selectedReso?.content || {}}
               />
             </div>
             <div className="flex gap-6">
-              <button
+                <button
                 onClick={postReso}
-                className="mt-4 rounded-2xl px-4 py-2 cursor-pointer bg-green-600 text-white"
-              >
+                className={`mt-4 rounded-2xl px-4 py-2 cursor-pointer bg-green-600 text-white`}
+                >
                 Post Resolution
-              </button>
+                </button>
             </div>
           </div>
         </div>

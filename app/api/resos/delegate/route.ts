@@ -19,7 +19,7 @@ export async function GET(url: Request) {
         return NextResponse.json({ error: 'Failed to fetch resolutions' }, { status: 500 });
     }
     if (!data || data.length === 0) {
-        return NextResponse.json({ message: 'No resolutions found' }, { status: 404 });
+        return NextResponse.json(data, { status: 200 });
     }
     return NextResponse.json(data, { status: 200 });
     
@@ -27,7 +27,21 @@ export async function GET(url: Request) {
 }
 
 export async function POST(request: Request) {
-    const { delegateID, committeeID, content } = await request.json();
+    const { delegateID, committeeID, content, isNew } = await request.json();
+
+    if (!isNew){
+        console.log("this triggers");
+        const { error } = await supabase
+            .from('Resos')
+            .update({ content })
+            .eq('delegateID', delegateID)
+            .eq('committeeID', committeeID);
+        if (error) {
+            console.error('Error updating resolution:', error);
+            return NextResponse.json({ error: 'Failed to update resolution' }, { status: 500 });
+        }
+        return NextResponse.json({ message: 'Resolution updated successfully' }, { status: 200 });
+    }
 
     const { data : existingResos, error : resoError } = await supabase
         .from('Resos')
