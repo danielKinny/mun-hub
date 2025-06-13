@@ -59,13 +59,21 @@ const Page = () => {
       return;
     }
     const data = await response.json();
-    setSpeechList(data.speeches);
+    setSpeechList(data.speeches || []);
   }, [currentUser, userRole, isDelegateUser, isChairUser]);
 
   const fetchCountries = useCallback(async () => {
-    if (!isDelegateUser || !(currentUser as any).committee) return;
+    let committeeID;
+    if (isDelegateUser && (currentUser as any).committee) {
+      committeeID = (currentUser as any).committee.committeeID;
+    } else if (isChairUser && (currentUser as any).committee) {
+      committeeID = (currentUser as any).committee.committeeID;
+    } else {
+      setCountries([]);
+      return;
+    }
     try {
-      const response = await fetch(`/api/countries?committeeID=${(currentUser as any).committee.committeeID}`);
+      const response = await fetch(`/api/countries?committeeID=${committeeID}`);
       if (response.ok) {
         const data = await response.json();
         setCountries([...data]);
@@ -75,7 +83,7 @@ const Page = () => {
     } catch {
       setCountries([]);
     }
-  }, [currentUser, userRole, isDelegateUser]);
+  }, [currentUser, userRole, isDelegateUser, isChairUser]);
 
   const searchEngine = useCallback(
     (query: string) => {
@@ -207,7 +215,7 @@ const Page = () => {
         [idKey]: idValue,
       }),
     });
-    await response.json();
+    const result = await response.json();
     if (response.ok) {
       toast.success(
         `Speech ${selectedSpeech ? "updated" : "added"} successfully`
@@ -215,16 +223,16 @@ const Page = () => {
       if (selectedSpeech) {
         setSpeechList((prev) =>
           prev.map((speech) =>
-            speech.speechID === selectedSpeech.speechID ? speechData : speech
+            speech.speechID === selectedSpeech.speechID ? { ...speechData, speechID: selectedSpeech.speechID } : speech
           )
         );
       } else {
-        setSpeechList((prev) => [speechData, ...prev]);
+        const newSpeech = { ...speechData, speechID: result.speechID };
+        setSpeechList((prev) => [newSpeech, ...prev]);
       }
       setHeading("");
       setContent("");
       setSpeechTags([]);
-      setSelectedSpeech(null);
       setHasUnsavedChanges(false);
     }
   }, [currentUser, heading, content, selectedSpeech, speechTags, login, userRole, isDelegateUser, isChairUser]);

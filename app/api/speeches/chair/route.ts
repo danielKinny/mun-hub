@@ -1,40 +1,8 @@
 import { NextResponse } from "next/server";
-import { Speech } from "@/db/types";
 import supabase from "@/lib/supabase";
 // this is gonna be for chairs, they need seperate logic because their ids can overlap with delegates
-export async function DELETE(request: Request) {
-  try {
-    const { speechID } = await request.json();
-    if (!speechID) {
-      return new NextResponse(JSON.stringify({ message: "Missing speechID" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
 
-    const { error } = await supabase
-      .from("Speech")
-      .delete()
-      .eq("speechID", speechID);
-
-    if (error) {
-      return new NextResponse(
-        JSON.stringify({ message: `Error deleting speech: ${error.message}` }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
-      );
-    }
-
-    return new NextResponse(
-      JSON.stringify({ message: "Speech deleted successfully" }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
-  } catch {
-    return new NextResponse(
-      JSON.stringify({ message: "Error deleting speech" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
-  }
-}
+//no delete request, it doesnt really matter honestly, cos the logic is the same as for delegates
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -171,7 +139,7 @@ export async function GET(request: Request) {
     const chairIDParam = searchParams.get("chairID");
     
     let speechesQuery = supabase
-      .from("Delegate-Speech")
+      .from("Chair-Speech")
       .select("speechID")
       .eq("chairID", chairIDParam)
     
