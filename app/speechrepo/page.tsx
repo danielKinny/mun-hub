@@ -6,7 +6,6 @@ import { useSession } from "../context/sessionContext";
 import { Speech } from "@/db/types";
 import { ParticipantRoute } from "@/components/protectedroute";
 import { toast } from "sonner";
-import { createSpeechID } from "@/lib/createID";
 import CountryOverlay from "@/components/ui/countryoverlay";
 import UnsavedChangesModal from "@/components/ui/unsavedchangesmodal";
 import DeleteConfirmModal from "@/components/ui/deleteconfirmmodal";
@@ -17,17 +16,22 @@ import {
   MagnifyingGlassCircleIcon,
   TagIcon,
 } from "@heroicons/react/24/outline";
-import isDelegate from "@/lib/isdelegate";
-// this page needs to be refactored
+import role from "@/lib/roles";
 
 type Country = { countryID: string; flag: string; name: string };
 
 const Page = () => {
   const { user: currentUser, login } = useSession();
+  const userRole = role(currentUser);
 
-  if (!isDelegate(currentUser)) {
-    return <div className="text-white text-center p-8">Only delegates can access this page.</div>;
-  } //typeguard so that typescript stops being a bum
+  // Only delegates and chairs can access this page
+  if (userRole !== "delegate" && userRole !== "chair") {
+    return <div className="text-white text-center p-8">Only delegates or chairs can access this page.</div>;
+  }
+
+  // Type guards for role-specific access
+  const isDelegateUser = userRole === "delegate" && currentUser !== null;
+  const isChairUser = userRole === "chair" && currentUser !== null;
 
   const [countries, setCountries] = useState<Country[] | null>(null);
   const [speechTags, setSpeechTags] = useState<string[]>([]);
@@ -46,19 +50,22 @@ const Page = () => {
   } | null>(null);
 
   const fetchSpeeches = useCallback(async () => {
-    if (!isDelegate(currentUser)) return;
-
-    const response = await fetch(
-      `/api/speeches/delegate?delegateID=${currentUser.delegateID}`
-    );
+    let response;
+    if (isDelegateUser) {
+      response = await fetch(`/api/speeches/delegate?delegateID=${(currentUser as any).delegateID}`);
+    } else if (isChairUser) {
+      response = await fetch(`/api/speeches/chair?chairID=${(currentUser as any).chairID}`);
+    } else {
+      return;
+    }
     const data = await response.json();
     setSpeechList(data.speeches);
-  }, [currentUser]);
+  }, [currentUser, userRole, isDelegateUser, isChairUser]);
 
   const fetchCountries = useCallback(async () => {
-    if (!isDelegate(currentUser) || !currentUser.committee) return;
+    if (!isDelegateUser || !(currentUser as any).committee) return;
     try {
-      const response = await fetch(`/api/countries?committeeID=${currentUser.committee.committeeID}`);
+      const response = await fetch(`/api/countries?committeeID=${(currentUser as any).committee.committeeID}`);
       if (response.ok) {
         const data = await response.json();
         setCountries([...data]);
@@ -68,7 +75,7 @@ const Page = () => {
     } catch {
       setCountries([]);
     }
-  }, [currentUser]);
+  }, [currentUser, userRole, isDelegateUser]);
 
   const searchEngine = useCallback(
     (query: string) => {
@@ -173,26 +180,31 @@ const Page = () => {
   }, []);
 
   const addSpeech = useCallback(async () => {
-    if (!isDelegate(currentUser)) {
-      toast.error("No delegateID found for current user");
+    if (!isDelegateUser && !isChairUser) {
+      toast.error("Only delegates or chairs can add speeches");
       return;
     }
+    const user = currentUser as any;
     const speechData: Speech = {
       title: heading,
       speechID: selectedSpeech ? selectedSpeech?.speechID : "-1",
       content: content,
       date: new Date().toISOString(),
       tags: speechTags,
-      delegateID: currentUser.delegateID,
+      delegateID: isDelegateUser ? user.delegateID : undefined,
+      // chairID removed from Speech object
     };
-    const response = await fetch("/api/speeches/delegate", {
+    const endpoint = isDelegateUser ? "/api/speeches/delegate" : "/api/speeches/chair";
+    const idKey = isDelegateUser ? "delegateID" : "chairID";
+    const idValue = isDelegateUser ? user.delegateID : user.chairID;
+    const response = await fetch(endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         speechData,
-        delegateID: currentUser.delegateID,
+        [idKey]: idValue,
       }),
     });
     await response.json();
@@ -215,7 +227,7 @@ const Page = () => {
       setSelectedSpeech(null);
       setHasUnsavedChanges(false);
     }
-  }, [currentUser, heading, content, selectedSpeech, speechTags, login]);
+  }, [currentUser, heading, content, selectedSpeech, speechTags, login, userRole, isDelegateUser, isChairUser]);
 
   const handleDeleteClick = useCallback(() => {
     if (!selectedSpeech?.speechID) {
@@ -236,7 +248,8 @@ const Page = () => {
     }
 
     const speechID = selectedSpeech.speechID;
-    const response = await fetch("/api/speeches", {
+    //reusing the delete route no matter the role because logic is unaffected
+    const response = await fetch("/api/speeches/delegate", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -340,7 +353,7 @@ const Page = () => {
         <div className="w-full h-screen space-y-2 p-4 animate-slidein-up">
           <div className="w-8/9 mx-8 pb-2 flex items-center">
             <p className="text-4xl font-bold mx-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 drop-shadow-lg animate-text-pop">
-              {isDelegate(currentUser) ? currentUser.firstname : ""} Speech Repo
+              {(isDelegateUser || isChairUser) ? (currentUser as any).firstname : ""} Speech Repo
             </p>
             <div className="flex space-x-4 ml-auto">
               <button
@@ -362,16 +375,17 @@ const Page = () => {
                   addSpeech();
                 }}
                 className="bg-blue-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-blue-600 active:scale-95 focus:scale-105 animate-btn-pop"
+                disabled={userRole !== "delegate" && userRole !== "chair"}
               >
                 <p className="inline-block">
                   {selectedSpeech ? "Update" : "Add"}
                 </p>
                 <PlusCircleIcon className="h-6 w-6 inline-block" />
               </button>
-
               <button
                 onClick={handleDeleteClick}
                 className="bg-red-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-red-600 active:scale-95 focus:scale-105 animate-btn-pop"
+                disabled={userRole !== "delegate" && userRole !== "chair"}
               >
                 <p className="inline-block">Delete</p>
                 <ArchiveBoxXMarkIcon className="h-6 w-6 inline-block" />

@@ -2,24 +2,22 @@
 import React, { useEffect, useState } from "react";
 import { Reso } from "@/db/types";
 import { useSession } from "../context/sessionContext";
-import isDelegate from "@/lib/isdelegate";
-import isParticipant from "@/lib/isparticipant";
 import { Editor } from "@tiptap/react";
 import { SimpleEditor } from "../../components/tiptap-templates/simple/simple-editor";
 import { ParticipantRoute } from "@/components/protectedroute";
 import { toast } from "sonner";
 import { CustomNav } from "@/components/ui/customnav";
-// Removed Card imports
-// Removed ArrowRightIcon import, using a simple arrow instead
+import role from "@/lib/roles";
 // this page assumes that delegates can only post 1 reso, might be changed later
 
 const Page = () => {
   const { user: currentUser } = useSession();
+  const userRole = role(currentUser);
   const editorRef = React.useRef<Editor | null>(null);
   const [fetchedResos, setFetchedResos] = useState<Reso[]>([]);
   const [selectedReso, setSelectedReso] = useState<Reso | null>(null);
 
-  if (!isParticipant(currentUser)) {
+  if (userRole !== "delegate" && userRole !== "chair") {
     return (
       <div className="text-white bg-black min-h-screen text-center p-8">
         Only delegates or chairs can access this page.
@@ -27,7 +25,9 @@ const Page = () => {
     );
   }
 
-  if (isDelegate(currentUser) && !currentUser.resoPerms){
+  const isDelegateUser = userRole === "delegate" && currentUser !== null;
+
+  if (isDelegateUser && !(currentUser as any).resoPerms) {
     return (
       <div className="text-white bg-black min-h-screen text-center p-8">
       <CustomNav />
@@ -56,6 +56,13 @@ const Page = () => {
       return;
     }
 
+    let delegateID = "0000";
+    let committeeID = "0000";
+    if (isDelegateUser) {
+      delegateID = (currentUser as any).delegateID;
+      committeeID = (currentUser as any).committee.committeeID;
+    }
+
     const res = await fetch("/api/resos/delegate", {
       method: "POST",
       headers: {
@@ -63,10 +70,8 @@ const Page = () => {
       },
       body: JSON.stringify({
         resoID: selectedReso ? selectedReso.resoID : -1,
-        delegateID: isDelegate(currentUser) ? currentUser?.delegateID : "0000",
-        committeeID: isDelegate(currentUser)
-          ? currentUser?.committee.committeeID
-          : "0000",
+        delegateID,
+        committeeID,
         content,
         isNew: !selectedReso,
       }),

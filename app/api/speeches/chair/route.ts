@@ -39,6 +39,7 @@ export async function DELETE(request: Request) {
 export async function POST(request: Request) {
   const body = await request.json();
   let speechID = body.speechData.speechID
+  const chairID = body.chairID
 
   console.log(speechID)
 
@@ -79,7 +80,7 @@ export async function POST(request: Request) {
   .from("Chair-Speech")
   .insert({
     speechID: speechID,
-    chairID: body.chairID,
+    chairID: chairID,
   })
 
   if (junctionError){
@@ -167,12 +168,12 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const chairID = searchParams.get("chairID");
+    const chairIDParam = searchParams.get("chairID");
     
     let speechesQuery = supabase
       .from("Delegate-Speech")
       .select("speechID")
-      .eq("chairID", chairID)
+      .eq("chairID", chairIDParam)
     
     const { data: speechIDs, error: speechesError } = await speechesQuery;
     

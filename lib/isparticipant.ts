@@ -1,5 +1,3 @@
-import { UserType, Delegate, Chair } from "@/db/types";
+import { UserType } from "@/db/types";
 
-export default function isDelegate(user: UserType): user is Delegate | Chair {
-  return !!user && ("delegateID" in user || "chairID" in user);
-}
+// deleted: use role(user) === "delegate" or role(user) === "chair" instead

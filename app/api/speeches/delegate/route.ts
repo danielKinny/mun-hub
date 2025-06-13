@@ -40,11 +40,12 @@ export async function POST(request: Request) {
   const body = await request.json();
   let speechID = body.speechData.speechID
 
-  console.log(speechID)
 
   //marks the start of speech creation logic if it is a new speech
 
   if (speechID === "-1"){
+
+    console.log("Creating new speech");
     
     const {data, error} = await supabase
     .from('Speech')
@@ -115,6 +116,7 @@ export async function POST(request: Request) {
   );
 
 } else {
+  console.log("Updating existing speech with ID:", speechID);
   const { error: updateError } = await supabase
     .from("Speech")
     .update({
@@ -129,7 +131,7 @@ export async function POST(request: Request) {
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
-  if (body.speechData.tags && body.speechData.tags.length > 0) {
+  if (body.speechData.tags) {
     const { error: deleteTagsError } = await supabase
       .from("Speech-Tags")
       .delete()
@@ -141,15 +143,15 @@ export async function POST(request: Request) {
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
-
-    for (const tag of body.speechData.tags) {
+    if (body.speechData.tags.length > 0) {
+      const tagRows = body.speechData.tags.map((tag: string) => ({ speechID, tag }));
       const { error: tagInsertError } = await supabase
         .from("Speech-Tags")
-        .insert({ speechID, tag });
+        .insert(tagRows);
 
       if (tagInsertError) {
         return new NextResponse(
-          JSON.stringify({ message: `Error inserting tag: ${tagInsertError.message}` }),
+          JSON.stringify({ message: `Error inserting tags: ${tagInsertError.message}` }),
           { status: 500, headers: { "Content-Type": "application/json" } }
         );
       }
@@ -166,12 +168,12 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const delegateID = searchParams.get("delegateID");
+    const delegateIDParam = searchParams.get("delegateID");
     
     let speechesQuery = supabase
       .from("Delegate-Speech")
       .select("speechID")
-      .eq("delegateID", delegateID)
+      .eq("delegateID", delegateIDParam)
     
     const { data: speechIDs, error: speechesError } = await speechesQuery;
     
