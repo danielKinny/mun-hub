@@ -93,8 +93,8 @@ export async function POST(request: Request) {
   //gonna insert tags now
   //no need to check for existing tags cos this is assumed to be a new speech
 
-  if(body.tags && body.tags.length > 0 ) {
-    for (const tag of body.tags) {
+  if(body.speechData.tags && body.speechData.tags.length > 0 ) {
+    for (const tag of body.speechData.tags) {
       const { error: tagError } = await supabase
         .from("Speech-Tags")
         .insert({ speechID, tag });
@@ -129,8 +129,7 @@ export async function POST(request: Request) {
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
-  // Update tags
-  if (body.tags && body.tags.length > 0) {
+  if (body.speechData.tags && body.speechData.tags.length > 0) {
     const { error: deleteTagsError } = await supabase
       .from("Speech-Tags")
       .delete()
@@ -143,7 +142,7 @@ export async function POST(request: Request) {
       );
     }
 
-    for (const tag of body.tags) {
+    for (const tag of body.speechData.tags) {
       const { error: tagInsertError } = await supabase
         .from("Speech-Tags")
         .insert({ speechID, tag });

@@ -193,7 +193,6 @@ const Page = () => {
       body: JSON.stringify({
         speechData,
         delegateID: currentUser.delegateID,
-        tags: speechTags,
       }),
     });
     await response.json();
