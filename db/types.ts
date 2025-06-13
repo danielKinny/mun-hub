@@ -70,6 +70,7 @@ export interface Delegate {
   password: string;
   country: Country;
   committee: Committee;
+  resoPerms: boolean;
 }
 
 

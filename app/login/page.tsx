@@ -159,8 +159,9 @@ const Login = () => {
           ...fullDelegate,
           country: delegation.Country,
           committee: delegation.Committee,
-          role: "delegate",
         };
+
+        console.log(enrichedUser);
 
         login(enrichedUser);
         router.push("/home");

@@ -27,26 +27,21 @@ const Page = () => {
     );
   }
 
-  // Example: fetchedContent would come from your database
-  useEffect(() => {
-    const fetchResos = async () => {
-      const res = await fetch(
-        isDelegate(currentUser)
-          ? `/api/resos/delegate?delegateID=${currentUser?.delegateID}`
-          : `/api/resos/chair?committeeID=${currentUser?.committee.committeeID}`
-      );
-      if (!res.ok) {
-        console.error("Failed to fetch resolutions");
-        return;
-      }
-      const data = await res.json();
-      setFetchedResos(data);
-    };
-
-    console.log(fetchedResos);
-
-    fetchResos();
-  }, [currentUser]);
+  if (isDelegate(currentUser) && !currentUser.resoPerms){
+    return (
+      <div className="text-white bg-black min-h-screen text-center p-8">
+      <CustomNav />
+      <div className="mt-10">
+      <p>
+        You do not have permission to post resolutions.
+      </p>
+      <p>
+        Please request access from your chair.
+      </p>
+      </div>
+      </div>
+    );
+  }
 
   const postReso = async () => {
     if (!editorRef.current) {
