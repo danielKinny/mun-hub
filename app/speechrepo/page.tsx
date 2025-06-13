@@ -49,7 +49,7 @@ const Page = () => {
     if (!isDelegate(currentUser)) return;
 
     const response = await fetch(
-      `/api/speeches?delegateID=${currentUser.delegateID}`
+      `/api/speeches/delegate?delegateID=${currentUser.delegateID}`
     );
     const data = await response.json();
     setSpeechList(data.speeches);
@@ -179,15 +179,13 @@ const Page = () => {
     }
     const speechData: Speech = {
       title: heading,
+      speechID: selectedSpeech ? selectedSpeech?.speechID : "-1",
       content: content,
-      speechID: selectedSpeech
-        ? selectedSpeech.speechID
-        : createSpeechID((currentUser.speechCount || 0) + 1),
       date: new Date().toISOString(),
       tags: speechTags,
       delegateID: currentUser.delegateID,
     };
-    const response = await fetch("/api/speeches", {
+    const response = await fetch("/api/speeches/delegate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -211,12 +209,6 @@ const Page = () => {
         );
       } else {
         setSpeechList((prev) => [speechData, ...prev]);
-        if (login && currentUser) {
-          login({
-            ...currentUser,
-            speechCount: (currentUser.speechCount || 0) + 1,
-          });
-        }
       }
       setHeading("");
       setContent("");

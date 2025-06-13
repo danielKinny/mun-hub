@@ -66,7 +66,6 @@ export interface Delegate {
   delegateID: string;
   firstname: string;
   lastname: string;
-  speechCount: number;
   password: string;
   country: Country;
   committee: Committee;

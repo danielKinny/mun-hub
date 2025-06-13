@@ -55,8 +55,6 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Failed to fetch existing resolutions' }, { status: 500 });
     }
 
-    console.log(existingResos? existingResos : 'No existing resolutions found');
-
     const highestResoID = existingResos.length > 0 ? (parseInt(existingResos[existingResos.length-1].resoID)+1).toString().padStart(4,'0') : '0001';
 
     const newReso = {
