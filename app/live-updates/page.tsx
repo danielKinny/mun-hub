@@ -1,11 +1,10 @@
 "use client";
 import React, {useEffect} from 'react'
-import {CustomNav} from '@/components/ui/customnav'
+import {CustomNav, AdminNav} from '@/components/ui/customnav'
 import { Update } from '@/db/types'
 import Image from 'next/image'
 import { useSession } from '../context/sessionContext'
 import { ProtectedRoute } from '@/components/protectedroute'
-import { AdminNav } from '@/components/ui/adminnav'
 const Page = () => {
     const {user: currentUser}= useSession();
     const [updates, setUpdates] = React.useState<Update[]>([]);
@@ -28,8 +27,7 @@ const Page = () => {
 
   return (
     <ProtectedRoute>
-        {isAdmin ? <AdminNav/> : 
-        <CustomNav />}
+        <CustomNav isAdmin={isAdmin} activeLink="live-updates" />
         <div className="h-screen text-white">
             <h1 className="text-6xl font-bold text-center p-4">Live Updates</h1>
 

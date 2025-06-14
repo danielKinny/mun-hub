@@ -47,6 +47,19 @@ export const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+export const ChairRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user: currentUser } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (('chairID' in (currentUser || {})) || currentUser === null) {
+      router.push("/login");
+    }
+  }, [currentUser, router]);
+
+  return <>{children}</>;
+}
+
 export const ParticipantRoute = ({ children }: { children: React.ReactNode }) => {
   const { user: currentUser } = useSession();
   const router = useRouter();

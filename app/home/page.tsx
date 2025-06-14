@@ -4,8 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useSession } from "../context/sessionContext";
 import Image from "next/image";
-import { CustomNav } from "@/components/ui/customnav";
-import { AdminNav } from "@/components/ui/adminnav";
+import { CustomNav, AdminNav } from "@/components/ui/customnav";
 import {ProtectedRoute} from "@/components/protectedroute";
 import { Announcement } from "@/db/types";
 import {
@@ -73,7 +72,7 @@ export default function Home() {
         <main className="flex-grow w-full max-w-4xl mx-auto">
           {/* dis is da beginning of da page content ya feel me */}
           <section className="w-full block mb-8">
-            {!(role === "admin") ? <CustomNav /> : <AdminNav />}
+            <CustomNav isAdmin={role === "admin"} />
           </section>
           <section className="w-full block mb-8">
             <div className="flex flex-wrap">

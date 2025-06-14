@@ -1,7 +1,7 @@
 "use client";
 import React from 'react'
 import {AdminRoute} from '@/components/protectedroute'
-import { AdminNav } from '@/components/ui/adminnav'
+import { CustomNav } from '@/components/ui/customnav'
 import supabase from '@/lib/supabase'
 import {toast} from 'sonner'
 const Page = () => {
@@ -91,7 +91,7 @@ const Page = () => {
 
   return (
     <AdminRoute>
-      <AdminNav />
+      <CustomNav isAdmin={true} activeLink="admin" />
       <div className="flex flex-col items-center justify-center min-h-screen text-white p-8">
         {error && (
           <div className="w-full max-w-4xl mb-6 p-4 bg-red-600 rounded-lg text-white animate-slidein-up">
