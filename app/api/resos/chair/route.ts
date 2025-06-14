@@ -4,7 +4,7 @@ import supabase from '@/lib/supabase';
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
-    const committeeID = searchParams.get('chairID');
+    const committeeID = searchParams.get('committeeID');
 
     const { data, error } = await supabase
         .from('Resos')

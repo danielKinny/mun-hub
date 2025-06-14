@@ -43,9 +43,34 @@ const Page = () => {
     );
   }
 
+  useEffect(() => {
+    const fetchResos = async () => {
+    let endpoint = "/api/resos";
+    if (isDelegateUser) {
+      endpoint += `/delegate?delegateID=${(currentUser as any).delegateID}`; 
+    } else {
+      endpoint += `/chair?committeeID=${(currentUser as any).committee.committeeID}`;
+    }
+
+    const res = await  fetch(endpoint)
+    const data = await res.json();
+
+    setFetchedResos(data);
+
+  }
+
+  fetchResos();
+
+  }, []);
+
   const postReso = async () => {
     if (!editorRef.current) {
       toast.error("Editor not initialized");
+      return;
+    }
+
+    if (!isDelegateUser && !selectedReso){
+      toast.error("Only delegates can post resolutions.");
       return;
     }
 
@@ -69,8 +94,8 @@ const Page = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        resoID: selectedReso ? selectedReso.resoID : -1,
-        delegateID,
+        resoID: selectedReso ? selectedReso.resoID : "-1",
+        delegateID : (isDelegateUser ? delegateID : selectedReso?.delegateID),
         committeeID,
         content,
         isNew: !selectedReso,
