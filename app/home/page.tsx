@@ -61,7 +61,7 @@ export default function Home() {
               transition={{ duration: 0.5 }}
             >
               {currentUser && 'delegateID' in currentUser
-                ? `You are the delegate of ${currentUser?.country.name} ${currentUser?.committee?.name}`
+                ? `You are delegating for ${currentUser?.country.name} in ${currentUser?.committee?.name}`
                 : currentUser && 'chairID' in currentUser
                 ? `You are the chair of ${currentUser?.committee?.name}`
                 : "Admin Access"

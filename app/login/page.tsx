@@ -86,7 +86,7 @@ const Login = () => {
 
           const { data: committee, error: committeeError } = await supabase
           .from("Committee")
-          .select("committeeID, name, href")
+          .select("committeeID, name")
           .eq("committeeID", committeeID.committeeID)
           .single();
         if (committeeError || !committee) {
@@ -100,7 +100,6 @@ const Login = () => {
           committee: {
             committeeID: committee.committeeID,
             name: committee.name,
-            href: committee.href,
           },
         };
 
@@ -144,7 +143,7 @@ const Login = () => {
           .from("Delegation")
           .select(`*,
             Country:countryID (countryID, name, flag),
-            Committee:committeeID (committeeID, name, href)
+            Committee:committeeID (committeeID, name)
           `)
           .eq("delegateID", trimmedId)
           .single();

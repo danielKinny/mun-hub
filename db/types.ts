@@ -2,7 +2,7 @@
 export interface Committee {
   committeeID: string;
   name: string;
-  href: string;
+  fullname: string;
 }
 
 export interface Country {
