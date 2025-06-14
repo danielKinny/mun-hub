@@ -30,7 +30,7 @@ const Page = () => {
   if (isDelegateUser && !(currentUser as any).resoPerms) {
     return (
       <div className="text-white bg-black min-h-screen text-center p-8">
-      <CustomNav />
+      <CustomNav/>
       <div className="mt-10">
       <p>
         You do not have permission to post resolutions.
@@ -131,7 +131,7 @@ const Page = () => {
   return (
     <ParticipantRoute>
       <div className="min-h-screen w-full bg-black flex flex-col">
-        <CustomNav />
+        <CustomNav activeLink="resolutions" />
         <main className="flex-1 flex flex-col items-center justify-start px-2 py-6 md:py-10">
           <h1 className="text-4xl md:text-6xl font-extrabold text-white text-center mb-6 md:mb-10 tracking-tight drop-shadow-lg">
             RESOLUTIONS
