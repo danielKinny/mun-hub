@@ -29,7 +29,7 @@ export async function GET(url: Request) {
 export async function POST(request: Request) {
     const { resoID, delegateID, committeeID, content } = await request.json();
 
-    if (resoID !== -1){
+    if (resoID !== "-1"){
         const { error } = await supabase
             .from('Resos')
             .update({content})

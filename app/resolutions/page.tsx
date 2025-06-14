@@ -27,7 +27,7 @@ const Page = () => {
 
   const isDelegateUser = userRole === "delegate" && currentUser !== null;
 
-  if (isDelegateUser && !(currentUser as any).resoPerms) {
+  if (isDelegateUser && !((currentUser as any).resoPerms["view:ownreso"])) {
     return (
       <div className="text-white bg-black min-h-screen text-center p-8">
       <CustomNav/>
@@ -47,7 +47,12 @@ const Page = () => {
     const fetchResos = async () => {
     let endpoint = "/api/resos";
     if (isDelegateUser) {
+      if(!(currentUser as any).resoPerms["view:allreso"]) {
       endpoint += `/delegate?delegateID=${(currentUser as any).delegateID}`; 
+      }
+      else {
+        endpoint += `/chair?committeeID=${(currentUser as any).committee.committeeID}`;
+      }
     } else {
       endpoint += `/chair?committeeID=${(currentUser as any).committee.committeeID}`;
     }
@@ -64,6 +69,7 @@ const Page = () => {
   }, []);
 
   const postReso = async () => {
+
     if (!editorRef.current) {
       toast.error("Editor not initialized");
       return;
@@ -71,6 +77,16 @@ const Page = () => {
 
     if (!isDelegateUser && !selectedReso){
       toast.error("Only delegates can post resolutions.");
+      return;
+    }
+
+    if (!((currentUser as any).resoPerms["update:ownreso"]) && isDelegateUser){
+      toast.error("You do not have permission to post resolutions.");
+      return;
+    }
+
+    if (selectedReso && selectedReso?.delegateID !== (currentUser as any).delegateID && isDelegateUser) {
+      toast.error("You can only update your own resolutions.");
       return;
     }
 
@@ -147,7 +163,7 @@ const Page = () => {
                 </div>
               ) : (
                 fetchedResos.map((reso, idx) => {
-                  if (!reso) return null; // Skip null/undefined entries
+                  if (!reso) return null;
                   return (
                     <button
                       key={reso.resoID}
