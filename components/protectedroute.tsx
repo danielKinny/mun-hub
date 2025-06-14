@@ -52,7 +52,7 @@ export const ChairRoute = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (('chairID' in (currentUser || {})) || currentUser === null) {
+    if (!('chairID' in (currentUser || {})) || currentUser === null) {
       router.push("/login");
     }
   }, [currentUser, router]);
