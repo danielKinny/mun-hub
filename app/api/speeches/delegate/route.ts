@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { Speech } from "@/db/types";
 import supabase from "@/lib/supabase";
 
 export async function DELETE(request: Request) {
@@ -47,7 +46,7 @@ export async function POST(request: Request) {
 
     console.log("Creating new speech");
     
-    const {data, error} = await supabase
+    const {data} = await supabase
     .from('Speech')
     .select('speechID');
 
@@ -170,7 +169,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const delegateIDParam = searchParams.get("delegateID");
     
-    let speechesQuery = supabase
+    const speechesQuery = supabase
       .from("Delegate-Speech")
       .select("speechID")
       .eq("delegateID", delegateIDParam)

@@ -1,6 +1,6 @@
 "use client";
 import React, {useEffect} from 'react'
-import {CustomNav, AdminNav} from '@/components/ui/customnav'
+import {CustomNav} from '@/components/ui/customnav'
 import { Update } from '@/db/types'
 import Image from 'next/image'
 import { useSession } from '../context/sessionContext'

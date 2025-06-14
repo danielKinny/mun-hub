@@ -75,8 +75,6 @@ import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils"
 // --- Styles ---
 import "@/components/tiptap-templates/simple/simple-editor.scss"
 
-import content from "@/components/tiptap-templates/simple/data/content.json"
-
 const MainToolbarContent = ({
   onHighlighterClick,
   onLinkClick,
@@ -227,7 +225,7 @@ export const SimpleEditor = React.forwardRef(function SimpleEditor({ content }: 
         TrailingNode,
         Link.configure({ openOnClick: false }),
       ],
-      content: content || require("@/components/tiptap-templates/simple/data/content.json"),
+      content: content
     })
 
     React.useEffect(() => {

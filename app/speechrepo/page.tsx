@@ -3,7 +3,7 @@ import React from "react";
 import { useEffect, useMemo, useCallback, useState } from "react";
 import { CustomNav } from "@/components/ui/customnav";
 import { useSession } from "../context/sessionContext";
-import { Speech } from "@/db/types";
+import { Speech, UserType, Delegate, Chair } from "@/db/types";
 import { ParticipantRoute } from "@/components/protectedroute";
 import { toast } from "sonner";
 import CountryOverlay from "@/components/ui/countryoverlay";
@@ -20,19 +20,12 @@ import role from "@/lib/roles";
 
 type Country = { countryID: string; flag: string; name: string };
 
+type DelegateUser = UserType & Delegate;
+type ChairUser = UserType & Chair;
+
 const Page = () => {
-  const { user: currentUser, login } = useSession();
+  const { user: currentUser } = useSession();
   const userRole = role(currentUser);
-
-  // Only delegates and chairs can access this page
-  if (userRole !== "delegate" && userRole !== "chair") {
-    return <div className="text-white text-center p-8">Only delegates or chairs can access this page.</div>;
-  }
-
-  // Type guards for role-specific access
-  const isDelegateUser = userRole === "delegate" && currentUser !== null;
-  const isChairUser = userRole === "chair" && currentUser !== null;
-
   const [countries, setCountries] = useState<Country[] | null>(null);
   const [speechTags, setSpeechTags] = useState<string[]>([]);
   const [speechList, setSpeechList] = useState<Speech[]>([]);
@@ -49,25 +42,29 @@ const Page = () => {
     speech?: Speech;
   } | null>(null);
 
+  // Type guards for role-specific access - computed variables, not state
+  const isDelegateUser = userRole === "delegate" && currentUser !== null;
+  const isChairUser = userRole === "chair" && currentUser !== null;
+
   const fetchSpeeches = useCallback(async () => {
     let response;
-    if (isDelegateUser) {
-      response = await fetch(`/api/speeches/delegate?delegateID=${(currentUser as any).delegateID}`);
-    } else if (isChairUser) {
-      response = await fetch(`/api/speeches/chair?chairID=${(currentUser as any).chairID}`);
+    if (isDelegateUser && currentUser) {
+      response = await fetch(`/api/speeches/delegate?delegateID=${(currentUser as DelegateUser).delegateID}`);
+    } else if (isChairUser && currentUser) {
+      response = await fetch(`/api/speeches/chair?chairID=${(currentUser as ChairUser).chairID}`);
     } else {
       return;
     }
     const data = await response.json();
     setSpeechList(data.speeches || []);
-  }, [currentUser, userRole, isDelegateUser, isChairUser]);
+  }, [currentUser, isDelegateUser, isChairUser]);
 
   const fetchCountries = useCallback(async () => {
     let committeeID;
-    if (isDelegateUser && (currentUser as any).committee) {
-      committeeID = (currentUser as any).committee.committeeID;
-    } else if (isChairUser && (currentUser as any).committee) {
-      committeeID = (currentUser as any).committee.committeeID;
+    if (isDelegateUser && currentUser && (currentUser as DelegateUser).committee) {
+      committeeID = (currentUser as DelegateUser).committee.committeeID;
+    } else if (isChairUser && currentUser && (currentUser as ChairUser).committee) {
+      committeeID = (currentUser as ChairUser).committee.committeeID;
     } else {
       setCountries([]);
       return;
@@ -83,7 +80,7 @@ const Page = () => {
     } catch {
       setCountries([]);
     }
-  }, [currentUser, userRole, isDelegateUser, isChairUser]);
+  }, [currentUser, isDelegateUser, isChairUser]);
 
   const searchEngine = useCallback(
     (query: string) => {
@@ -192,19 +189,25 @@ const Page = () => {
       toast.error("Only delegates or chairs can add speeches");
       return;
     }
-    const user = currentUser as any;
+    
     const speechData: Speech = {
       title: heading,
       speechID: selectedSpeech ? selectedSpeech?.speechID : "-1",
       content: content,
       date: new Date().toISOString(),
       tags: speechTags,
-      delegateID: isDelegateUser ? user.delegateID : undefined,
+      delegateID: isDelegateUser && currentUser ? (currentUser as DelegateUser).delegateID : "",
       // chairID removed from Speech object
     };
+    
     const endpoint = isDelegateUser ? "/api/speeches/delegate" : "/api/speeches/chair";
     const idKey = isDelegateUser ? "delegateID" : "chairID";
-    const idValue = isDelegateUser ? user.delegateID : user.chairID;
+    const idValue = isDelegateUser && currentUser 
+      ? (currentUser as DelegateUser).delegateID 
+      : isChairUser && currentUser 
+        ? (currentUser as ChairUser).chairID 
+        : "";
+        
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -215,7 +218,9 @@ const Page = () => {
         [idKey]: idValue,
       }),
     });
+    
     const result = await response.json();
+    
     if (response.ok) {
       toast.success(
         `Speech ${selectedSpeech ? "updated" : "added"} successfully`
@@ -235,7 +240,7 @@ const Page = () => {
       setSpeechTags([]);
       setHasUnsavedChanges(false);
     }
-  }, [currentUser, heading, content, selectedSpeech, speechTags, login, userRole, isDelegateUser, isChairUser]);
+  }, [currentUser, heading, content, selectedSpeech, speechTags, isDelegateUser, isChairUser]);
 
   const handleDeleteClick = useCallback(() => {
     if (!selectedSpeech?.speechID) {
@@ -304,6 +309,15 @@ const Page = () => {
     [searchEngine, searchQuery]
   );
 
+  if (userRole !== "delegate" && userRole !== "chair") {
+    return (
+      <ParticipantRoute>
+        <CustomNav />
+        <div className="text-white text-center p-8">Only delegates or chairs can access this page.</div>
+      </ParticipantRoute>
+    );
+  }
+  
   return (
     <ParticipantRoute>
       <CustomNav />
@@ -361,7 +375,8 @@ const Page = () => {
         <div className="w-full h-screen space-y-2 p-4 animate-slidein-up">
           <div className="w-8/9 mx-8 pb-2 flex items-center">
             <p className="text-4xl font-bold mx-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 drop-shadow-lg animate-text-pop">
-              {(isDelegateUser || isChairUser) ? (currentUser as any).firstname : ""} Speech Repo
+              {isDelegateUser && currentUser ? (currentUser as DelegateUser).firstname : 
+               isChairUser && currentUser ? (currentUser as ChairUser).firstname : ""} Speech Repo
             </p>
             <div className="flex space-x-4 ml-auto">
               <button

@@ -138,7 +138,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const chairIDParam = searchParams.get("chairID");
     
-    let speechesQuery = supabase
+    const speechesQuery = supabase
       .from("Chair-Speech")
       .select("speechID")
       .eq("chairID", chairIDParam)

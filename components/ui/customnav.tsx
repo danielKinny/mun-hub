@@ -1,8 +1,5 @@
-// Increased text size for all navigation text elements
-
 "use client";
 import React from "react";
-import { Committee } from "@/db/types";
 
 import {
   HomeModernIcon,
@@ -15,7 +12,6 @@ import {
   WrenchIcon
 } from "@heroicons/react/24/outline";
 
-// Define the props type for CustomNav component
 type CustomNavProps = {
   activeLink?: string;
   className?: string;

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useSession } from "../context/sessionContext";
 import Image from "next/image";
-import { CustomNav, AdminNav } from "@/components/ui/customnav";
+import { CustomNav } from "@/components/ui/customnav";
 import {ProtectedRoute} from "@/components/protectedroute";
 import { Announcement } from "@/db/types";
 import {

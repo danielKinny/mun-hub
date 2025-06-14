@@ -63,7 +63,7 @@ export async function POST(request: Request) {
         content
     }
 
-    const { data, error } = await supabase.
+    const { error } = await supabase.
     from('Resos')
     .insert(newReso); // insert the reso, lets hope it work
     if (error) {

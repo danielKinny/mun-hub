@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Reso } from "@/db/types";
+import { Reso, Delegate, Chair } from "@/db/types";
 import { useSession } from "../context/sessionContext";
 import { Editor } from "@tiptap/react";
 import { SimpleEditor } from "../../components/tiptap-templates/simple/simple-editor";
@@ -16,60 +16,37 @@ const Page = () => {
   const editorRef = React.useRef<Editor | null>(null);
   const [fetchedResos, setFetchedResos] = useState<Reso[]>([]);
   const [selectedReso, setSelectedReso] = useState<Reso | null>(null);
-
-  if (userRole !== "delegate" && userRole !== "chair") {
-    return (
-      <div className="text-white bg-black min-h-screen text-center p-8">
-        Only delegates or chairs can access this page.
-      </div>
-    );
-  }
-
   const isDelegateUser = userRole === "delegate" && currentUser !== null;
-
-  if (isDelegateUser && !((currentUser as any).resoPerms["view:ownreso"])) {
-    return (
-      <div className="text-white bg-black min-h-screen text-center p-8">
-      <CustomNav/>
-      <div className="mt-10">
-      <p>
-        You do not have permission to post resolutions.
-      </p>
-      <p>
-        Please request access from your chair.
-      </p>
-      </div>
-      </div>
-    );
-  }
-
+  
   useEffect(() => {
     const fetchResos = async () => {
-    let endpoint = "/api/resos";
-    if (isDelegateUser) {
-      if(!(currentUser as any).resoPerms["view:allreso"]) {
-      endpoint += `/delegate?delegateID=${(currentUser as any).delegateID}`; 
+      if (!currentUser) return;
+      
+      let endpoint = "/api/resos";
+      if (isDelegateUser) {
+        const delegateUser = currentUser as Delegate;
+        if (!delegateUser.resoPerms["view:allreso"]) {
+          endpoint += `/delegate?delegateID=${delegateUser.delegateID}`; 
+        }
+        else {
+          endpoint += `/chair?committeeID=${delegateUser.committee.committeeID}`;
+        }
+      } else {
+        const chairUser = currentUser as Chair;
+        endpoint += `/chair?committeeID=${chairUser.committee.committeeID}`;
       }
-      else {
-        endpoint += `/chair?committeeID=${(currentUser as any).committee.committeeID}`;
-      }
-    } else {
-      endpoint += `/chair?committeeID=${(currentUser as any).committee.committeeID}`;
-    }
 
-    const res = await  fetch(endpoint)
-    const data = await res.json();
+      const res = await fetch(endpoint);
+      const data = await res.json();
+      setFetchedResos(data);
+    };
 
-    setFetchedResos(data);
-
-  }
-
-  fetchResos();
-
-  }, []);
+    fetchResos();
+  }, [currentUser, isDelegateUser]);
 
   const postReso = async () => {
-
+    if (!currentUser) return;
+    
     if (!editorRef.current) {
       toast.error("Editor not initialized");
       return;
@@ -80,14 +57,17 @@ const Page = () => {
       return;
     }
 
-    if (!((currentUser as any).resoPerms["update:ownreso"]) && isDelegateUser){
-      toast.error("You do not have permission to post resolutions.");
-      return;
-    }
+    if (isDelegateUser) {
+      const delegateUser = currentUser as Delegate;
+      if (!delegateUser.resoPerms["update:ownreso"]) {
+        toast.error("You do not have permission to post resolutions.");
+        return;
+      }
 
-    if (selectedReso && selectedReso?.delegateID !== (currentUser as any).delegateID && isDelegateUser) {
-      toast.error("You can only update your own resolutions.");
-      return;
+      if (selectedReso && selectedReso?.delegateID !== delegateUser.delegateID) {
+        toast.error("You can only update your own resolutions.");
+        return;
+      }
     }
 
     const content = editorRef.current.getJSON();
@@ -99,9 +79,11 @@ const Page = () => {
 
     let delegateID = "0000";
     let committeeID = "0000";
+    
     if (isDelegateUser) {
-      delegateID = (currentUser as any).delegateID;
-      committeeID = (currentUser as any).committee.committeeID;
+      const delegateUser = currentUser as Delegate;
+      delegateID = delegateUser.delegateID;
+      committeeID = delegateUser.committee.committeeID;
     }
 
     const res = await fetch("/api/resos/delegate", {
@@ -111,7 +93,7 @@ const Page = () => {
       },
       body: JSON.stringify({
         resoID: selectedReso ? selectedReso.resoID : "-1",
-        delegateID : (isDelegateUser ? delegateID : selectedReso?.delegateID),
+        delegateID: (isDelegateUser ? delegateID : selectedReso?.delegateID),
         committeeID,
         content,
         isNew: !selectedReso,
@@ -131,6 +113,33 @@ const Page = () => {
       setFetchedResos(prev => [...prev, newReso]);
     }
   };
+
+  if (userRole !== "delegate" && userRole !== "chair") {
+    return (
+      <div className="text-white bg-black min-h-screen text-center p-8">
+        Only delegates or chairs can access this page.
+      </div>
+    );
+  }
+
+  if (isDelegateUser) {
+    const delegateUser = currentUser as Delegate;
+    if (!delegateUser.resoPerms["view:ownreso"]) {
+      return (
+        <div className="text-white bg-black min-h-screen text-center p-8">
+          <CustomNav/>
+          <div className="mt-10">
+            <p>
+              You do not have permission to post resolutions.
+            </p>
+            <p>
+              Please request access from your chair.
+            </p>
+          </div>
+        </div>
+      );
+    }
+  }
 
   // this is specifically for logging and debugging, commenting it out until needed again, might be removed during refactor
 
