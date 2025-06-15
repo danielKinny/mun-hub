@@ -8,7 +8,7 @@ import { ProtectedRoute } from '@/components/protectedroute'
 const Page = () => {
     const {user: currentUser}= useSession();
     const [updates, setUpdates] = React.useState<Update[]>([]);
-    const isAdmin = 'adminID' in (currentUser || {});
+    const role =  currentUser && ('delegateID' in currentUser ? 'delegate' : 'chairID' in currentUser ? 'chair' : 'admin');
     useEffect( () => {
         const fetchUpdates = async () => {
             const res = await fetch('/api/updates');
@@ -27,7 +27,7 @@ const Page = () => {
 
   return (
     <ProtectedRoute>
-        <CustomNav isAdmin={isAdmin} activeLink="live-updates" />
+        <CustomNav role={role ? role : "delegate"} activeLink="live-updates" />
         <div className="h-screen text-white">
             <h1 className="text-6xl font-bold text-center p-4">Live Updates</h1>
 
