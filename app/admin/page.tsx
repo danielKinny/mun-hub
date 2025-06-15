@@ -4,13 +4,14 @@ import {AdminRoute} from '@/components/protectedroute'
 import { CustomNav } from '@/components/ui/customnav'
 import supabase from '@/lib/supabase'
 import {toast} from 'sonner'
+import { useSession } from '../context/sessionContext'
 const Page = () => {
     const [content, setContent] = React.useState<string>("");
     const [title, setTitle] = React.useState<string>("");
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
     const [error, setError] = React.useState<string>("");
-
-    // Animations have been added throughout the component using classes from globals.css
+    const { user: currentUser } = useSession();
+    const role = currentUser && ('delegateID' in currentUser ? 'delegate' : 'chairID' in currentUser ? 'chair' : 'admin')
 
     const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setContent(e.target.value);
@@ -91,7 +92,7 @@ const Page = () => {
 
   return (
     <AdminRoute>
-      <CustomNav isAdmin={true} activeLink="admin" />
+      <CustomNav role={role ? role : 'delegate'} activeLink="admin" />
       <div className="flex flex-col items-center justify-center min-h-screen text-white p-8">
         {error && (
           <div className="w-full max-w-4xl mb-6 p-4 bg-red-600 rounded-lg text-white animate-slidein-up">

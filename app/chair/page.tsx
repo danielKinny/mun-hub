@@ -75,7 +75,16 @@ const Page = () => {
             "update:ownreso": boolean;
         };
     }[]>([]);
-    const [originalDelegates, setOriginalDelegates] = useState<any[]>([]);
+    const [originalDelegates, setOriginalDelegates] = useState<{
+        delegateID: string;
+        firstname: string;
+        lastname: string;
+        resoPerms: {
+            "view:ownreso": boolean;
+            "view:allreso": boolean;
+            "update:ownreso": boolean;
+        };
+    }[]>([]);
     const [saving, setSaving] = useState(false);
     const [hasChanges, setHasChanges] = useState(false);
 
@@ -190,7 +199,21 @@ const Page = () => {
                     throw new Error(result.error || 'Failed to update delegates');
                 }
 
-                const failures = result.results?.filter((r: any) => !r.success) || [];
+                type UpdateResult = {
+                    delegateID: string;
+                    success: boolean;
+                    error?: string;
+                    delegate?: {
+                        delegateID: string;
+                        resoPerms: {
+                            "view:ownreso": boolean;
+                            "view:allreso": boolean;
+                            "update:ownreso": boolean;
+                        };
+                    };
+                };
+                
+                const failures = result.results?.filter((r: UpdateResult) => !r.success) || [];
                 
                 if (failures.length > 0) {
                     toast.error(`Failed to update ${failures.length} delegates`);
@@ -220,7 +243,7 @@ const Page = () => {
           />
         ))}
       </ul>
-    ), [delegates]);
+    ), [delegates, handlePermissionChange]);
 
   return (
     <ChairRoute>
