@@ -49,12 +49,12 @@ const MotionsComp = () => {
         speed={0.9}
         className="flex items-center justify-center w-full h-full"
       >
-        <div className="flex flex-row items-center justify-center h-full w-full gap-2">
+        <div className="flex bg-black flex-row items-center justify-center w-full gap-2 p-8">
           <div className="flex flex-col items-center justify-center h-full space-y-2">
             {motions.map((motion, index) => (
               <button
                 key={index}
-                className="bg-black text-white cursor-pointer p-2 text-2xl"
+                className="bg-black text-white outline outline-gray-900 rounded-lg cursor-pointer p-2 text-lg"
                 onClick={() => setMotion(motion)}
               >
                 {motion.name}
