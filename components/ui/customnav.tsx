@@ -9,16 +9,17 @@ import {
   BookOpenIcon,
   BoltIcon,
   PencilSquareIcon,
-  WrenchIcon
+  WrenchIcon,
+  IdentificationIcon,
 } from "@heroicons/react/24/outline";
 
 type CustomNavProps = {
   activeLink?: string;
   className?: string;
-  isAdmin?: boolean;
+  role?: 'delegate' | 'chair' | 'admin';
 };
 
-const CustomNavComponent = ({ activeLink, className, isAdmin = false }: CustomNavProps = {}) => {
+const CustomNavComponent = ({ activeLink, className, role = 'delegate' }: CustomNavProps = {}) => {
   return (
     <>
       <nav className={`w-full p-2 text-white border-b border-gray-700 bg-transparent ${className || ''}`}>
@@ -43,7 +44,19 @@ const CustomNavComponent = ({ activeLink, className, isAdmin = false }: CustomNa
             </a>
           </li>
 
-          {isAdmin ? (
+          {role === 'chair' && (
+            <li className={`inline-block ${activeLink === 'chair-tool' ? 'bg-white text-black' : 'hover:bg-white hover:text-black'} p-2 rounded-lg`}>
+              <a
+                href="/chair"
+                className="flex items-center text-xl cursor-pointer"
+              >
+                <IdentificationIcon className="w-5 h-5 mr-1" />
+                Chair Tool
+              </a>
+            </li>
+          )}
+
+          {role === 'admin' ? (
             <li className={`inline-block ${activeLink === 'admin' ? 'bg-white text-black' : 'hover:bg-white hover:text-black'} p-2 rounded-lg`}>
               <a
                 href="/admin"
@@ -114,6 +127,6 @@ const CustomNavComponent = ({ activeLink, className, isAdmin = false }: CustomNa
 
 export const CustomNav = React.memo(CustomNavComponent);
 
-export const AdminNav = React.memo((props: Omit<CustomNavProps, 'isAdmin'>) => 
-  <CustomNavComponent {...props} isAdmin={true} />
+export const AdminNav = React.memo((props: Omit<CustomNavProps, 'role'>) => 
+  <CustomNavComponent {...props} role='admin' />
 );

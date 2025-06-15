@@ -72,7 +72,7 @@ export default function Home() {
         <main className="flex-grow w-full max-w-4xl mx-auto">
           {/* dis is da beginning of da page content ya feel me */}
           <section className="w-full block mb-8">
-            <CustomNav isAdmin={role === "admin"} />
+            <CustomNav role={role ? role : 'delegate'} />
           </section>
           <section className="w-full block mb-8">
             <div className="flex flex-wrap">
