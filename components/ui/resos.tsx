@@ -83,7 +83,7 @@ const ResosComp = () => {
           </div>
           <div className="flex flex-col items-center justify-center h-full mx-2">
             <div className=" p-2 mb-2">
-              <h1 className="text-blue-900 text-9xl text-center font-extrabold drop-shadow-xl">
+              <h1 className="text-blue-900 text-9xl text-center font-extrabold drop-shadow-lg p-2">
                 RESOLUTIONS
               </h1>
             </div>

@@ -42,8 +42,17 @@ const MotionsComp = () => {
         style={{
           backgroundImage: "url(/images/UN6.jpg)",
           backgroundSize: "cover",
+          position: "relative",
         }}
-      />
+      >
+        <div 
+          className="absolute inset-0" 
+          style={{
+            background: "radial-gradient(circle, transparent 0%, rgba(255,0,0,0.5) 100%)",
+            pointerEvents: "none",
+          }}
+        />
+      </ParallaxLayer>
       <ParallaxLayer
         offset={2}
         speed={0.9}
