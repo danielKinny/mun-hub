@@ -4,6 +4,7 @@ import { Parallax, ParallaxLayer } from "@react-spring/parallax";
 
 const createCommitteeComponent = (
   name: string,
+  logo: string,
   bgImage1: string,
   bgImage2: string,
   agenda1: string,
@@ -74,85 +75,155 @@ const createCommitteeComponent = (
   return CommitteeComponent;
 };
 
-const committeeData = {
-  UNHRC: {
-    bgImage1: "UNHRC.jpg",
+export const committeeData = [
+  {
+    name: "UNHRC",
+    logo: "UNEMBLEM.png",
+    bgImage1: "UNHRC1.jpg",
     bgImage2: "UNHRC2.jpg",
-    agenda1:
-      "Human Rights Violations in the Xinjiang Uyghur Autonomous Region\nFocus: Alleged mass internment, surveillance, and cultural repression.",
-    agenda2:
-      "Protecting Freedom of Expression and Digital Rights under Authoritarian Regimes\nFocus: Government censorship, internet shutdowns, and suppression of dissent.",
+    agenda1: "placeholder text for agenda 1 of UNHRC",
+    agenda2: "placeholder text for agenda 2 of UNHRC",
   },
-  UNSC: {
-    bgImage1: "UNSC.jpg",
-    bgImage2: "UNSC2.jpg",
-    agenda1:
-      "The Situation in the Red Sea and Ensuring Maritime Security in International Waters\nFocus: Ongoing threats to shipping lanes, including piracy and state-sponsored aggression.",
-    agenda2:
-      "Addressing the Escalation of the Israel-Palestine Conflict and Ensuring Humanitarian Access\nFocus: Civilian protection, ceasefire enforcement, and access for aid organizations.",
+  {
+    name: "IACA",
+    logo: "UNEMBLEM.png",
+    bgImage1: "IACA1.jpg",
+    bgImage2: "IACA2.jpg",
+    agenda1: "placeholder text for agenda 1 of IACA",
+    agenda2: "placeholder text for agenda 2 of IACA",
   },
-  UNODC: {
-    bgImage1: "UNODC.jpg",
-    bgImage2: "UNODC2.jpg",
-    agenda1: "Combating the Illicit Trade of Synthetic Drugs and Precursors",
-    agenda2: "Tackling Human Trafficking and Forced Labor in Conflict Zones",
+  {
+    name: "HSC",
+    logo: "UNEMBLEM.png",
+    bgImage1: "HSC1.jpg",
+    bgImage2: "HSC2.jpg",
+    agenda1: "placeholder text for agenda 1 of HSC",
+    agenda2: "placeholder text for agenda 2 of HSC",
   },
-  UNESCO: {
-    bgImage1: "UNESCO.jpg",
-    bgImage2: "UNESCO2.jpg",
-    agenda1:
-      "Safeguarding Cultural Heritage in Conflict Zones\nFocus: Deliberate destruction of historical sites (e.g., in Syria, Mali, Ukraine).",
-    agenda2:
-      "Bridging the Global Digital Divide in Education\nFocus: Access to online learning, especially in low-income and rural communities.",
+  {
+    name: "IPACRC",
+    logo: "UNEMBLEM.png",
+    bgImage1: "IPACRC1.jpg",
+    bgImage2: "IPACRC2.jpg",
+    agenda1: "placeholder text for agenda 1 of IPACRC",
+    agenda2: "placeholder text for agenda 2 of IPACRC",
   },
-  ECOSOC: {
-    bgImage1: "ECOSOC.jpg",
-    bgImage2: "ECOSOC2.jpg",
-    agenda1:
-      "Tackling Global Food Insecurity and Supply Chain Disruptions\nFocus: Post-pandemic recovery, conflict-related shortages, and sustainable agriculture.",
-    agenda2:
-      "Strategies for Achieving Universal Access to Clean Water and Sanitation by 2030\nFocus: Sustainable Development Goal 6 (SDG 6) implementation and funding gaps.",
+  {
+    name: "UNBOCC",
+    logo: "UNEMBLEM.png",
+    bgImage1: "UNBOCC1.jpg",
+    bgImage2: "UNBOCC2.jpg",
+    agenda1: "placeholder text for agenda 1 of UNBOCC",
+    agenda2: "placeholder text for agenda 2 of UNBOCC",
   },
+  {
+    name: "IPC",
+    logo: "UNEMBLEM.png",
+    bgImage1: "IPC1.jpg",
+    bgImage2: "IPC2.jpg",
+    agenda1: "placeholder text for agenda 1 of IPC",
+    agenda2: "placeholder text for agenda 2 of IPC",
+  },
+  {
+    name: "CSW",
+    logo: "UNEMBLEM.png",
+    bgImage1: "CSW1.jpg",
+    bgImage2: "CSW2.jpg",
+    agenda1: "placeholder text for agenda 1 of CSW",
+    agenda2: "placeholder text for agenda 2 of CSW",
+  },
+  {
+    name: "COE",
+    logo: "UNEMBLEM.png",
+    bgImage1: "COE1.jpg",
+    bgImage2: "COE2.jpg",
+    agenda1: "placeholder text for agenda 1 of COE",
+    agenda2: "placeholder text for agenda 2 of COE",
+  },
+];
+
+// Helper function to find committee data by name
+const getCommitteeByName = (name: string) => {
+  return committeeData.find(committee => committee.name === name) || {
+    name: "",
+    logo: "",
+    bgImage1: "",
+    bgImage2: "",
+    agenda1: "",
+    agenda2: ""
+  };
 };
 
-const UNHRCComp = createCommitteeComponent(
+const UNHRC = createCommitteeComponent(
   "UNHRC",
-  committeeData.UNHRC.bgImage1,
-  committeeData.UNHRC.bgImage2,
-  committeeData.UNHRC.agenda1,
-  committeeData.UNHRC.agenda2
+  getCommitteeByName("UNHRC").logo,
+  getCommitteeByName("UNHRC").bgImage1,
+  getCommitteeByName("UNHRC").bgImage2,
+  getCommitteeByName("UNHRC").agenda1,
+  getCommitteeByName("UNHRC").agenda2
 );
 
-const UNSCComp = createCommitteeComponent(
-  "UNSC",
-  committeeData.UNSC.bgImage1,
-  committeeData.UNSC.bgImage2,
-  committeeData.UNSC.agenda1,
-  committeeData.UNSC.agenda2
+const HSC = createCommitteeComponent(
+  "HSC",
+  getCommitteeByName("HSC").logo,
+  getCommitteeByName("HSC").bgImage1,
+  getCommitteeByName("HSC").bgImage2,
+  getCommitteeByName("HSC").agenda1,
+  getCommitteeByName("HSC").agenda2
 );
 
-const UNODCComp = createCommitteeComponent(
-  "UNODC",
-  committeeData.UNODC.bgImage1,
-  committeeData.UNODC.bgImage2,
-  committeeData.UNODC.agenda1,
-  committeeData.UNODC.agenda2
+const IACA = createCommitteeComponent(
+  "IACA",
+  getCommitteeByName("IACA").logo,
+  getCommitteeByName("IACA").bgImage1,
+  getCommitteeByName("IACA").bgImage2,
+  getCommitteeByName("IACA").agenda1,
+  getCommitteeByName("IACA").agenda2
 );
 
-const UNESCOComp = createCommitteeComponent(
-  "UNESCO",
-  committeeData.UNESCO.bgImage1,
-  committeeData.UNESCO.bgImage2,
-  committeeData.UNESCO.agenda1,
-  committeeData.UNESCO.agenda2
+const IPACRC = createCommitteeComponent(
+  "IPACRC",
+  getCommitteeByName("IPACRC").logo,
+  getCommitteeByName("IPACRC").bgImage1,
+  getCommitteeByName("IPACRC").bgImage2,
+  getCommitteeByName("IPACRC").agenda1,
+  getCommitteeByName("IPACRC").agenda2
 );
 
-const ECOSOCComp = createCommitteeComponent(
-  "ECOSOC",
-  committeeData.ECOSOC.bgImage1,
-  committeeData.ECOSOC.bgImage2,
-  committeeData.ECOSOC.agenda1,
-  committeeData.ECOSOC.agenda2
+const UNBOCC = createCommitteeComponent(
+  "UNBOCC",
+  getCommitteeByName("UNBOCC").logo,
+  getCommitteeByName("UNBOCC").bgImage1,
+  getCommitteeByName("UNBOCC").bgImage2,
+  getCommitteeByName("UNBOCC").agenda1,
+  getCommitteeByName("UNBOCC").agenda2
 );
 
-export { UNHRCComp, UNSCComp, UNODCComp, UNESCOComp, ECOSOCComp };
+const IPC = createCommitteeComponent(
+  "IPC",
+  getCommitteeByName("IPC").logo,
+  getCommitteeByName("IPC").bgImage1,
+  getCommitteeByName("IPC").bgImage2,
+  getCommitteeByName("IPC").agenda1,
+  getCommitteeByName("IPC").agenda2
+);
+
+const CSW = createCommitteeComponent(
+  "CSW",
+  getCommitteeByName("CSW").logo,
+  getCommitteeByName("CSW").bgImage1,
+  getCommitteeByName("CSW").bgImage2,
+  getCommitteeByName("CSW").agenda1,
+  getCommitteeByName("CSW").agenda2
+);
+
+const COE = createCommitteeComponent(
+  "COE",
+  getCommitteeByName("COE").logo,
+  getCommitteeByName("COE").bgImage1,
+  getCommitteeByName("COE").bgImage2,
+  getCommitteeByName("COE").agenda1,
+  getCommitteeByName("COE").agenda2
+);
+
+export { UNHRC, HSC, IACA, IPACRC, UNBOCC, IPC, CSW, COE };
