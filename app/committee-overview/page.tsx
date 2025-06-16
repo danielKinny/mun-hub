@@ -1,5 +1,5 @@
 "use client";
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react';
 
 import {
   HSC,
@@ -15,6 +15,22 @@ import {
 
 const Page = () => {
   const [selectedCommittee, setSelectedCommittee] = useState<string | null>(null);
+  const [imagesLoaded, setImagesLoaded] = useState<{[key: string]: boolean}>({});
+
+  useEffect(() => {
+    const initialLoadState: {[key: string]: boolean} = {};
+    committeeData.forEach(committee => {
+      initialLoadState[committee.name] = false;
+    });
+    setImagesLoaded(initialLoadState);
+  }, []);
+
+  const handleImageLoad = (committeeName: string) => {
+    setImagesLoaded(prev => ({
+      ...prev,
+      [committeeName]: true
+    }));
+  };
 
   const renderCommitteeComponent = () => {
     switch(selectedCommittee) {
@@ -38,36 +54,67 @@ const Page = () => {
         return null;
     }
   };
+  const calculatePosition = (index: number, totalItems: number, radius: number) => {
+    const angle = (index / totalItems) * 2 * Math.PI;
+    
+    const x = Math.cos(angle) * radius;
+    const y = Math.sin(angle) * radius;
+    
+    return { x, y };
+  };
 
-    return (
-      <div className='min-h-screen text-center p-2 bg-black text-white text-4xl'>
-        <div className='flex flex-col items-center justify-center gap-4 min-h-screen'>
-          <h1 className='text-5xl font-bold mb-8'>Committee Overview</h1>
-          <ul className='flex flex-wrap items-center justify-center gap-8'>
-            {committeeData.map((committee, index) => (
-              <li 
-                key={index} 
-                className='text-2xl font-bold cursor-pointer transition-transform hover:scale-105'
-                onClick={() => setSelectedCommittee(committee.name)}
-              >
-                <div className='flex flex-col items-center justify-center'>
-                  <img 
-                    src={`/images/${committee.logo}`} 
-                    alt={`${committee.name} Logo`} 
-                    width={100}
-                    height={100}
-                  />
-                  <h2 className='text-4xl font-extrabold'>{committee.name}</h2>
+  return (
+    <div className='min-h-screen text-center p-2 bg-black text-white'>
+        <div className='flex items-center justify-center min-h-screen'>
+          <div className='relative w-[700px] h-[700px]'>
+            <div className='absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10'>
+              <h1 className='text-6xl font-bold'>Committees</h1>
+            </div>
+            {committeeData.map((committee, index) => {
+              const radius = 300; 
+              const { x, y } = calculatePosition(
+                index, 
+                committeeData.length, 
+                radius
+              );
+              
+              return (
+                <div
+                  key={index}
+                  className='absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all hover:scale-110'
+                  style={{
+                    left: `calc(50% + ${x}px)`,
+                    top: `calc(50% + ${y}px)`,
+                  }}
+                  onClick={() => setSelectedCommittee(committee.name)}
+                >
+                  <div className='flex flex-col items-center'>
+                    <div className='w-[160px] h-[160px] flex items-center justify-center'>
+                      <img
+                        src={`/images/${committee.logo}`}
+                        alt={`${committee.name} Logo`}
+                        width={160}
+                        height={160}
+                        className='object-contain max-w-full max-h-full'
+                        onLoad={() => handleImageLoad(committee.name)}
+                        style={{ 
+                          opacity: imagesLoaded[committee.name] ? 1 : 0,
+                          transition: 'opacity 0.3s ease-in-out'
+                        }}
+                      />
+                    </div>
+                    <h2 className='text-xl font-bold'>{committee.name}</h2>
+                  </div>
                 </div>
-              </li>
-            ))}
-          </ul>
+              );
+            })}
+          </div>
         </div>
-        { selectedCommittee && (
+        {selectedCommittee && (
           renderCommitteeComponent()
         )}
       </div>
-    );
+  );
 }
 
 export default Page;
