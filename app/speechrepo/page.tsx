@@ -42,7 +42,6 @@ const Page = () => {
     speech?: Speech;
   } | null>(null);
 
-  // Type guards for role-specific access - computed variables, not state
   const isDelegateUser = userRole === "delegate" && currentUser !== null;
   const isChairUser = userRole === "chair" && currentUser !== null;
 
@@ -197,7 +196,6 @@ const Page = () => {
       date: new Date().toISOString(),
       tags: speechTags,
       delegateID: isDelegateUser && currentUser ? (currentUser as DelegateUser).delegateID : "",
-      // chairID removed from Speech object
     };
     
     const endpoint = isDelegateUser ? "/api/speeches/delegate" : "/api/speeches/chair";

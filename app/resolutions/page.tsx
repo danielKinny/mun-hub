@@ -8,15 +8,63 @@ import { ParticipantRoute } from "@/components/protectedroute";
 import { toast } from "sonner";
 import { CustomNav } from "@/components/ui/customnav";
 import role from "@/lib/roles";
+import supabase from "@/lib/supabase";
 // this page assumes that delegates can only post 1 reso, might be changed later
 
 const Page = () => {
-  const { user: currentUser } = useSession();
+  const { user: currentUser, login } = useSession();
   const userRole = role(currentUser);
   const editorRef = React.useRef<Editor | null>(null);
   const [fetchedResos, setFetchedResos] = useState<Reso[]>([]);
   const [selectedReso, setSelectedReso] = useState<Reso | null>(null);
   const isDelegateUser = userRole === "delegate" && currentUser !== null;
+
+  const logBackIn = async () => {
+    if (!currentUser) {
+      toast.error("No user logged in");
+      return;
+    }
+    const { data: delegate, error: delegateError } = await supabase
+          .from("Delegate")
+          .select("delegateID, password")
+          .eq("delegateID", (currentUser as Delegate).delegateID)
+          .single();
+
+        const { data: fullDelegate, error: fullDelegateError } = await supabase
+          .from("Delegate")
+          .select("*")
+          .eq("delegateID", (currentUser as Delegate).delegateID)
+          .single();
+
+        if (fullDelegateError || !fullDelegate) {
+          toast.error("Delegate record not found");
+          return;
+        }
+
+        const { data: delegation, error: delegationError } = await supabase
+          .from("Delegation")
+          .select(`*,
+            Country:countryID (countryID, name, flag),
+            Committee:committeeID (committeeID, name)
+          `)
+          .eq("delegateID", (currentUser as Delegate).delegateID)
+          .single();
+
+        if (delegationError || !delegation) {
+          toast.error("Delegation not found");
+          return;
+        }
+
+        const enrichedUser = {
+          ...fullDelegate,
+          country: delegation.Country,
+          committee: delegation.Committee,
+        };
+
+        console.log(enrichedUser);
+
+        login(enrichedUser);
+  }
   
   useEffect(() => {
     const fetchResos = async () => {
@@ -126,9 +174,13 @@ const Page = () => {
     const delegateUser = currentUser as Delegate;
     if (!delegateUser.resoPerms["view:ownreso"]) {
       return (
-        <div className="text-white bg-black min-h-screen text-center p-8">
+        <div className="text-white bg-black min-h-screen text-center">
           <CustomNav/>
           <div className="mt-10">
+            { ( currentUser && ('delegateID' in currentUser) ) && <><button
+          onClick={() => {logBackIn(); toast.success("Page reloaded successfully!");}}
+          className="mb-4 px-6 cursor-pointer py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow transition-colors">
+          Reload</button></>}
             <p>
               You do not have permission to post resolutions.
             </p>
@@ -158,9 +210,19 @@ const Page = () => {
       <div className="min-h-screen w-full bg-black flex flex-col">
         <CustomNav activeLink="resolutions" />
         <main className="flex-1 flex flex-col items-center justify-start px-2 py-6 md:py-10">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white text-center mb-6 md:mb-10 tracking-tight drop-shadow-lg">
-            RESOLUTIONS
-          </h1>
+            <div className="flex items-center justify-center gap-4 mb-6 md:mb-10">
+              <h1 className="text-4xl md:text-6xl font-extrabold text-white text-center tracking-tight drop-shadow-lg">
+                RESOLUTIONS
+              </h1>
+              {(currentUser && ('delegateID' in currentUser)) && (
+                <button
+                  onClick={() => { logBackIn(); toast.success("Page reloaded successfully!"); }}
+                  className="px-6 cursor-pointer py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow transition-colors"
+                >
+                  Reload
+                </button>
+              )}
+            </div>
           <div className="flex flex-col md:flex-row w-full max-w-8xl gap-6 md:gap-10">
             <aside className="w-full md:max-w-xs h-[350px] md:h-[80vh] overflow-y-auto bg-gradient-to-b from-gray-900/90 to-gray-800/80 text-white rounded-2xl shadow-2xl p-4 flex flex-col gap-3 mb-4 md:mb-0 border border-gray-700 backdrop-blur-md">
               <h2 className="text-xl md:text-2xl text-center font-extrabold mb-3 tracking-tight text-blue-400 drop-shadow">

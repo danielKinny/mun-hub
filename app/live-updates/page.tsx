@@ -34,7 +34,7 @@ const Page = () => {
             <ul className="space-y-4 p-4 mx-8">
                 {updates.map((update, index) => (
                     <li key={update.updateID} 
-                        className={`outline outline-gray-800 p-4 w-full h-[30rem] rounded-lg shadow-md flex items-center ${index % 2 !== 0 ? 'flex-row-reverse' : ''} transition-transform duration-300 hover:scale-102`}>
+                        className={`group outline outline-gray-800 p-4 w-full h-[30rem] rounded-lg shadow-md flex items-center ${index % 2 !== 0 ? 'flex-row-reverse' : ''} cursor-pointer transform transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-xl hover:outline-gray-600`}>
                         <div className='w-1/2 px-4 text-center'>
                             <h2 className="text-2xl text-white font-semibold mb-2">{update.title}</h2>
                             <p className="text-gray-400 mb-2">{new Date(update.time.slice(0,10)).toLocaleDateString() + " " + new Date(update.time).toLocaleTimeString()}</p>
@@ -46,7 +46,7 @@ const Page = () => {
                                 alt="Update Image"
                                 width={500}
                                 height={700}
-                                className="rounded-lg object-cover shadow-md"
+                                className="rounded-lg object-cover shadow-md transition-all duration-300 group-hover:scale-105"
                             />
                         </div>
                     </li>
