@@ -24,12 +24,6 @@ const Page = () => {
       toast.error("No user logged in");
       return;
     }
-    const { data: delegate, error: delegateError } = await supabase
-          .from("Delegate")
-          .select("delegateID, password")
-          .eq("delegateID", (currentUser as Delegate).delegateID)
-          .single();
-
         const { data: fullDelegate, error: fullDelegateError } = await supabase
           .from("Delegate")
           .select("*")
@@ -90,9 +84,13 @@ const Page = () => {
     };
 
     fetchResos();
+    logBackIn();
   }, [currentUser, isDelegateUser]);
 
   const postReso = async () => {
+
+    await logBackIn();
+
     if (!currentUser) return;
     
     if (!editorRef.current) {
@@ -175,7 +173,7 @@ const Page = () => {
     if (!delegateUser.resoPerms["view:ownreso"]) {
       return (
         <div className="text-white bg-black min-h-screen text-center">
-          <CustomNav/>
+          <CustomNav role={userRole}/>
           <div className="mt-10">
             { ( currentUser && ('delegateID' in currentUser) ) && <><button
           onClick={() => {logBackIn(); toast.success("Page reloaded successfully!");}}
@@ -214,14 +212,6 @@ const Page = () => {
               <h1 className="text-4xl md:text-6xl font-extrabold text-white text-center tracking-tight drop-shadow-lg">
                 RESOLUTIONS
               </h1>
-              {(currentUser && ('delegateID' in currentUser)) && (
-                <button
-                  onClick={() => { logBackIn(); toast.success("Page reloaded successfully!"); }}
-                  className="px-6 cursor-pointer py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow transition-colors"
-                >
-                  Reload
-                </button>
-              )}
             </div>
           <div className="flex flex-col md:flex-row w-full max-w-8xl gap-6 md:gap-10">
             <aside className="w-full md:max-w-xs h-[350px] md:h-[80vh] overflow-y-auto bg-gradient-to-b from-gray-900/90 to-gray-800/80 text-white rounded-2xl shadow-2xl p-4 flex flex-col gap-3 mb-4 md:mb-0 border border-gray-700 backdrop-blur-md">

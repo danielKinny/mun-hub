@@ -78,7 +78,7 @@ const createCommitteeComponent = (
 export const committeeData = [
   {
     name: "UNHRC",
-    logo: "UNEMBLEM.png",
+    logo: "UNHRCLOGO.png",
     bgImage1: "UNHRC1.jpg",
     bgImage2: "UNHRC2.jpg",
     agenda1: "placeholder text for agenda 1 of UNHRC",
@@ -126,7 +126,7 @@ export const committeeData = [
   },
   {
     name: "CSW",
-    logo: "UNEMBLEM.png",
+    logo: "CSWLOGO.png",
     bgImage1: "CSW1.jpg",
     bgImage2: "CSW2.jpg",
     agenda1: "placeholder text for agenda 1 of CSW",
@@ -134,7 +134,7 @@ export const committeeData = [
   },
   {
     name: "COE",
-    logo: "UNEMBLEM.png",
+    logo: "COELOGO.png",
     bgImage1: "COE1.jpg",
     bgImage2: "COE2.jpg",
     agenda1: "placeholder text for agenda 1 of COE",
@@ -154,8 +154,8 @@ const getCommitteeByName = (name: string) => {
   };
 };
 
-const UNHRC = createCommitteeComponent(
-  "UNHRC",
+const UNHCR = createCommitteeComponent(
+  "UNHCR",
   getCommitteeByName("UNHRC").logo,
   getCommitteeByName("UNHRC").bgImage1,
   getCommitteeByName("UNHRC").bgImage2,
@@ -226,4 +226,4 @@ const COE = createCommitteeComponent(
   getCommitteeByName("COE").agenda2
 );
 
-export { UNHRC, HSC, IACA, IPACRC, UNBOCC, IPC, CSW, COE };
+export {UNHCR, HSC, IACA, IPACRC, UNBOCC, IPC, CSW, COE };
