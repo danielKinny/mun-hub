@@ -73,6 +73,7 @@ export interface Delegate {
     "view:ownreso": boolean;
     "view:allreso": boolean;
     "update:ownreso": boolean;
+    "update:reso": string[];
   };
 }
 
