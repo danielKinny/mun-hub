@@ -5,21 +5,13 @@ import { CustomNav } from '@/components/ui/customnav'
 import { useSession } from '@/app/context/sessionContext'
 import { Chair } from '@/db/types'
 import {toast} from 'sonner'
+import { shortenedDel } from '@/db/types'
 
 const DelegateItem = memo(({ 
   delegate, 
   onPermissionChange 
 }: { 
-  delegate: {
-    delegateID: string;
-    firstname: string;
-    lastname: string;
-    resoPerms: {
-        "view:ownreso": boolean;
-        "view:allreso": boolean;
-        "update:ownreso": boolean;
-    };
-  },
+  delegate: shortenedDel,
   onPermissionChange: (delegateID: string, permKey: string, value: boolean) => void;
 }) => (
   <li key={delegate.delegateID} className='outline outline-gray-800 p-4 w-full rounded-lg shadow-md'>
@@ -65,26 +57,8 @@ const MemoizedNav = memo(CustomNav);
 
 const Page = () => {
     const { user: currentUser } = useSession();
-    const [delegates, setDelegates] = useState<{
-        delegateID: string;
-        firstname: string;
-        lastname: string;
-        resoPerms: {
-            "view:ownreso": boolean;
-            "view:allreso": boolean;
-            "update:ownreso": boolean;
-        };
-    }[]>([]);
-    const [originalDelegates, setOriginalDelegates] = useState<{
-        delegateID: string;
-        firstname: string;
-        lastname: string;
-        resoPerms: {
-            "view:ownreso": boolean;
-            "view:allreso": boolean;
-            "update:ownreso": boolean;
-        };
-    }[]>([]);
+    const [delegates, setDelegates] = useState<shortenedDel[]>([]);
+    const [originalDelegates, setOriginalDelegates] = useState<shortenedDel[]>([]);
     const [saving, setSaving] = useState(false);
     const [hasChanges, setHasChanges] = useState(false);
 
@@ -209,6 +183,7 @@ const Page = () => {
                             "view:ownreso": boolean;
                             "view:allreso": boolean;
                             "update:ownreso": boolean;
+                            "update:reso": string[];
                         };
                     };
                 };

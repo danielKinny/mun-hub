@@ -77,6 +77,17 @@ export interface Delegate {
   };
 }
 
+export interface shortenedDel {
+    delegateID: string;
+    firstname: string;
+    lastname: string;
+    resoPerms: {
+        "view:ownreso": boolean;
+        "view:allreso": boolean;
+        "update:ownreso": boolean;
+        "update:reso": string[];
+    };
+}
 
 export interface Article {
 
