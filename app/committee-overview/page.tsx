@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import {
   HSC,
@@ -20,6 +20,7 @@ const Page = () => {
   const [selectedCommittee, setSelectedCommittee] = useState<string | null>(null);
   const [imagesLoaded, setImagesLoaded] = useState<{[key: string]: boolean}>({});
   const {user : currentUser} = useSession();
+  const committeeDetailsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const initialLoadState: {[key: string]: boolean} = {};
@@ -28,6 +29,15 @@ const Page = () => {
     });
     setImagesLoaded(initialLoadState);
   }, []);
+
+  useEffect(() => {
+    if (selectedCommittee && committeeDetailsRef.current) {
+      committeeDetailsRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, [selectedCommittee]);
 
   const handleImageLoad = (committeeName: string) => {
     setImagesLoaded(prev => ({
@@ -96,12 +106,15 @@ const Page = () => {
         return (
           <div
           key={index}
-          className='absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all hover:scale-110'
+          className='absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all hover:scale-110 hover:text-blue-400'
           style={{
             left: `calc(50% + ${x}px)`,
             top: `calc(50% + ${y}px)`,
           }}
-          onClick={() => setSelectedCommittee(committee.name)}
+          onClick={() => {
+            setSelectedCommittee(committee.name);
+            // The scrolling is handled by the useEffect
+          }}
           >
           <div className='flex flex-col items-center'>
             <div className='w-[160px] h-[160px] flex items-center justify-center'>
@@ -125,9 +138,13 @@ const Page = () => {
         })}
       </div>
       </div>
+      <div ref={committeeDetailsRef} className="scroll-mt-16 mt-8 min-h-screen">
       {selectedCommittee && (
-      renderCommitteeComponent()
+        <div className="committee-details-container">
+          { selectedCommittee && renderCommitteeComponent()}
+        </div>
       )}
+      </div>
     </div>
   );
 }

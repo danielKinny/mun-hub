@@ -77,12 +77,12 @@ const createCommitteeComponent = (
 
 export const committeeData = [
   {
-    name: "UNHRC",
-    logo: "UNHRCLOGO.png",
-    bgImage1: "UNHRC1.jpg",
-    bgImage2: "UNHRC2.jpg",
-    agenda1: "placeholder text for agenda 1 of UNHRC",
-    agenda2: "placeholder text for agenda 2 of UNHRC",
+    name: "UNHCR",
+    logo: "UNHCRLOGO.png",
+    bgImage1: "UNHCR1.jpg",
+    bgImage2: "UNHCR2.jpg",
+    agenda1: "placeholder text for agenda 1 of UNHCR",
+    agenda2: "placeholder text for agenda 2 of UNHCR",
   },
   {
     name: "IACA",
