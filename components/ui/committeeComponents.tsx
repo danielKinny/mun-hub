@@ -86,7 +86,7 @@ export const committeeData = [
   },
   {
     name: "IACA",
-    logo: "UNEMBLEM.png",
+    logo: "IACALOGO.png",
     bgImage1: "IACA1.jpg",
     bgImage2: "IACA2.jpg",
     agenda1: "placeholder text for agenda 1 of IACA",
@@ -94,7 +94,7 @@ export const committeeData = [
   },
   {
     name: "HSC",
-    logo: "UNEMBLEM.png",
+    logo: "HSCLOGO.png",
     bgImage1: "HSC1.jpg",
     bgImage2: "HSC2.jpg",
     agenda1: "placeholder text for agenda 1 of HSC",
@@ -110,7 +110,7 @@ export const committeeData = [
   },
   {
     name: "UNBOCC",
-    logo: "UNEMBLEM.png",
+    logo: "UNBOCCLOGO.png",
     bgImage1: "UNBOCC1.jpg",
     bgImage2: "UNBOCC2.jpg",
     agenda1: "placeholder text for agenda 1 of UNBOCC",
@@ -118,7 +118,7 @@ export const committeeData = [
   },
   {
     name: "IPC",
-    logo: "UNEMBLEM.png",
+    logo: "IPCLOGO.png",
     bgImage1: "IPC1.jpg",
     bgImage2: "IPC2.jpg",
     agenda1: "placeholder text for agenda 1 of IPC",
