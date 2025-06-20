@@ -29,6 +29,20 @@ export async function GET(url: Request) {
 export async function POST(request: Request) {
     const { resoID, delegateID, committeeID, content } = await request.json();
 
+    const {data : userPerms, error: userPermsError} = await supabase
+        .from('Delegate')
+        .select('resoPerms')
+        .eq('delegateID', delegateID)
+        .single();
+    if (userPermsError) {
+        console.error('Error fetching user permissions:', userPermsError);
+        return NextResponse.json({ error: 'Failed to fetch user permissions' }, { status: 500 });
+    }
+
+    if (!(userPerms.resoPerms["update:reso"].includes(resoID))){
+        return NextResponse.json({ error: 'You do not have permission to update resolutions' }, { status: 403 });
+    }
+
     if (resoID !== "-1"){
         const { error } = await supabase
             .from('Resos')

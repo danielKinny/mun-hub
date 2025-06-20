@@ -2,6 +2,25 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SessionProvider } from "./context/sessionContext";
 import { Toaster } from "sonner";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: [
+    "100",
+    "200",
+    "300",
+    "400",
+    "500",
+    "600",
+    "700",
+    "800",
+    "900"
+  ],
+  style: ["normal", "italic"],
+  display: "swap"
+});
+
 export const metadata: Metadata = {
   title: "mun-hub",
   description: "ooga booga",
@@ -14,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-black antialiased">
+      <body className={`bg-black antialiased ${poppins.className}`}>
         {/* entire thingy is wrapped with session provider */}
         <SessionProvider>
           <main>

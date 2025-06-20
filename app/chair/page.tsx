@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect, useState, useMemo, memo} from 'react'
+import React, {useEffect, useState, useMemo, memo, useCallback} from 'react'
 import { ChairRoute } from '@/components/protectedroute'
 import { CustomNav } from '@/components/ui/customnav'
 import { useSession } from '@/app/context/sessionContext'
@@ -83,7 +83,7 @@ const Page = () => {
         fetchDelegates();
     }, [currentUser]);
 
-    const handlePermissionChange = (delegateID: string, permKey: string, value: boolean) => {
+    const handlePermissionChange = useCallback((delegateID: string, permKey: string, value: boolean) => {
         setDelegates(prevDelegates => {
             const newDelegates = prevDelegates.map(delegate => {
                 if (delegate.delegateID === delegateID) {
@@ -110,7 +110,7 @@ const Page = () => {
             setHasChanges(hasAnyChanges);
             return newDelegates;
         });
-    };
+    }, [originalDelegates]);
 
     const saveChanges = async () => {
         try {

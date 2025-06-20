@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Reso, Delegate, Chair, shortenedDel } from "@/db/types";
 import { useSession } from "../context/sessionContext";
 import { Editor } from "@tiptap/react";
@@ -20,51 +20,45 @@ const Page = () => {
   const [delegates, setDelegates] = useState<shortenedDel[]>([]);
   const isDelegateUser = userRole === "delegate" && currentUser !== null;
 
-  const logBackIn = async () => {
+  const logBackIn = useCallback(async () => {
     if (!currentUser) {
       toast.error("No user logged in");
-      return;
+      return null;
     }
 
     if (userRole === "delegate") {
-      const { data: fullDelegate, error: fullDelegateError } = await supabase
+      const {data : newPerms, error : permsError} = await supabase
         .from("Delegate")
-        .select("*")
+        .select("resoPerms")
         .eq("delegateID", (currentUser as Delegate).delegateID)
         .single();
-
-      if (fullDelegateError || !fullDelegate) {
-        toast.error("Delegate record not found");
-        return;
+      if (permsError) {
+        console.error("Failed to fetch delegate permissions:", permsError);
+        toast.error("Failed to fetch delegate permissions");
+        return null;
       }
 
-      const { data: delegation, error: delegationError } = await supabase
-        .from("Delegation")
-        .select(
-          `*,
-            Country:countryID (countryID, name, flag),
-            Committee:committeeID (committeeID, name)
-          `
-        )
-        .eq("delegateID", (currentUser as Delegate).delegateID)
-        .single();
-
-      if (delegationError || !delegation) {
-        toast.error("Delegation not found");
-        return;
-      }
-
-      const enrichedUser = {
-        ...fullDelegate,
-        country: delegation.Country,
-        committee: delegation.Committee,
+      const delegateUser = currentUser as Delegate;
+      const enrichedUser: Delegate = {
+        delegateID: delegateUser.delegateID,
+        firstname: delegateUser.firstname,
+        lastname: delegateUser.lastname,
+        password: delegateUser.password,
+        country: delegateUser.country,
+        committee: delegateUser.committee,
+        resoPerms: newPerms.resoPerms || {
+          "view:ownreso": false,
+          "view:allreso": false,
+          "update:ownreso": false,
+          "update:reso": [],
+        },
       };
 
-      console.log(enrichedUser);
-
       login(enrichedUser);
+      return enrichedUser;
     }
-  };
+    return currentUser;
+  }, [currentUser, userRole, login]);
 
   useEffect( () => {
 
@@ -84,7 +78,7 @@ const Page = () => {
 
   useEffect( () => {
     logBackIn();
-  },[]) // this should only run once on mount plspslpslpslsplspls
+  }, [logBackIn]) // added logBackIn to dependencies
 
   useEffect(() => {
     const fetchResos = async () => {
@@ -112,10 +106,10 @@ const Page = () => {
   }, [currentUser, isDelegateUser]);
 
   const postReso = async () => {
+    const updatedUser = await logBackIn();
+    if (!updatedUser) return;
 
-    await logBackIn();
-
-    if (!currentUser) return;
+    const isDelegateUser = role(updatedUser) === "delegate" && updatedUser !== null;
 
     if (!editorRef.current) {
       toast.error("Editor not initialized");
@@ -128,20 +122,15 @@ const Page = () => {
     }
 
     if (isDelegateUser) {
-      const delegateUser = currentUser as Delegate;
-      if (!delegateUser.resoPerms["update:ownreso"] && selectedReso?.delegateID === (currentUser as Delegate).delegateID) {
+      const delegateUser = updatedUser as Delegate;
+      if (!delegateUser.resoPerms["update:ownreso"] && selectedReso?.delegateID === delegateUser.delegateID) {
         toast.error("You do not have permission to post resolutions.");
         return;
       }
-
-      console.log("selectedReso", selectedReso ? true : false);
-      console.log('not my reso', selectedReso?.delegateID !== delegateUser.delegateID);
-      console.log('the resoID doesnt exist in my perms', !((currentUser as Delegate).resoPerms["update:reso"]?.includes(selectedReso?.resoID || "")));
-
       if (
         selectedReso &&
         (selectedReso?.delegateID !== delegateUser.delegateID
-        && !((currentUser as Delegate).resoPerms["update:reso"]?.includes(selectedReso.resoID || "")))
+        && !(delegateUser.resoPerms["update:reso"]?.includes(selectedReso.resoID)))
       ) {
         toast.error("You can only update your own resolutions.");
         return;
@@ -159,7 +148,7 @@ const Page = () => {
     let committeeID = "0000";
 
     if (isDelegateUser) {
-      const delegateUser = currentUser as Delegate;
+      const delegateUser = updatedUser as Delegate;
       delegateID = delegateUser.delegateID;
       committeeID = delegateUser.committee.committeeID;
     }
@@ -242,7 +231,6 @@ const Page = () => {
         throw new Error('Failed to update permissions');
       }
 
-      // Update local state
       setDelegates(delegates.map(d => 
         d.delegateID === delegateID 
           ? { ...d, resoPerms: updatedPermissions }
