@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
-
+import Image from 'next/image';
 import {
   HSC,
   IACA,
@@ -113,7 +113,7 @@ const Page = () => {
           >
           <div className='flex flex-col items-center'>
             <div className='w-[160px] h-[160px] flex items-center justify-center'>
-            <img
+            <Image
               src={`/committee-resources/${committee.name}/${committee.logo}`}
               alt={`${committee.name} Logo`}
               title ={`${committee.fullname} Logo`}
