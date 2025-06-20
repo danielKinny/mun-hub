@@ -40,12 +40,7 @@ const Page = () => {
 
       const delegateUser = currentUser as Delegate;
       const enrichedUser: Delegate = {
-        delegateID: delegateUser.delegateID,
-        firstname: delegateUser.firstname,
-        lastname: delegateUser.lastname,
-        password: delegateUser.password,
-        country: delegateUser.country,
-        committee: delegateUser.committee,
+        ...delegateUser,
         resoPerms: newPerms.resoPerms || {
           "view:ownreso": false,
           "view:allreso": false,
@@ -53,8 +48,9 @@ const Page = () => {
           "update:reso": [],
         },
       };
-
-      login(enrichedUser);
+      if (JSON.stringify(delegateUser.resoPerms) !== JSON.stringify(enrichedUser.resoPerms)) {
+        login(enrichedUser);
+      }
       return enrichedUser;
     }
     return currentUser;
@@ -80,19 +76,20 @@ const Page = () => {
     logBackIn();
   }, [logBackIn]) // added logBackIn to dependencies
 
+  // Only depend on currentUser for fetching resolutions
   useEffect(() => {
     const fetchResos = async () => {
       if (!currentUser) return;
 
       let endpoint = "/api/resos";
-      if (isDelegateUser) {
+      if (role(currentUser) === "delegate" && currentUser !== null) {
         const delegateUser = currentUser as Delegate;
         if (!delegateUser.resoPerms["view:allreso"]) {
           endpoint += `/delegate?delegateID=${delegateUser.delegateID}`;
         } else {
           endpoint += `/chair?committeeID=${delegateUser.committee.committeeID}`;
         }
-      } else {
+      } else if (role(currentUser) === "chair") {
         const chairUser = currentUser as Chair;
         endpoint += `/chair?committeeID=${chairUser.committee.committeeID}`;
       }
@@ -103,7 +100,7 @@ const Page = () => {
     };
 
     fetchResos();
-  }, [currentUser, isDelegateUser]);
+  }, [currentUser]);
 
   const postReso = async () => {
     const updatedUser = await logBackIn();
