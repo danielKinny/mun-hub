@@ -4,11 +4,9 @@ import { Parallax, ParallaxLayer } from "@react-spring/parallax";
 
 const createCommitteeComponent = (
   name: string,
-  logo: string,
   bgImage1: string,
   bgImage2: string,
-  agenda1: string,
-  agenda2: string
+  agenda1: string
 ) => {
   const CommitteeComponent = () => {
     return (
@@ -53,18 +51,14 @@ const createCommitteeComponent = (
           >
             <div className="text-center flex flex-row items-center justify-center w-full h-full space-x-4 text-white text-3xl font-extrabold">
               <div>
+                <h1 className="text-9xl p-6"> Agenda </h1>
+              </div>
+              <div className="max-w-2xl">
                 <p>
-                  Agenda 1: <br /> {agenda1}
+                  Agenda: <br /> {agenda1}
                 </p>
               </div>
-              <div>
-                <h1 className="text-9xl p-6"> Agendas </h1>
-              </div>
-              <div>
-                <p>
-                  Agenda 2: <br /> {agenda2}
-                </p>
-              </div>
+              
             </div>
           </ParallaxLayer>
         </Parallax>
@@ -78,152 +72,78 @@ const createCommitteeComponent = (
 export const committeeData = [
   {
     name: "UNHCR",
+    fullname: "United Nations High Commissioner for Refugees",
     logo: "UNHCRLOGO.png",
     bgImage1: "UNHCR1.jpg",
     bgImage2: "UNHCR2.jpg",
-    agenda1: "placeholder text for agenda 1 of UNHCR",
-    agenda2: "placeholder text for agenda 2 of UNHCR",
+    agenda1: "Defending Refugee Rights in the Age of Rising Xenophobic Nationalism",
   },
   {
     name: "IACA",
+    fullname: "International Aviation and something",
     logo: "IACALOGO.png",
     bgImage1: "IACA1.jpg",
     bgImage2: "IACA2.jpg",
-    agenda1: "placeholder text for agenda 1 of IACA",
-    agenda2: "placeholder text for agenda 2 of IACA",
+    agenda1: "CRISIS COMMITTEE - Developing Sustainable Aviation and Management of rapidly increasing worldwide Carbon Emissions",
   },
   {
     name: "HSC",
+    fullname: "Historic Security Council",
     logo: "HSCLOGO.png",
     bgImage1: "HSC1.jpg",
     bgImage2: "HSC2.jpg",
-    agenda1: "placeholder text for agenda 1 of HSC",
-    agenda2: "placeholder text for agenda 2 of HSC",
+    agenda1: "World War II, 1943: Reclaiming Occupied Europe – Strategic Decisions on Axis-Held Territories",
   },
   {
     name: "IPACRC",
-    logo: "UNEMBLEM.png",
+    fullname: "International Psychological Association Case Review Commisssion",
+    logo: "IPACRCLOGO.png",
     bgImage1: "IPACRC1.jpg",
     bgImage2: "IPACRC2.jpg",
-    agenda1: "placeholder text for agenda 1 of IPACRC",
-    agenda2: "placeholder text for agenda 2 of IPACRC",
+    agenda1: "Discussing the use of social learning as a method to combat increasing crime rates",
   },
   {
     name: "UNBOCC",
+    fullname: "United Nations Black Ops Crisis Committee",
     logo: "UNBOCCLOGO.png",
     bgImage1: "UNBOCC1.jpg",
     bgImage2: "UNBOCC2.jpg",
-    agenda1: "placeholder text for agenda 1 of UNBOCC",
-    agenda2: "placeholder text for agenda 2 of UNBOCC",
+    agenda1: "CRISIS COMMITTEE - The Breach\nClassified briefing: A global cyberattack has begun. Systems are failing. Attribution unknown. Coordination essential. Trust, compromised.",
   },
   {
     name: "IPC",
+    fullname: "International Press Corps",
     logo: "IPCLOGO.png",
     bgImage1: "IPC1.jpg",
     bgImage2: "IPC2.jpg",
-    agenda1: "placeholder text for agenda 1 of IPC",
-    agenda2: "placeholder text for agenda 2 of IPC",
-  },
-  {
-    name: "CSW",
-    logo: "CSWLOGO.png",
-    bgImage1: "CSW1.jpg",
-    bgImage2: "CSW2.jpg",
-    agenda1: "placeholder text for agenda 1 of CSW",
-    agenda2: "placeholder text for agenda 2 of CSW",
+    agenda1: "Combating the use of Mass Media in the escalation and sensationalization of global crises and phenomena.",
   },
   {
     name: "COE",
+    fullname: "Council of Europe",
     logo: "COELOGO.png",
     bgImage1: "COE1.jpg",
     bgImage2: "COE2.jpg",
-    agenda1: "placeholder text for agenda 1 of COE",
-    agenda2: "placeholder text for agenda 2 of COE",
+    agenda1: "Re-examining Article 8 of the ECHR: Balancing Privacy Rights with National Security and Public Interest",
   },
 ];
 
-// Helper function to find committee data by name
-const getCommitteeByName = (name: string) => {
-  return committeeData.find(committee => committee.name === name) || {
-    name: "",
-    logo: "",
-    bgImage1: "",
-    bgImage2: "",
-    agenda1: "",
-    agenda2: ""
-  };
-};
+const committeeComponentMap: Record<string, React.FC> = {};
+committeeData.forEach((committee) => {
+  committeeComponentMap[committee.name] = createCommitteeComponent(
+    committee.name,
+    committee.bgImage1,
+    committee.bgImage2,
+    committee.agenda1
+  );
+});
 
-const UNHCR = createCommitteeComponent(
-  "UNHCR",
-  getCommitteeByName("UNHRC").logo,
-  getCommitteeByName("UNHRC").bgImage1,
-  getCommitteeByName("UNHRC").bgImage2,
-  getCommitteeByName("UNHRC").agenda1,
-  getCommitteeByName("UNHRC").agenda2
-);
+export const UNHCR = committeeComponentMap["UNHCR"];
+export const HSC = committeeComponentMap["HSC"];
+export const IACA = committeeComponentMap["IACA"];
+export const IPACRC = committeeComponentMap["IPACRC"];
+export const UNBOCC = committeeComponentMap["UNBOCC"];
+export const IPC = committeeComponentMap["IPC"];
+export const COE = committeeComponentMap["COE"];
 
-const HSC = createCommitteeComponent(
-  "HSC",
-  getCommitteeByName("HSC").logo,
-  getCommitteeByName("HSC").bgImage1,
-  getCommitteeByName("HSC").bgImage2,
-  getCommitteeByName("HSC").agenda1,
-  getCommitteeByName("HSC").agenda2
-);
-
-const IACA = createCommitteeComponent(
-  "IACA",
-  getCommitteeByName("IACA").logo,
-  getCommitteeByName("IACA").bgImage1,
-  getCommitteeByName("IACA").bgImage2,
-  getCommitteeByName("IACA").agenda1,
-  getCommitteeByName("IACA").agenda2
-);
-
-const IPACRC = createCommitteeComponent(
-  "IPACRC",
-  getCommitteeByName("IPACRC").logo,
-  getCommitteeByName("IPACRC").bgImage1,
-  getCommitteeByName("IPACRC").bgImage2,
-  getCommitteeByName("IPACRC").agenda1,
-  getCommitteeByName("IPACRC").agenda2
-);
-
-const UNBOCC = createCommitteeComponent(
-  "UNBOCC",
-  getCommitteeByName("UNBOCC").logo,
-  getCommitteeByName("UNBOCC").bgImage1,
-  getCommitteeByName("UNBOCC").bgImage2,
-  getCommitteeByName("UNBOCC").agenda1,
-  getCommitteeByName("UNBOCC").agenda2
-);
-
-const IPC = createCommitteeComponent(
-  "IPC",
-  getCommitteeByName("IPC").logo,
-  getCommitteeByName("IPC").bgImage1,
-  getCommitteeByName("IPC").bgImage2,
-  getCommitteeByName("IPC").agenda1,
-  getCommitteeByName("IPC").agenda2
-);
-
-const CSW = createCommitteeComponent(
-  "CSW",
-  getCommitteeByName("CSW").logo,
-  getCommitteeByName("CSW").bgImage1,
-  getCommitteeByName("CSW").bgImage2,
-  getCommitteeByName("CSW").agenda1,
-  getCommitteeByName("CSW").agenda2
-);
-
-const COE = createCommitteeComponent(
-  "COE",
-  getCommitteeByName("COE").logo,
-  getCommitteeByName("COE").bgImage1,
-  getCommitteeByName("COE").bgImage2,
-  getCommitteeByName("COE").agenda1,
-  getCommitteeByName("COE").agenda2
-);
-
-export {UNHCR, HSC, IACA, IPACRC, UNBOCC, IPC, CSW, COE };
+export const committeeComponentMapExport = committeeComponentMap;

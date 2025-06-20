@@ -8,7 +8,6 @@ import {
   IPACRC,
   UNBOCC,
   UNHCR,
-  CSW,
   COE,
   committeeData,
 } from '../../components/ui/committeeComponents'
@@ -60,8 +59,6 @@ const Page = () => {
         return <UNBOCC />;
       case 'IPC':
         return <IPC />;
-      case 'CSW':
-        return <CSW />;
       case 'COE':
         return <COE />;
       default:
@@ -69,8 +66,7 @@ const Page = () => {
     }
   };
   const calculatePosition = (index: number, totalItems: number, radius: number) => {
-    const angle = (index / totalItems) * 2 * Math.PI;
-    
+    const angle = (index / totalItems) * 2 * Math.PI - Math.PI / 2;
     const x = Math.cos(angle) * radius;
     const y = Math.sin(angle) * radius;
     
@@ -93,10 +89,10 @@ const Page = () => {
       <div className='flex items-center justify-center min-h-screen'>
       <div className='relative w-[700px] h-[700px]'>
         <div className='absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10'>
-        <h1 className='text-6xl font-bold'>COMMITTEES</h1>
+        <h1><span className='text-7xl font-extrabold'> COMMITTEES </span> <br/> <span className='text-2xl'> Click on a Logo to explore </span></h1>
         </div>
         {committeeData.map((committee, index) => {
-        const radius = 300; 
+        const radius = 350; 
         const { x, y } = calculatePosition(
           index, 
           committeeData.length, 
@@ -113,7 +109,6 @@ const Page = () => {
           }}
           onClick={() => {
             setSelectedCommittee(committee.name);
-            // The scrolling is handled by the useEffect
           }}
           >
           <div className='flex flex-col items-center'>
@@ -121,6 +116,7 @@ const Page = () => {
             <img
               src={`/committee-resources/${committee.name}/${committee.logo}`}
               alt={`${committee.name} Logo`}
+              title ={`${committee.fullname} Logo`}
               width={160}
               height={160}
               className='object-contain max-w-full max-h-full'
