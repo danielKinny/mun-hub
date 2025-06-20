@@ -93,7 +93,7 @@ export default function Home() {
                       {announcements.map((announcement, index) => (
                         <motion.li
                           key={index}
-                          className="mb-4 overflow-y-hidden overflow-x-hidden"
+                          className="mb-4 overflow-y-hidden overflow-x-hidden rounded-lg"
                           initial={{ opacity: 0, y: 50 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{
@@ -140,7 +140,7 @@ export default function Home() {
                   <div className="bg-gray-800 shadow-lg rounded-lg w-full p-4 transition-transform transform hover:scale-103 hover:shadow-xl">
                     <h3 className="text-xl font-bold text-white mb-2">
                       <Link
-                        href="/delegate-resources/placeholder.pdf"
+                        href="/delegate-resources/schedule.pdf"
                         className="hover:underline"
                       >
                         View Schedule
