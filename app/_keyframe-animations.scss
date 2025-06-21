@@ -45,6 +45,21 @@
   }
 }
 
+@keyframes clickEffect {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.92);
+  }
+  70% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 @keyframes slideFromTop {
   from {
     transform: translateY(-0.5rem);
