@@ -69,6 +69,7 @@ export interface Delegate {
   password: string;
   country: Country;
   committee: Committee;
+  email : string;
   resoPerms: {
     "view:ownreso": boolean;
     "view:allreso": boolean;
