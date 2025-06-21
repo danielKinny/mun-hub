@@ -35,7 +35,7 @@ export default function Home() {
       <div className="min-h-screen flex flex-col items-start justify-center bg-black text-white">
         <div className="absolute top-0 right-0 m-4 flex flex-col items-end gap-2">
           <button
-            className="p-2 text-lg cursor-pointer bg-red-500 text-white rounded-2xl hover:bg-red-600/90 transition-all duration-300 shadow-md"
+            className="hidden md:block p-2 text-lg cursor-pointer bg-red-500 text-white rounded-2xl hover:bg-red-600/90 transition-all duration-300 shadow-md"
             onClick={logout}
           >
             <UserIcon className="w-6 h-6 inline-block" /> Logout
