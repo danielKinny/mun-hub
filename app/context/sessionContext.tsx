@@ -62,7 +62,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   };
 
   if (isLoading) {
-    return <div className="bg-black text-white text-center">Loading...</div>;
+    return <div className="bg-black min-h-screen flex items-center justify-center text-white text-center">Loading...</div>;
   }
 
   return (

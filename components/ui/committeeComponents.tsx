@@ -39,7 +39,6 @@ const createCommitteeComponent = (
             </h2>
           </ParallaxLayer>
 
-          {/* Second page - Agenda */}
           <ParallaxLayer
             offset={isMobile ? 1 : 1}
             speed={0.5}
@@ -79,7 +78,6 @@ const createCommitteeComponent = (
             )}
           </ParallaxLayer>
           
-          {/* Add extra spacing on mobile for better scrolling */}
           {isMobile && (
             <ParallaxLayer
               offset={2}

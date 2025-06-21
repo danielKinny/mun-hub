@@ -5,7 +5,6 @@ import { EditorContent, EditorContext, useEditor, Editor } from "@tiptap/react"
 
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit"
-import { Image } from "@tiptap/extension-image"
 import { TaskItem } from "@tiptap/extension-task-item"
 import { TaskList } from "@tiptap/extension-task-list"
 import { TextAlign } from "@tiptap/extension-text-align"
@@ -30,15 +29,12 @@ import {
 } from "@/components/tiptap-ui-primitive/toolbar"
 
 // --- Tiptap Node ---
-import { ImageUploadNode } from "@/components/tiptap-node/image-upload-node/image-upload-node-extension"
 import "@/components/tiptap-node/code-block-node/code-block-node.scss"
 import "@/components/tiptap-node/list-node/list-node.scss"
-import "@/components/tiptap-node/image-node/image-node.scss"
 import "@/components/tiptap-node/paragraph-node/paragraph-node.scss"
 
 // --- Tiptap UI ---
 import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu"
-import { ImageUploadButton } from "@/components/tiptap-ui/image-upload-button"
 import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu"
 import { BlockQuoteButton } from "@/components/tiptap-ui/blockquote-button"
 import { CodeBlockButton } from "@/components/tiptap-ui/code-block-button"
@@ -70,7 +66,7 @@ import { useCursorVisibility } from "@/hooks/use-cursor-visibility"
 import { ThemeToggle } from "@/components/tiptap-templates/simple/theme-toggle"
 
 // --- Lib ---
-import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils"
+import { MAX_FILE_SIZE } from "@/lib/tiptap-utils"
 
 // --- Styles ---
 import "@/components/tiptap-templates/simple/simple-editor.scss"
@@ -134,12 +130,6 @@ const MainToolbarContent = ({
         <TextAlignButton align="justify" />
       </ToolbarGroup>
 
-      <ToolbarSeparator />
-
-      <ToolbarGroup>
-        <ImageUploadButton text="Add" />
-      </ToolbarGroup>
-
       <Spacer />
 
       {isMobile && <ToolbarSeparator />}
@@ -187,7 +177,6 @@ export interface SimpleEditorProps {
 
 export const SimpleEditor = React.forwardRef(function SimpleEditor({ content, className }: SimpleEditorProps, ref: React.Ref<Editor | null>) {
     const isMobile = useMobile()
-    const windowSize = useWindowSize()
     const [mobileView, setMobileView] = React.useState<
       "main" | "highlighter" | "link"
     >("main")
@@ -210,19 +199,9 @@ export const SimpleEditor = React.forwardRef(function SimpleEditor({ content, cl
         TaskList,
         TaskItem.configure({ nested: true }),
         Highlight.configure({ multicolor: true }),
-        Image,
         Typography,
-        Superscript,
-        Subscript,
-
+        
         Selection,
-        ImageUploadNode.configure({
-          accept: "image/*",
-          maxSize: MAX_FILE_SIZE,
-          limit: 3,
-          upload: handleImageUpload,
-          onError: (error) => console.error("Upload failed:", error),
-        }),
         TrailingNode,
         Link.configure({ openOnClick: false }),
       ],
