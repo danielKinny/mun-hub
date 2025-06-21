@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { Parallax, ParallaxLayer } from "@react-spring/parallax";
+import { useMobile } from "../../hooks/use-mobile";
 
 const createCommitteeComponent = (
   name: string,
@@ -9,9 +10,12 @@ const createCommitteeComponent = (
   agenda1: string
 ) => {
   const CommitteeComponent = () => {
+    const isMobile = useMobile();
+    
     return (
       <div>
-        <Parallax pages={2}>
+        <Parallax pages={isMobile ? 3 : 2}>
+          {/* First page - Committee name and background */}
           <ParallaxLayer
             offset={0}
             speed={1.5}
@@ -19,6 +23,7 @@ const createCommitteeComponent = (
             style={{
               backgroundImage: `url(/images/${bgImage1})`,
               backgroundSize: "cover",
+              backgroundPosition: "center",
             }}
             className="flex items-center justify-center w-full h-full"
           />
@@ -29,38 +34,61 @@ const createCommitteeComponent = (
             speed={2}
             className="flex items-center justify-center w-full h-full"
           >
-            <h2 className="text-white text-9xl text-center font-extrabold">
+            <h2 className={`text-white ${isMobile ? 'text-4xl px-4' : 'text-9xl'} text-center font-extrabold`}>
               {name}
             </h2>
           </ParallaxLayer>
 
+          {/* Second page - Agenda */}
           <ParallaxLayer
-            offset={1}
+            offset={isMobile ? 1 : 1}
             speed={0.5}
             style={{
               backgroundImage: `url(/images/${bgImage2})`,
               backgroundSize: "cover",
+              backgroundPosition: "center",
             }}
             className="flex items-center justify-center w-full h-full"
           ></ParallaxLayer>
 
           <ParallaxLayer
-            offset={1}
+            offset={isMobile ? 1 : 1}
             speed={1.4}
             className="flex items-center justify-center w-full h-full"
           >
-            <div className="text-center flex flex-row items-center justify-center w-full h-full space-x-4 text-white text-3xl font-extrabold">
-              <div>
-                <h1 className="text-9xl p-6"> Agenda </h1>
+            {isMobile ? (
+              <div className="text-center px-4 py-6 w-full flex flex-col items-center justify-center text-white">
+                <h1 className="text-4xl font-extrabold mb-6">Agenda</h1>
+                <div className="w-full">
+                  <p className="text-lg font-medium">
+                    {agenda1}
+                  </p>
+                </div>
               </div>
-              <div className="max-w-2xl">
-                <p>
-                  Agenda: <br /> {agenda1}
-                </p>
+            ) : (
+              <div className="text-center flex flex-row items-center justify-center w-full h-full space-x-4 text-white text-3xl font-extrabold">
+                <div>
+                  <h1 className="text-9xl p-6">Agenda</h1>
+                </div>
+                <div className="max-w-2xl">
+                  <p>
+                    Agenda: <br /> {agenda1}
+                  </p>
+                </div>
               </div>
-              
-            </div>
+            )}
           </ParallaxLayer>
+          
+          {/* Add extra spacing on mobile for better scrolling */}
+          {isMobile && (
+            <ParallaxLayer
+              offset={2}
+              speed={0.5}
+              className="flex items-center justify-center w-full h-full"
+            >
+              <div className="py-12"></div>
+            </ParallaxLayer>
+          )}
         </Parallax>
       </div>
     );

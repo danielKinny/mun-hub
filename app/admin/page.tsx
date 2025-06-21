@@ -6,11 +6,11 @@ import supabase from '@/lib/supabase'
 import {toast} from 'sonner'
 import { useSession } from '../context/sessionContext'
 import Image from 'next/image'
+
 const Page = () => {
     const [content, setContent] = React.useState<string>("");
     const [title, setTitle] = React.useState<string>("");
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-    const [error, setError] = React.useState<string>("");
     const { user: currentUser } = useSession();
     const role = currentUser && ('delegateID' in currentUser ? 'delegate' : 'chairID' in currentUser ? 'chair' : 'admin')
 
@@ -87,7 +87,7 @@ const Page = () => {
             
         } catch (error) {
             console.error('Error adding update:', error);
-            setError(error instanceof Error ? error.message : "An unknown error occurred");
+            toast.error("An unknown error occurred");
         }
     }
 
