@@ -55,9 +55,9 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   //for now, though this is there, it doesnt have an implementation, might add it later,
   //if this is already added and my comment is still here then i have forgotten to remove this
   const logout = () => {
-    routerInstance.push("/login");
     setUser(null);
     Cookies.remove("user");
+    routerInstance.push("/login");
     console.log("SessionProvider: User logged out");
   };
 
