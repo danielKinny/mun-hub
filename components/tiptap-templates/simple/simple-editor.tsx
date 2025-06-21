@@ -251,31 +251,39 @@ export const SimpleEditor = React.forwardRef(function SimpleEditor({ content, cl
     return (
       <EditorContext.Provider value={{ editor }}>
         <div className={`editor-container ${className || ''}`} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <Toolbar
-            ref={toolbarRef}
-            style={
-              isMobile
-                ? {
-                    bottom: `calc(100% - ${windowSize.height - bodyRect.y}px)`,
-                  }
-                : {}
-            }
-          >
-            {mobileView === "main" ? (
-              <MainToolbarContent
-                onHighlighterClick={() => setMobileView("highlighter")}
-                onLinkClick={() => setMobileView("link")}
-                isMobile={isMobile}
-              />
-            ) : (
-              <MobileToolbarContent
-                type={mobileView === "highlighter" ? "highlighter" : "link"}
-                onBack={() => setMobileView("main")}
-              />
-            )}
-          </Toolbar>
+          <div className="content-wrapper" style={{ flex: 1, overflow: 'auto', position: 'relative' }}>
+            <div style={{ 
+              position: isMobile ? 'sticky' : 'relative',
+              top: 0,
+              zIndex: 1000,
+              width: '100%'
+            }}>
+              <Toolbar
+                ref={toolbarRef}
+                style={
+                  isMobile
+                    ? {
+                        position: 'sticky',
+                        top: 0,
+                      }
+                    : {}
+                }
+              >
+                {mobileView === "main" ? (
+                  <MainToolbarContent
+                    onHighlighterClick={() => setMobileView("highlighter")}
+                    onLinkClick={() => setMobileView("link")}
+                    isMobile={isMobile}
+                  />
+                ) : (
+                  <MobileToolbarContent
+                    type={mobileView === "highlighter" ? "highlighter" : "link"}
+                    onBack={() => setMobileView("main")}
+                  />
+                )}
+              </Toolbar>
+            </div>
 
-          <div className="content-wrapper" style={{ flex: 1, overflow: 'auto' }}>
             <EditorContent
               editor={editor}
               role="presentation"

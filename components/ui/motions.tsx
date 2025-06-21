@@ -44,6 +44,7 @@ const MotionsComp = () => {
         style={{
           backgroundImage: "url(/images/UN6.jpg)",
           backgroundSize: "cover",
+          backgroundPosition: "center",
           position: "relative",
         }}
       >
@@ -59,40 +60,45 @@ const MotionsComp = () => {
       <ParallaxLayer
         offset={2}
         speed={0.9}
-        className="flex items-center justify-center w-full h-full"
+        className="flex items-center justify-center w-full h-full px-1 sm:px-4"
+        style={{ zIndex: 1 }}
       >
         <div
           className={`flex bg-white ${
             isMobile ? "flex-col" : "flex-row"
-          } items-center justify-center w-full gap-2 p-4`}
+          } items-center justify-center w-full ${
+            isMobile ? "gap-1 p-3 max-w-full overflow-x-hidden" : "gap-2 p-4"
+          }`}
         >
           <div
-            className={`flex flex-col items-center justify-center space-y-2 ${
-              isMobile ? "order-2 w-full" : ""
+            className={`flex flex-col items-center justify-center ${
+              isMobile ? "order-2 w-full mt-4 space-y-3" : "w-auto space-y-2"
             }`}
           >
             {motions.map((motion, index) => (
               <button
                 key={index}
-                className={`bg-white text-red-600 outline outline-gray-900 rounded-lg cursor-pointer p-2 text-lg ${
-                  isMobile ? "w-full" : ""
-                }`}
+                className={`bg-white text-red-600 outline outline-gray-900 rounded-lg cursor-pointer ${
+                  isMobile 
+                    ? "w-full text-sm sm:text-base py-3 px-3 flex justify-center items-center min-h-[44px]" 
+                    : "text-lg p-2"
+                } transition-colors hover:bg-red-50`}
                 onClick={() => setMotion(motion)}
               >
-                {motion.name}
+                <span className="text-center">{motion.name}</span>
               </button>
             ))}
           </div>
           <div
             className={`flex flex-col items-center justify-center h-full ${
-              isMobile ? "mx-0 my-4 order-1" : "mx-2"
+              isMobile ? "mx-0 my-2 order-1 w-full" : "mx-2"
             }`}
           >
-            <div className="bg-white p-2 mb-2">
+            <div className={`bg-white ${isMobile ? "w-full px-2" : "mb-2 p-2"}`}>
               <h1
-                className={` ${
-                  isMobile ? "text-5xl md:text-7xl" : "text-9xl"
-                } text-center font-extrabold text-red-600 drop-shadow-lg p-2`}
+                className={`${
+                  isMobile ? "text-3xl sm:text-4xl py-1" : "text-9xl p-2"
+                } text-center font-extrabold text-red-600 drop-shadow-lg`}
               >
                 MOTIONS
               </h1>
@@ -100,18 +106,20 @@ const MotionsComp = () => {
           </div>
           <div
             className={`flex flex-col items-center justify-center h-full ${
-              isMobile ? "order-3 w-full mx-0" : "ml-2"
+              isMobile ? "order-3 w-full mx-0 mt-3" : "ml-2"
             }`}
           >
             <div
-              className={`text-xl text-red-600 bg-white p-3 min-h-[100px] ${
-                isMobile ? "w-full" : "w-[320px]"
-              } rounded transition-all duration-300 flex items-center justify-center`}
+              className={`${
+                isMobile ? "text-sm sm:text-base" : "text-xl"
+              } text-red-600 bg-white p-3 ${
+                isMobile ? "min-h-[80px] w-full" : "min-h-[100px] w-[320px]"
+              } rounded transition-all duration-300 flex items-center justify-center shadow-sm`}
             >
               {motion ? (
                 motion.description
               ) : (
-                <span className="opacity-50">
+                <span className="opacity-50 text-center px-1 sm:px-2">
                   Select a motion to see its description
                 </span>
               )}
