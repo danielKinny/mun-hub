@@ -2,6 +2,7 @@
 import React from "react";
 import { ParallaxLayer } from "@react-spring/parallax";
 import { jargons } from "@/db/types";
+import { useMobile } from "@/hooks/use-mobile";
 
 const motions: jargons[] = [
   {
@@ -33,6 +34,7 @@ const motions: jargons[] = [
 
 const MotionsComp = () => {
   const [motion, setMotion] = React.useState<jargons | null>(null);
+  const isMobile = useMobile();
 
   return (
     <div>
@@ -45,10 +47,11 @@ const MotionsComp = () => {
           position: "relative",
         }}
       >
-        <div 
-          className="absolute inset-0" 
+        <div
+          className="absolute inset-0"
           style={{
-            background: "radial-gradient(circle, transparent 0%, rgba(255,0,0,0.5) 100%)",
+            background:
+              "radial-gradient(circle, transparent 0%, rgba(255,0,0,0.5) 100%)",
             pointerEvents: "none",
           }}
         />
@@ -58,27 +61,53 @@ const MotionsComp = () => {
         speed={0.9}
         className="flex items-center justify-center w-full h-full"
       >
-        <div className="flex bg-black flex-row items-center justify-center w-full gap-2 p-8">
-          <div className="flex flex-col items-center justify-center h-full space-y-2">
+        <div
+          className={`flex bg-white ${
+            isMobile ? "flex-col" : "flex-row"
+          } items-center justify-center w-full gap-2 p-4`}
+        >
+          <div
+            className={`flex flex-col items-center justify-center space-y-2 ${
+              isMobile ? "order-2 w-full" : ""
+            }`}
+          >
             {motions.map((motion, index) => (
               <button
                 key={index}
-                className="bg-black text-white outline outline-gray-900 rounded-lg cursor-pointer p-2 text-lg"
+                className={`bg-white text-red-600 outline outline-gray-900 rounded-lg cursor-pointer p-2 text-lg ${
+                  isMobile ? "w-full" : ""
+                }`}
                 onClick={() => setMotion(motion)}
               >
                 {motion.name}
               </button>
             ))}
           </div>
-          <div className="flex flex-col items-center justify-center h-full mx-2">
-            <div className="bg-black p-2 mb-2">
-              <h1 className="text-white text-9xl text-center font-extrabold">
+          <div
+            className={`flex flex-col items-center justify-center h-full ${
+              isMobile ? "mx-0 my-4 order-1" : "mx-2"
+            }`}
+          >
+            <div className="bg-white p-2 mb-2">
+              <h1
+                className={` ${
+                  isMobile ? "text-5xl md:text-7xl" : "text-9xl"
+                } text-center font-extrabold text-red-600 drop-shadow-lg p-2`}
+              >
                 MOTIONS
               </h1>
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center h-full ml-2">
-            <div className="text-xl text-white bg-black p-3 min-h-[100px] w-[320px] rounded transition-all duration-300 flex items-center justify-center">
+          <div
+            className={`flex flex-col items-center justify-center h-full ${
+              isMobile ? "order-3 w-full mx-0" : "ml-2"
+            }`}
+          >
+            <div
+              className={`text-xl text-red-600 bg-white p-3 min-h-[100px] ${
+                isMobile ? "w-full" : "w-[320px]"
+              } rounded transition-all duration-300 flex items-center justify-center`}
+            >
               {motion ? (
                 motion.description
               ) : (

@@ -2,6 +2,7 @@
 import React from "react";
 import { ParallaxLayer} from "@react-spring/parallax";
 import { jargons } from "@/db/types";
+import { useMobile } from "@/hooks/use-mobile";
 
 const points: jargons[] = [
   {
@@ -28,6 +29,7 @@ const points: jargons[] = [
 
 const PointsComp = () => {
   const [point, setPoint] = React.useState<jargons | null>(null);
+  const isMobile = useMobile();
 
   return (
     <div>
@@ -44,27 +46,27 @@ const PointsComp = () => {
         speed={0.9}
         className="flex items-center justify-center w-full h-full"
       >
-        <div className="flex flex-row items-center justify-center h-full w-full gap-2">
-          <div className="flex flex-col items-center justify-center h-full space-y-2">
+        <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} items-center justify-center bg-black w-full gap-2 p-4`}>
+          <div className={`flex flex-col items-center justify-center h-full space-y-2 ${isMobile ? 'order-2' : ''}`}>
             {points.map((point, index) => (
               <button
                 key={index}
-                className="bg-black text-white cursor-pointer p-2 text-2xl"
+                className="bg-black text-white cursor-pointer p-2 text-md outline rounded-lg md:text-lg"
                 onClick={() => setPoint(point)}
               >
                 {point.name}
               </button>
             ))}
           </div>
-          <div className="flex flex-col items-center justify-center h-full mx-2">
+          <div className={`flex flex-col items-center justify-center h-full ${isMobile ? 'mx-0 my-4 order-1' : 'mx-2'}`}>
             <div className="bg-black p-2 mb-2">
-              <h1 className="text-white text-9xl text-center font-extrabold">
+              <h1 className={`text-white ${isMobile ? 'text-5xl md:text-7xl' : 'text-9xl'} text-center font-extrabold`}>
                 POINTS
               </h1>
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center h-full ml-2">
-            <div className="text-xl text-white bg-black p-3 min-h-[100px] w-[320px] rounded transition-all duration-300 flex items-center justify-center">
+          <div className={`flex flex-col items-center justify-center h-full ${isMobile ? 'order-3 w-full mx-0' : 'ml-2'}`}>
+            <div className={`text-xl text-white bg-black p-3 min-h-[100px] ${isMobile ? 'w-full' : 'w-[320px]'} rounded transition-all duration-300 flex items-center justify-center`}>
               {point ? (
                 point.description
               ) : (

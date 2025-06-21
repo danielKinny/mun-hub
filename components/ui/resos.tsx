@@ -2,6 +2,7 @@
 import React from "react";
 import { ParallaxLayer } from "@react-spring/parallax";
 import { jargons } from "@/db/types";
+import { useMobile } from "@/hooks/use-mobile";
 
 const resos: jargons[] = [
   {
@@ -53,6 +54,7 @@ const resos: jargons[] = [
 
 const ResosComp = () => {
   const [reso, setReso] = React.useState<jargons | null>(null);
+  const isMobile = useMobile();
 
   return (
     <div>
@@ -69,27 +71,53 @@ const ResosComp = () => {
         speed={0.9}
         className="flex items-center justify-center w-full h-full"
       >
-        <div className="flex flex-row items-center justify-center bg-white w-full p-2 gap-2">
-          <div className="grid grid-cols-2 grid-rows-5 gap-2 mx-4 my-8">
+        <div
+          className={`flex ${
+            isMobile ? "flex-col" : "flex-row"
+          } items-center justify-center bg-white w-full p-2 gap-2`}
+        >
+          <div
+            className={`grid ${
+              isMobile ? "grid-cols-1" : "grid-cols-2"
+            } grid-rows-auto gap-2 mx-2 my-4 ${
+              isMobile ? "order-2 w-full" : "mx-4 my-8"
+            }`}
+          >
             {resos.map((reso, index) => (
               <button
                 key={index}
-                className=" text-blue-900 font-bold outline outline-gray-800 p-1 cursor-pointer rounded-lg text-xl"
+                className="text-blue-900 font-bold outline outline-gray-800 p-1 cursor-pointer rounded-lg text-sm md:text-xl"
                 onClick={() => setReso(reso)}
               >
                 {reso.name}
               </button>
             ))}
           </div>
-          <div className="flex flex-col items-center justify-center h-full mx-2">
-            <div className=" p-2 mb-2">
-              <h1 className="text-blue-900 text-9xl text-center font-extrabold drop-shadow-lg p-2">
+          <div
+            className={`flex flex-col items-center justify-center h-full ${
+              isMobile ? "mx-0 my-4 order-1" : "mx-2"
+            }`}
+          >
+            <div className="p-2 mb-2">
+              <h1
+                className={`text-blue-900 ${
+                  isMobile ? "text-4xl md:text-6xl" : "text-9xl"
+                } text-center font-extrabold drop-shadow-lg p-2`}
+              >
                 RESOLUTIONS
               </h1>
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center h-full ml-2">
-            <div className="text-xl font-bold text-blue-900 outline outline-gray-900 p-4 w-[320px] h-[25rem] rounded-lg transition-all duration-300 flex items-center justify-center">
+          <div
+            className={`flex flex-col items-center justify-center h-full ${
+              isMobile ? "order-3 w-full mx-0 mb-4" : "ml-2"
+            }`}
+          >
+            <div
+              className={`text-xl font-bold text-blue-900 outline outline-gray-900 p-4 ${
+                isMobile ? "w-full h-[15rem]" : "w-[320px] h-[25rem]"
+              } rounded-lg transition-all duration-300 flex items-center justify-center`}
+            >
               {reso ? (
                 reso.description
               ) : (
