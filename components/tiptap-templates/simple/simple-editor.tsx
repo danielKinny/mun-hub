@@ -10,8 +10,7 @@ import { TaskList } from "@tiptap/extension-task-list"
 import { TextAlign } from "@tiptap/extension-text-align"
 import { Typography } from "@tiptap/extension-typography"
 import { Highlight } from "@tiptap/extension-highlight"
-import { Subscript } from "@tiptap/extension-subscript"
-import { Superscript } from "@tiptap/extension-superscript"
+// Removed unused imports: Subscript and Superscript
 import { Underline } from "@tiptap/extension-underline"
 
 // --- Custom Extensions ---
@@ -59,14 +58,14 @@ import { LinkIcon } from "@/components/tiptap-icons/link-icon"
 
 // --- Hooks ---
 import { useMobile } from "@/hooks/use-mobile"
-import { useWindowSize } from "@/hooks/use-window-size"
+// Removed unused hook: useWindowSize
 import { useCursorVisibility } from "@/hooks/use-cursor-visibility"
 
 // --- Components ---
 import { ThemeToggle } from "@/components/tiptap-templates/simple/theme-toggle"
 
 // --- Lib ---
-import { MAX_FILE_SIZE } from "@/lib/tiptap-utils"
+// Removed unused import: MAX_FILE_SIZE
 
 // --- Styles ---
 import "@/components/tiptap-templates/simple/simple-editor.scss"
@@ -216,7 +215,8 @@ export const SimpleEditor = React.forwardRef(function SimpleEditor({ content, cl
 
     React.useImperativeHandle(ref, () => editor!, [editor])
 
-    const bodyRect = useCursorVisibility({
+    // Using useCursorVisibility without storing the result since we don't need the return value
+    useCursorVisibility({
       editor,
       overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
     })
