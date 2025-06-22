@@ -11,16 +11,6 @@ const resos: jargons[] = [
       "A resolution is a formal document that outlines the committee's stance on a specific issue. It includes the committee's recommendations and proposed actions.",
   },
   {
-    name: "Position Paper",
-    description:
-      "A position paper is a document that outlines a delegate's stance on a specific issue. It is used to inform other delegates of the delegate's position and to support their arguments during the debate.",
-  },
-  {
-    name: "Amendment",
-    description:
-      "An amendment is a proposed change to a resolution or working paper. It is used to modify the content of the document to better reflect the committee's consensus.",
-  },
-  {
     name: "Co-Sponsor",
     description:
       "A co-sponsor is a delegate who supports a resolution or working paper and is willing to sign it. Co-sponsors are often involved in the drafting process and help to gather support for the document.",
@@ -69,40 +59,53 @@ const ResosComp = () => {
       <ParallaxLayer
         offset={3}
         speed={0.9}
-        className="flex items-center justify-center w-full h-full"
+        className="flex items-center justify-center w-full h-full px-1 sm:px-4"
+        style={{ zIndex: 1 }}
       >
         <div
-          className={`flex ${
+          className={`flex bg-white ${
             isMobile ? "flex-col" : "flex-row"
-          } items-center justify-center bg-white w-full p-2 gap-2`}
+          } items-center justify-center w-full ${
+            isMobile ? "gap-1 p-3 max-w-full overflow-x-hidden" : "gap-2 p-4"
+          }`}
         >
           <div
-            className={`grid ${
-              isMobile ? "grid-cols-1" : "grid-cols-2"
-            } grid-rows-auto gap-2 mx-2 my-4 ${
-              isMobile ? "order-2 w-full" : "mx-4 my-8"
+            className={`flex flex-col items-center justify-center relative ${
+              isMobile ? "order-2 w-full mt-4" : "w-auto"
             }`}
           >
-            {resos.map((reso, index) => (
-              <button
-                key={index}
-                className="text-blue-900 font-bold outline outline-gray-800 p-1 cursor-pointer rounded-lg text-sm md:text-xl"
-                onClick={() => setReso(reso)}
-              >
-                {reso.name}
-              </button>
-            ))}
+            <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white to-transparent pointer-events-none z-10"></div>
+            
+            <div 
+              className={`flex flex-col items-center justify-start space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-900 scrollbar-track-gray-100 ${
+                isMobile ? "max-h-[250px] w-full" : "max-h-[300px] w-auto"
+              } px-2 py-1 pb-6`}
+            >
+              {resos.map((reso, index) => (
+                <button
+                  key={index}
+                  className={`bg-white text-blue-900 outline outline-gray-800 rounded-lg cursor-pointer ${
+                    isMobile 
+                      ? "w-full text-sm sm:text-base py-3 px-3 flex justify-center items-center min-h-[44px]" 
+                      : "text-lg p-2 w-full"
+                  } transition-colors hover:bg-blue-50 font-bold`}
+                  onClick={() => setReso(reso)}
+                >
+                  <span className="text-center">{reso.name}</span>
+                </button>
+              ))}
+            </div>
           </div>
           <div
             className={`flex flex-col items-center justify-center h-full ${
-              isMobile ? "mx-0 my-4 order-1" : "mx-2"
+              isMobile ? "mx-0 my-2 order-1 w-full" : "mx-2"
             }`}
           >
-            <div className="p-2 mb-2">
+            <div className={`bg-white ${isMobile ? "w-full px-2" : "mb-2 p-2"}`}>
               <h1
-                className={`text-blue-900 ${
-                  isMobile ? "text-4xl md:text-6xl" : "text-9xl"
-                } text-center font-extrabold drop-shadow-lg p-2`}
+                className={`${
+                  isMobile ? "text-3xl sm:text-4xl py-1" : "text-9xl p-2"
+                } text-center font-extrabold text-blue-900 drop-shadow-lg`}
               >
                 RESOLUTIONS
               </h1>
@@ -110,18 +113,20 @@ const ResosComp = () => {
           </div>
           <div
             className={`flex flex-col items-center justify-center h-full ${
-              isMobile ? "order-3 w-full mx-0 mb-4" : "ml-2"
+              isMobile ? "order-3 w-full mx-0 mt-3" : "ml-2"
             }`}
           >
             <div
-              className={`text-xl font-bold text-blue-900 outline outline-gray-900 p-4 ${
-                isMobile ? "w-full h-[15rem]" : "w-[320px] h-[25rem]"
-              } rounded-lg transition-all duration-300 flex items-center justify-center`}
+              className={`${
+                isMobile ? "text-sm sm:text-base" : "text-xl"
+              } text-blue-900 bg-white p-3 ${
+                isMobile ? "min-h-[80px] w-full" : "min-h-[100px] w-[320px]"
+              } rounded outline outline-gray-800 transition-all duration-300 flex items-center justify-center shadow-sm font-bold`}
             >
               {reso ? (
                 reso.description
               ) : (
-                <span className="opacity-50">
+                <span className="opacity-50 text-center px-1 sm:px-2">
                   Select a resolution term to see its description
                 </span>
               )}
