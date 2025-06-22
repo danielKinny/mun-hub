@@ -2,7 +2,7 @@
 export interface Committee {
   committeeID: string;
   name: string;
-  href: string;
+  fullname: string;
 }
 
 export interface Country {
@@ -17,6 +17,16 @@ export interface Delegation {
   countryID: string;
 }
 
+export interface Chair {
+  chairID: string;
+  firstname: string;
+  lastname: string;
+  password: string;
+  committee: Committee;
+}
+
+export type UserType = Delegate | Admin | Chair | null;
+
 export interface Speech {
   speechID: string;
   title: string;
@@ -24,6 +34,14 @@ export interface Speech {
   date: string;
   delegateID: string;
   tags: string[];
+}
+
+export interface Update {
+  updateID: string;
+  time: string;
+  title: string;
+  content: string;
+  href: string;
 }
 
 export interface Announcement {
@@ -48,12 +66,29 @@ export interface Delegate {
   delegateID: string;
   firstname: string;
   lastname: string;
-  speechCount: number;
   password: string;
   country: Country;
   committee: Committee;
+  email : string;
+  resoPerms: {
+    "view:ownreso": boolean;
+    "view:allreso": boolean;
+    "update:ownreso": boolean;
+    "update:reso": string[];
+  };
 }
 
+export interface shortenedDel {
+    delegateID: string;
+    firstname: string;
+    lastname: string;
+    resoPerms: {
+        "view:ownreso": boolean;
+        "view:allreso": boolean;
+        "update:ownreso": boolean;
+        "update:reso": string[];
+    };
+}
 
 export interface Article {
 
@@ -68,4 +103,19 @@ export interface Article {
   urlToImage: string;
   publishedAt: string;
   content: string;
+}
+
+export interface Admin {
+  adminID :string;
+  firstname: string;
+  lastname: string;
+  password: string;
+}
+
+export interface Reso {
+  resoID: string;
+  delegateID: string;
+  committeeID: string;
+  content: Object;
+  isNew: boolean;
 }

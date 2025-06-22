@@ -6,14 +6,13 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { Delegate } from "@/db/types";
+import { Admin, Delegate, Chair, UserType } from "@/db/types";
 import Cookies from "js-cookie";
-
+import {useRouter} from "next/navigation";
 // lot to explain here lolz
-
 interface SessionContextProps {
-  user: Delegate | null;
-  login: (user: Delegate) => void;
+  user: UserType | null;
+  login: (user: UserType) => void;
   logout: () => void;
 }
 
@@ -22,9 +21,11 @@ const SessionContext = createContext<SessionContextProps | undefined>(
 );
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<Delegate | null>(null);
+  const [user, setUser] = useState<Delegate | Admin | Chair | null>(null);
+  const routerInstance = useRouter();
   const [isLoading, setIsLoading] =
     useState(true); /* this is very very very important
+  
     
     literally spent a whole day trying to figure out why the routing wasnt working
     turns out that the context takes time to load, and while its not loaded in other components, it will redirect to the login page
@@ -46,7 +47,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(false);
   }, []);
 
-  const login = (user: Delegate) => {
+  const login = (user: UserType) => {
     setUser(user);
     Cookies.set("user", JSON.stringify(user));
   };
@@ -56,11 +57,12 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser(null);
     Cookies.remove("user");
+    routerInstance.push("/login");
     console.log("SessionProvider: User logged out");
   };
 
   if (isLoading) {
-    return <div className="bg-black text-white text-center">Loading...</div>;
+    return <div className="bg-black min-h-screen flex items-center justify-center text-white text-center">Loading...</div>;
   }
 
   return (

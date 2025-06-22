@@ -2,22 +2,13 @@
 import React from "react";
 import { ParallaxLayer } from "@react-spring/parallax";
 import { jargons } from "@/db/types";
+import { useMobile } from "@/hooks/use-mobile";
 
 const resos: jargons[] = [
   {
     name: "Resolution",
     description:
       "A resolution is a formal document that outlines the committee's stance on a specific issue. It includes the committee's recommendations and proposed actions.",
-  },
-  {
-    name: "Position Paper",
-    description:
-      "A position paper is a document that outlines a delegate's stance on a specific issue. It is used to inform other delegates of the delegate's position and to support their arguments during the debate.",
-  },
-  {
-    name: "Amendment",
-    description:
-      "An amendment is a proposed change to a resolution or working paper. It is used to modify the content of the document to better reflect the committee's consensus.",
   },
   {
     name: "Co-Sponsor",
@@ -53,6 +44,7 @@ const resos: jargons[] = [
 
 const ResosComp = () => {
   const [reso, setReso] = React.useState<jargons | null>(null);
+  const isMobile = useMobile();
 
   return (
     <div>
@@ -67,33 +59,74 @@ const ResosComp = () => {
       <ParallaxLayer
         offset={3}
         speed={0.9}
-        className="flex items-center justify-center w-full h-full"
+        className="flex items-center justify-center w-full h-full px-1 sm:px-4"
+        style={{ zIndex: 1 }}
       >
-        <div className="flex flex-row items-center justify-center h-full w-full gap-2">
-          <div className="flex flex-col items-center justify-center h-full space-y-2">
-            {resos.map((reso, index) => (
-              <button
-                key={index}
-                className="bg-black text-white cursor-pointer p-2 text-2xl"
-                onClick={() => setReso(reso)}
-              >
-                {reso.name}
-              </button>
-            ))}
+        <div
+          className={`flex bg-white ${
+            isMobile ? "flex-col" : "flex-row"
+          } items-center justify-center w-full ${
+            isMobile ? "gap-1 p-3 max-w-full overflow-x-hidden" : "gap-2 p-4"
+          }`}
+        >
+          <div
+            className={`flex flex-col items-center justify-center relative ${
+              isMobile ? "order-2 w-full mt-4" : "w-auto"
+            }`}
+          >
+            <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white to-transparent pointer-events-none z-10"></div>
+            
+            <div 
+              className={`flex flex-col items-center justify-start space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-900 scrollbar-track-gray-100 ${
+                isMobile ? "max-h-[250px] w-full" : "max-h-[300px] w-auto"
+              } px-2 py-1 pb-6`}
+            >
+              {resos.map((reso, index) => (
+                <button
+                  key={index}
+                  className={`bg-white text-blue-900 outline outline-gray-800 rounded-lg cursor-pointer ${
+                    isMobile 
+                      ? "w-full text-sm sm:text-base py-3 px-3 flex justify-center items-center min-h-[44px]" 
+                      : "text-lg p-2 w-full"
+                  } transition-colors hover:bg-blue-50 font-bold`}
+                  onClick={() => setReso(reso)}
+                >
+                  <span className="text-center">{reso.name}</span>
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="flex flex-col items-center justify-center h-full mx-2">
-            <div className="bg-black p-2 mb-2">
-              <h1 className="text-white text-9xl text-center font-extrabold">
+          <div
+            className={`flex flex-col items-center justify-center h-full ${
+              isMobile ? "mx-0 my-2 order-1 w-full" : "mx-2"
+            }`}
+          >
+            <div className={`bg-white ${isMobile ? "w-full px-2" : "mb-2 p-2"}`}>
+              <h1
+                className={`${
+                  isMobile ? "text-3xl sm:text-4xl py-1" : "text-9xl p-2"
+                } text-center font-extrabold text-blue-900 drop-shadow-lg`}
+              >
                 RESOLUTIONS
               </h1>
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center h-full ml-2">
-            <div className="text-xl text-white bg-black p-3 min-h-[100px] w-[320px] rounded transition-all duration-300 flex items-center justify-center">
+          <div
+            className={`flex flex-col items-center justify-center h-full ${
+              isMobile ? "order-3 w-full mx-0 mt-3" : "ml-2"
+            }`}
+          >
+            <div
+              className={`${
+                isMobile ? "text-sm sm:text-base" : "text-xl"
+              } text-blue-900 bg-white p-3 ${
+                isMobile ? "min-h-[80px] w-full" : "min-h-[100px] w-[320px]"
+              } rounded outline outline-gray-800 transition-all duration-300 flex items-center justify-center shadow-sm font-bold`}
+            >
               {reso ? (
                 reso.description
               ) : (
-                <span className="opacity-50">
+                <span className="opacity-50 text-center px-1 sm:px-2">
                   Select a resolution term to see its description
                 </span>
               )}

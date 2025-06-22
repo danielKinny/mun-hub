@@ -28,7 +28,7 @@ const CountryOverlay: React.FC<CountryOverlayProps> = ({
         ×
       </button>
       <h2 className="text-2xl font-bold mb-6 pr-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-800 to-purple-800 animate-text-pop">
-        Select Countries
+        Select Delegations to tag
       </h2>
       <div className="flex flex-col gap-2">
         {countries.map((country, idx) => (

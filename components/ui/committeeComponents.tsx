@@ -1,18 +1,21 @@
 "use client";
 import React from "react";
 import { Parallax, ParallaxLayer } from "@react-spring/parallax";
+import { useMobile } from "../../hooks/use-mobile";
 
 const createCommitteeComponent = (
   name: string,
   bgImage1: string,
   bgImage2: string,
-  agenda1: string,
-  agenda2: string
+  agenda1: string
 ) => {
   const CommitteeComponent = () => {
+    const isMobile = useMobile();
+    
     return (
       <div>
-        <Parallax pages={2}>
+        <Parallax pages={isMobile ? 3 : 2}>
+          {/* First page - Committee name and background */}
           <ParallaxLayer
             offset={0}
             speed={1.5}
@@ -20,6 +23,7 @@ const createCommitteeComponent = (
             style={{
               backgroundImage: `url(/images/${bgImage1})`,
               backgroundSize: "cover",
+              backgroundPosition: "center",
             }}
             className="flex items-center justify-center w-full h-full"
           />
@@ -30,42 +34,59 @@ const createCommitteeComponent = (
             speed={2}
             className="flex items-center justify-center w-full h-full"
           >
-            <h2 className="text-white text-9xl text-center font-extrabold">
+            <h2 className={`text-white ${isMobile ? 'text-4xl px-4' : 'text-9xl'} text-center font-extrabold`}>
               {name}
             </h2>
           </ParallaxLayer>
 
           <ParallaxLayer
-            offset={1}
+            offset={isMobile ? 1 : 1}
             speed={0.5}
             style={{
               backgroundImage: `url(/images/${bgImage2})`,
               backgroundSize: "cover",
+              backgroundPosition: "center",
             }}
             className="flex items-center justify-center w-full h-full"
           ></ParallaxLayer>
 
           <ParallaxLayer
-            offset={1}
+            offset={isMobile ? 1 : 1}
             speed={1.4}
             className="flex items-center justify-center w-full h-full"
           >
-            <div className="text-center flex flex-row items-center justify-center w-full h-full space-x-4 text-white text-3xl font-extrabold">
-              <div>
-                <p>
-                  Agenda 1: <br /> {agenda1}
-                </p>
+            {isMobile ? (
+              <div className="text-center px-4 py-6 w-full flex flex-col items-center justify-center text-white">
+                <h1 className="text-4xl font-extrabold mb-6">Agenda</h1>
+                <div className="w-full">
+                  <p className="text-lg font-medium">
+                    {agenda1}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-9xl p-6"> Agendas </h1>
+            ) : (
+              <div className="text-center flex flex-row items-center justify-center w-full h-full space-x-4 text-white text-3xl font-extrabold">
+                <div>
+                  <h1 className="text-9xl p-6">Agenda</h1>
+                </div>
+                <div className="max-w-2xl">
+                  <p>
+                    Agenda: <br /> {agenda1}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p>
-                  Agenda 2: <br /> {agenda2}
-                </p>
-              </div>
-            </div>
+            )}
           </ParallaxLayer>
+          
+          {isMobile && (
+            <ParallaxLayer
+              offset={2}
+              speed={0.5}
+              className="flex items-center justify-center w-full h-full"
+            >
+              <div className="py-12"></div>
+            </ParallaxLayer>
+          )}
         </Parallax>
       </div>
     );
@@ -74,85 +95,81 @@ const createCommitteeComponent = (
   return CommitteeComponent;
 };
 
-const committeeData = {
-  UNHRC: {
-    bgImage1: "UNHRC.jpg",
-    bgImage2: "UNHRC2.jpg",
-    agenda1:
-      "Human Rights Violations in the Xinjiang Uyghur Autonomous Region\nFocus: Alleged mass internment, surveillance, and cultural repression.",
-    agenda2:
-      "Protecting Freedom of Expression and Digital Rights under Authoritarian Regimes\nFocus: Government censorship, internet shutdowns, and suppression of dissent.",
+export const committeeData = [
+  {
+    name: "UNHCR",
+    fullname: "United Nations High Commissioner for Refugees",
+    logo: "UNHCRLOGO.png",
+    bgImage1: "UNHCR1.jpg",
+    bgImage2: "UNHCR2.jpg",
+    agenda1: "Defending Refugee Rights in the Age of Rising Xenophobic Nationalism",
   },
-  UNSC: {
-    bgImage1: "UNSC.jpg",
-    bgImage2: "UNSC2.jpg",
-    agenda1:
-      "The Situation in the Red Sea and Ensuring Maritime Security in International Waters\nFocus: Ongoing threats to shipping lanes, including piracy and state-sponsored aggression.",
-    agenda2:
-      "Addressing the Escalation of the Israel-Palestine Conflict and Ensuring Humanitarian Access\nFocus: Civilian protection, ceasefire enforcement, and access for aid organizations.",
+  {
+    name: "IACA",
+    fullname: "International Aviation and something",
+    logo: "IACALOGO.png",
+    bgImage1: "IACA1.jpg",
+    bgImage2: "IACA2.jpg",
+    agenda1: "CRISIS COMMITTEE - Developing Sustainable Aviation and Management of rapidly increasing worldwide Carbon Emissions",
   },
-  UNODC: {
-    bgImage1: "UNODC.jpg",
-    bgImage2: "UNODC2.jpg",
-    agenda1: "Combating the Illicit Trade of Synthetic Drugs and Precursors",
-    agenda2: "Tackling Human Trafficking and Forced Labor in Conflict Zones",
+  {
+    name: "HSC",
+    fullname: "Historic Security Council",
+    logo: "HSCLOGO.png",
+    bgImage1: "HSC1.jpg",
+    bgImage2: "HSC2.jpg",
+    agenda1: "World War II, 1943: Reclaiming Occupied Europe – Strategic Decisions on Axis-Held Territories",
   },
-  UNESCO: {
-    bgImage1: "UNESCO.jpg",
-    bgImage2: "UNESCO2.jpg",
-    agenda1:
-      "Safeguarding Cultural Heritage in Conflict Zones\nFocus: Deliberate destruction of historical sites (e.g., in Syria, Mali, Ukraine).",
-    agenda2:
-      "Bridging the Global Digital Divide in Education\nFocus: Access to online learning, especially in low-income and rural communities.",
+  {
+    name: "IPACRC",
+    fullname: "International Psychological Association Case Review Commisssion",
+    logo: "IPACRCLOGO.png",
+    bgImage1: "IPACRC1.jpg",
+    bgImage2: "IPACRC2.jpg",
+    agenda1: "Discussing the use of social learning as a method to combat increasing crime rates",
   },
-  ECOSOC: {
-    bgImage1: "ECOSOC.jpg",
-    bgImage2: "ECOSOC2.jpg",
-    agenda1:
-      "Tackling Global Food Insecurity and Supply Chain Disruptions\nFocus: Post-pandemic recovery, conflict-related shortages, and sustainable agriculture.",
-    agenda2:
-      "Strategies for Achieving Universal Access to Clean Water and Sanitation by 2030\nFocus: Sustainable Development Goal 6 (SDG 6) implementation and funding gaps.",
+  {
+    name: "UNBOCC",
+    fullname: "United Nations Black Ops Crisis Committee",
+    logo: "UNBOCCLOGO.png",
+    bgImage1: "UNBOCC1.jpg",
+    bgImage2: "UNBOCC2.jpg",
+    agenda1: "CRISIS COMMITTEE - The Breach\nClassified briefing: A global cyberattack has begun. Systems are failing. Attribution unknown. Coordination essential. Trust, compromised.",
   },
-};
+  {
+    name: "IPC",
+    fullname: "International Press Corps",
+    logo: "IPCLOGO.png",
+    bgImage1: "IPC1.jpg",
+    bgImage2: "IPC2.jpg",
+    agenda1: "Combating the use of Mass Media in the escalation and sensationalization of global crises and phenomena.",
+  },
+  {
+    name: "COE",
+    fullname: "Council of Europe",
+    logo: "COELOGO.png",
+    bgImage1: "COE1.jpg",
+    bgImage2: "COE2.jpg",
+    agenda1: "Re-examining Article 8 of the ECHR: Balancing Privacy Rights with National Security and Public Interest",
+  },
+];
 
-const UNHRCComp = createCommitteeComponent(
-  "UNHRC",
-  committeeData.UNHRC.bgImage1,
-  committeeData.UNHRC.bgImage2,
-  committeeData.UNHRC.agenda1,
-  committeeData.UNHRC.agenda2
-);
+const committeeComponentMap: Record<string, React.FC> = {};
+committeeData.forEach((committee) => {
+  committeeComponentMap[committee.name] = createCommitteeComponent(
+    committee.name,
+    committee.bgImage1,
+    committee.bgImage2,
+    committee.agenda1
+  );
+});
 
-const UNSCComp = createCommitteeComponent(
-  "UNSC",
-  committeeData.UNSC.bgImage1,
-  committeeData.UNSC.bgImage2,
-  committeeData.UNSC.agenda1,
-  committeeData.UNSC.agenda2
-);
+export const UNHCR = committeeComponentMap["UNHCR"];
+export const HSC = committeeComponentMap["HSC"];
+export const IACA = committeeComponentMap["IACA"];
+export const IPACRC = committeeComponentMap["IPACRC"];
+export const UNBOCC = committeeComponentMap["UNBOCC"];
+export const IPC = committeeComponentMap["IPC"];
+export const COE = committeeComponentMap["COE"];
 
-const UNODCComp = createCommitteeComponent(
-  "UNODC",
-  committeeData.UNODC.bgImage1,
-  committeeData.UNODC.bgImage2,
-  committeeData.UNODC.agenda1,
-  committeeData.UNODC.agenda2
-);
-
-const UNESCOComp = createCommitteeComponent(
-  "UNESCO",
-  committeeData.UNESCO.bgImage1,
-  committeeData.UNESCO.bgImage2,
-  committeeData.UNESCO.agenda1,
-  committeeData.UNESCO.agenda2
-);
-
-const ECOSOCComp = createCommitteeComponent(
-  "ECOSOC",
-  committeeData.ECOSOC.bgImage1,
-  committeeData.ECOSOC.bgImage2,
-  committeeData.ECOSOC.agenda1,
-  committeeData.ECOSOC.agenda2
-);
-
-export { UNHRCComp, UNSCComp, UNODCComp, UNESCOComp, ECOSOCComp };
+export const committeeComponentMapExport = committeeComponentMap;

@@ -3,14 +3,13 @@ import React from "react";
 import { useEffect, useMemo, useCallback, useState } from "react";
 import { CustomNav } from "@/components/ui/customnav";
 import { useSession } from "../context/sessionContext";
-import { Speech } from "@/db/types";
-import ProtectedRoute from "@/components/protectedroute";
+import { Speech, UserType, Delegate, Chair } from "@/db/types";
+import { ParticipantRoute } from "@/components/protectedroute";
 import { toast } from "sonner";
-import { createSpeechID } from "@/lib/createID";
 import CountryOverlay from "@/components/ui/countryoverlay";
 import UnsavedChangesModal from "@/components/ui/unsavedchangesmodal";
 import DeleteConfirmModal from "@/components/ui/deleteconfirmmodal";
-
+import { useMobile } from "@/hooks/use-mobile";
 import {
   ArchiveBoxXMarkIcon,
   PlusCircleIcon,
@@ -18,12 +17,17 @@ import {
   MagnifyingGlassCircleIcon,
   TagIcon,
 } from "@heroicons/react/24/outline";
+import role from "@/lib/roles";
 
 type Country = { countryID: string; flag: string; name: string };
 
-const Page = () => {
-  const { user: currentUser, login } = useSession();
+type DelegateUser = UserType & Delegate;
+type ChairUser = UserType & Chair;
 
+const Page = () => {
+  const { user: currentUser } = useSession();
+  const isMobile = useMobile();
+  const userRole = role(currentUser);
   const [countries, setCountries] = useState<Country[] | null>(null);
   const [speechTags, setSpeechTags] = useState<string[]>([]);
   const [speechList, setSpeechList] = useState<Speech[]>([]);
@@ -40,20 +44,34 @@ const Page = () => {
     speech?: Speech;
   } | null>(null);
 
-  const fetchSpeeches = useCallback(async () => {
-    if (!currentUser?.delegateID) return;
+  const isDelegateUser = userRole === "delegate" && currentUser !== null;
+  const isChairUser = userRole === "chair" && currentUser !== null;
 
-    const response = await fetch(
-      `/api/speeches?delegateID=${currentUser.delegateID}`
-    );
+  const fetchSpeeches = useCallback(async () => {
+    let response;
+    if (isDelegateUser && currentUser) {
+      response = await fetch(`/api/speeches/delegate?delegateID=${(currentUser as DelegateUser).delegateID}`);
+    } else if (isChairUser && currentUser) {
+      response = await fetch(`/api/speeches/chair?chairID=${(currentUser as ChairUser).chairID}`);
+    } else {
+      return;
+    }
     const data = await response.json();
-    setSpeechList(data.speeches);
-  }, [currentUser?.delegateID]);
+    setSpeechList(data.speeches || []);
+  }, [currentUser, isDelegateUser, isChairUser]);
 
   const fetchCountries = useCallback(async () => {
-    if (!currentUser?.committee) return;
+    let committeeID;
+    if (isDelegateUser && currentUser && (currentUser as DelegateUser).committee) {
+      committeeID = (currentUser as DelegateUser).committee.committeeID;
+    } else if (isChairUser && currentUser && (currentUser as ChairUser).committee) {
+      committeeID = (currentUser as ChairUser).committee.committeeID;
+    } else {
+      setCountries([]);
+      return;
+    }
     try {
-      const response = await fetch(`/api/countries?committeeID=${currentUser.committee.committeeID}`);
+      const response = await fetch(`/api/countries?committeeID=${committeeID}`);
       if (response.ok) {
         const data = await response.json();
         setCountries([...data]);
@@ -63,7 +81,7 @@ const Page = () => {
     } catch {
       setCountries([]);
     }
-  }, [currentUser?.committee]);
+  }, [currentUser, isDelegateUser, isChairUser]);
 
   const searchEngine = useCallback(
     (query: string) => {
@@ -168,32 +186,41 @@ const Page = () => {
   }, []);
 
   const addSpeech = useCallback(async () => {
-    if (!currentUser?.delegateID) {
-      toast.error("No delegateID found for current user");
+    if (!isDelegateUser && !isChairUser) {
+      toast.error("Only delegates or chairs can add speeches");
       return;
     }
+    
     const speechData: Speech = {
       title: heading,
+      speechID: selectedSpeech ? selectedSpeech?.speechID : "-1",
       content: content,
-      speechID: selectedSpeech
-        ? selectedSpeech.speechID
-        : createSpeechID((currentUser?.speechCount || 0) + 1),
       date: new Date().toISOString(),
       tags: speechTags,
-      delegateID: currentUser.delegateID,
+      delegateID: isDelegateUser && currentUser ? (currentUser as DelegateUser).delegateID : "",
     };
-    const response = await fetch("/api/speeches", {
+    
+    const endpoint = isDelegateUser ? "/api/speeches/delegate" : "/api/speeches/chair";
+    const idKey = isDelegateUser ? "delegateID" : "chairID";
+    const idValue = isDelegateUser && currentUser 
+      ? (currentUser as DelegateUser).delegateID 
+      : isChairUser && currentUser 
+        ? (currentUser as ChairUser).chairID 
+        : "";
+        
+    const response = await fetch(endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         speechData,
-        delegateID: currentUser.delegateID,
-        tags: speechTags,
+        [idKey]: idValue,
       }),
     });
-    await response.json();
+    
+    const result = await response.json();
+    
     if (response.ok) {
       toast.success(
         `Speech ${selectedSpeech ? "updated" : "added"} successfully`
@@ -201,32 +228,19 @@ const Page = () => {
       if (selectedSpeech) {
         setSpeechList((prev) =>
           prev.map((speech) =>
-            speech.speechID === selectedSpeech.speechID ? speechData : speech
+            speech.speechID === selectedSpeech.speechID ? { ...speechData, speechID: selectedSpeech.speechID } : speech
           )
         );
       } else {
-        setSpeechList((prev) => [speechData, ...prev]);
-        if (login && currentUser) {
-          login({
-            ...currentUser,
-            speechCount: (currentUser.speechCount || 0) + 1,
-          });
-        }
+        const newSpeech = { ...speechData, speechID: result.speechID };
+        setSpeechList((prev) => [newSpeech, ...prev]);
       }
       setHeading("");
       setContent("");
       setSpeechTags([]);
-      setSelectedSpeech(null);
       setHasUnsavedChanges(false);
     }
-  }, [
-    currentUser,
-    heading,
-    content,
-    selectedSpeech,
-    speechTags,
-    login,
-  ]);
+  }, [currentUser, heading, content, selectedSpeech, speechTags, isDelegateUser, isChairUser]);
 
   const handleDeleteClick = useCallback(() => {
     if (!selectedSpeech?.speechID) {
@@ -247,7 +261,8 @@ const Page = () => {
     }
 
     const speechID = selectedSpeech.speechID;
-    const response = await fetch("/api/speeches", {
+    //reusing the delete route no matter the role because logic is unaffected
+    const response = await fetch("/api/speeches/delegate", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -294,17 +309,26 @@ const Page = () => {
     [searchEngine, searchQuery]
   );
 
+  if (userRole !== "delegate" && userRole !== "chair") {
+    return (
+      <ParticipantRoute>
+        <CustomNav />
+        <div className="text-white text-center p-8">Only delegates or chairs can access this page.</div>
+      </ParticipantRoute>
+    );
+  }
+  
   return (
-    <ProtectedRoute>
+    <ParticipantRoute>
       <CustomNav />
       <div
-        className="flex text-white p-4 bg-gradient-to-b from-black to-gray-950 min-h-screen relative overflow-hidden animate-fadein"
+        className={`${isMobile ? 'flex flex-col' : 'flex'} text-white p-4 bg-gradient-to-b from-black to-gray-950 min-h-screen relative overflow-hidden animate-fadein`}
         style={{
           backgroundImage:
             "radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)",
         }}
       >
-        <ul className="outline w-1/4 rounded-2xl p-4 bg-gradient-to-b from-gray-900 to-gray-950 shadow-xl border border-gray-800 animate-slidein-left">
+        <ul className={`outline ${isMobile ? 'w-full mb-4' : 'w-1/4'} rounded-2xl p-4 bg-gradient-to-b from-gray-900 to-gray-950 shadow-xl border border-gray-800 ${isMobile ? 'animate-slidein-down' : 'animate-slidein-left'}`}>
           <div className="flex space-x-2 p-2">
             <input
               type="text"
@@ -348,12 +372,13 @@ const Page = () => {
             )}
           </div>
         </ul>
-        <div className="w-full h-screen space-y-2 p-4 animate-slidein-up">
-          <div className="w-8/9 mx-8 pb-2 flex items-center">
-            <p className="text-4xl font-bold mx-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 drop-shadow-lg animate-text-pop">
-              {currentUser?.firstname} Speech Repo
+        <div className={`${isMobile ? 'w-full' : 'w-full'} space-y-2 p-4 animate-slidein-up`}>
+          <div className={`${isMobile ? 'w-full flex-col mx-0' : 'w-8/9 mx-8'} pb-2 flex ${isMobile ? 'space-y-3' : 'items-center'}`}>
+            <p className={`text-4xl font-bold ${isMobile ? 'mx-0 text-center' : 'mx-4'} bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 drop-shadow-lg animate-text-pop`}>
+              {isDelegateUser && currentUser ? (currentUser as DelegateUser).firstname : 
+               isChairUser && currentUser ? (currentUser as ChairUser).firstname : ""} Speech Repo
             </p>
-            <div className="flex space-x-4 ml-auto">
+            <div className={`flex ${isMobile ? 'w-full justify-center flex-wrap gap-2' : 'space-x-4 ml-auto'}`}>
               <button
                 onClick={() => handleSpeechSwitch(null)}
                 className="bg-gray-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-gray-600 active:scale-95 focus:scale-105 animate-btn-pop"
@@ -373,16 +398,17 @@ const Page = () => {
                   addSpeech();
                 }}
                 className="bg-blue-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-blue-600 active:scale-95 focus:scale-105 animate-btn-pop"
+                disabled={userRole !== "delegate" && userRole !== "chair"}
               >
                 <p className="inline-block">
                   {selectedSpeech ? "Update" : "Add"}
                 </p>
                 <PlusCircleIcon className="h-6 w-6 inline-block" />
               </button>
-
               <button
                 onClick={handleDeleteClick}
                 className="bg-red-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-red-600 active:scale-95 focus:scale-105 animate-btn-pop"
+                disabled={userRole !== "delegate" && userRole !== "chair"}
               >
                 <p className="inline-block">Delete</p>
                 <ArchiveBoxXMarkIcon className="h-6 w-6 inline-block" />
@@ -390,9 +416,9 @@ const Page = () => {
             </div>
           </div>
           {speechTags.length > 0 && (
-            <div className="space-x-2 mb-2 mx-12 p-2 animate-fadein">
-              <p className="text-lg text-gray-300 inline-block mb-2">Tags:</p>
-              <div className="space-x-2 inline-block">
+            <div className={`${isMobile ? '' : 'space-x-2'} mb-2 ${isMobile ? 'mx-0' : 'mx-12'} p-2 animate-fadein`}>
+              <p className={`text-lg text-gray-300 ${isMobile ? 'block' : 'inline-block'} mb-2`}>Tags:</p>
+              <div className={`${isMobile ? 'flex flex-wrap gap-2' : 'space-x-2 inline-block'}`}>
                 {speechTags.map((tag, idx) => (
                   <span
                     key={tag}
@@ -409,7 +435,7 @@ const Page = () => {
             </div>
           )}
           <textarea
-            className="block w-8/9 outline rounded-2xl mx-8 p-4 bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300 animate-fadein-up"
+            className={`block ${isMobile ? 'w-full' : 'w-8/9'} outline rounded-2xl ${isMobile ? 'mx-0' : 'mx-8'} p-4 bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300 animate-fadein-up`}
             placeholder="Write your title here..."
             onChange={(e) => {
               setHeading(e.target.value);
@@ -418,7 +444,7 @@ const Page = () => {
             value={heading}
           ></textarea>
           <textarea
-            className="outline w-8/9 rounded-2xl mx-8 p-4 h-187 bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300 animate-fadein-up"
+            className={`outline ${isMobile ? 'w-full' : 'w-8/9'} rounded-2xl ${isMobile ? 'mx-0' : 'mx-8'} p-4 ${isMobile ? 'h-64' : 'h-187'} bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300 animate-fadein-up`}
             placeholder="Write your speech here..."
             onChange={(e) => {
               setContent(e.target.value);
@@ -449,7 +475,7 @@ const Page = () => {
           onDelete={confirmSpeechDelete}
         />
       )}
-    </ProtectedRoute>
+    </ParticipantRoute>
   );
 };
 export default Page;
