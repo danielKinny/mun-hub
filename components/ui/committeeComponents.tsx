@@ -14,8 +14,7 @@ const createCommitteeComponent = (
     
     return (
       <div>
-        <Parallax pages={isMobile ? 3 : 2}>
-          {/* First page - Committee name and background */}
+        <Parallax pages={2}>
           <ParallaxLayer
             offset={0}
             speed={1.5}
@@ -77,16 +76,6 @@ const createCommitteeComponent = (
               </div>
             )}
           </ParallaxLayer>
-          
-          {isMobile && (
-            <ParallaxLayer
-              offset={2}
-              speed={0.5}
-              className="flex items-center justify-center w-full h-full"
-            >
-              <div className="py-12"></div>
-            </ParallaxLayer>
-          )}
         </Parallax>
       </div>
     );
