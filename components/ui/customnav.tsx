@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
 import {
@@ -28,9 +28,20 @@ const CustomNavComponent = ({ activeLink, className, role = 'delegate' }: Custom
     if (menuOpen) setMenuOpen(false);
   };
 
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.classList.add('mobile-menu-open');
+    } else {
+      document.body.classList.remove('mobile-menu-open');
+    }
+    return () => {
+      document.body.classList.remove('mobile-menu-open');
+    };
+  }, [menuOpen]);
+
   return (
     <>
-      <nav className={`w-full p-2 text-white border-b border-gray-700 bg-transparent ${className || ''}`}>
+      <nav className={`w-full p-2 text-white border-b border-gray-700 bg-transparent ${className || ''} ${menuOpen ? 'menu-open' : ''}`}>
         <div className="flex items-center justify-between md:hidden">
           <span className="text-xl font-bold flex items-center">
             <HomeModernIcon className="w-6 h-6 mr-2" />MUN Hub

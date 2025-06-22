@@ -239,11 +239,13 @@ export const SimpleEditor = React.forwardRef(function SimpleEditor({ content, cl
             }}>
               <Toolbar
                 ref={toolbarRef}
+                className="tiptap-toolbar"
                 style={
                   isMobile
                     ? {
                         position: 'sticky',
                         top: 0,
+                        zIndex: 20
                       }
                     : {}
                 }

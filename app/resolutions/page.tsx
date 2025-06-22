@@ -374,13 +374,13 @@ const Page = () => {
               )}
             </div>
 
-            <section className="flex-1 flex flex-col bg-black/90 text-white border border-gray-800 rounded-lg shadow-lg p-2 md:p-4 max-h-[500px] md:max-h-[600px] overflow-auto">
+            <section className="flex-1 flex flex-col bg-black/90 text-white border border-gray-800 rounded-lg shadow-lg p-2 md:p-4 max-h-[500px] md:max-h-[600px] overflow-auto relative z-0">
               <div className="flex-1 overflow-auto">
                 {" "}
                 <SimpleEditor
                   ref={editorRef}
                   content={selectedReso?.content || undefined}
-                  className="h-full"
+                  className="h-full toolbar-fixed"
                 />
               </div>
               <div className="flex justify-end mt-3 pb-1 sticky bottom-0 right-0 z-10 bg-gradient-to-t from-black to-transparent pt-4">

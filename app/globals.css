@@ -158,6 +158,52 @@ html {
   --sidebar-ring: oklch(0.439 0 0);
 }
 
+@media (max-width: 768px) {
+  nav ul:not(.hidden) ~ main .ProseMirror-toolbar-wrapper {
+    display: none !important;
+    z-index: -1 !important;
+  }
+  
+  nav ul:not(.hidden) ~ main {
+    position: relative;
+    z-index: 0;
+  }
+  
+  body.mobile-menu-open .ProseMirror-toolbar-wrapper,
+  body.mobile-menu-open .tiptap-toolbar {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -10 !important;
+  }
+  
+  body.mobile-menu-open .tiptap-toolbar * {
+    pointer-events: none !important;
+  }
+  
+  nav.menu-open + main {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.ProseMirror-toolbar-wrapper,
+.tiptap-toolbar {
+  z-index: 20;
+  position: sticky;
+  top: 0;
+}
+
+.toolbar-fixed .tiptap-toolbar {
+  position: sticky !important;
+  top: 0;
+  z-index: 20;
+}
+
+body.mobile-menu-open .toolbar-fixed .tiptap-toolbar {
+  z-index: -10 !important;
+}
+
 /* Theme inline section commented out to fix CSS parsing errors
 @theme inline {
   --color-background: var(--background);
