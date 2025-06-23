@@ -342,15 +342,15 @@ const Page = () => {
                   </div>
                 )}
               </aside>
-              
-              {/* Delegate permissions panel */}
               {selectedReso && userRole === "chair" && delegates.length > 0 && (
                 <div className="w-full bg-gray-900/90 text-white rounded-lg shadow-lg p-4 flex-shrink-0">
                   <h3 className="text-lg font-bold mb-2 text-blue-400">Update Permissions</h3>
                   <div className="max-h-[200px] overflow-y-auto overscroll-contain">
                     <ul className="space-y-1">
                       {
-                        delegates.map((delegate) => (
+                        [...delegates].sort((a, b) => 
+                          `${a.firstname} ${a.lastname}`.localeCompare(`${b.firstname} ${b.lastname}`)
+                        ).map((delegate) => (
                           <li
                             key={delegate.delegateID}
                             className="flex items-center justify-between p-2 hover:bg-gray-800/80 rounded-lg transition-colors"
