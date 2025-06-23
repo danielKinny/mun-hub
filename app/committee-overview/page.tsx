@@ -18,7 +18,6 @@ import { HomeIcon } from '@heroicons/react/24/outline';
 import { useSession } from '../context/sessionContext';
 import {CustomNav} from '../../components/ui/customnav';
 import { useMobile } from '../../hooks/use-mobile';
-import Home from '../home/page';
 
 const Page = () => {
   const [selectedCommittee, setSelectedCommittee] = useState<string | null>(null);
