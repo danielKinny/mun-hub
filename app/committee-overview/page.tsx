@@ -111,7 +111,6 @@ const Page = () => {
       } 
       />
       {isMobile ? (
-        // Mobile layout - vertical list
         <div className='flex flex-col items-center pt-6 pb-20'>
           <h1 className='mb-12'>
             <span className='text-4xl font-extrabold block mb-2'>COMMITTEES</span>
@@ -148,7 +147,6 @@ const Page = () => {
           </div>
         </div>
       ) : (
-        // Desktop layout - circular arrangement
         <div className='flex items-center justify-center min-h-screen'>
           <div className='relative w-[700px] h-[700px]'>
             <div className='absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10'>
@@ -158,7 +156,7 @@ const Page = () => {
               </h1>
             </div>
             {committeeData.map((committee, index) => {
-              const radius = 350; 
+              const radius = 325; 
               const { x, y } = calculatePosition(
                 index, 
                 committeeData.length, 

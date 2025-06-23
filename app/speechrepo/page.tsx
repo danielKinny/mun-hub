@@ -190,6 +190,11 @@ const Page = () => {
       toast.error("Only delegates or chairs can add speeches");
       return;
     }
+
+    if (!heading.trim() || !content.trim()) {
+      toast.error("Title and content cannot be empty");
+      return;
+    }
     
     const speechData: Speech = {
       title: heading,
