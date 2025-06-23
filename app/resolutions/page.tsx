@@ -18,7 +18,16 @@ const Page = () => {
   const [fetchedResos, setFetchedResos] = useState<Reso[]>([]);
   const [selectedReso, setSelectedReso] = useState<Reso | null>(null);
   const [delegates, setDelegates] = useState<shortenedDel[]>([]);
+  const [title, setTitle] = useState<string>("");
   const isDelegateUser = userRole === "delegate" && currentUser !== null;
+
+  useEffect(() => {
+    if (selectedReso) {
+      setTitle(selectedReso.title || "");
+    } else {
+      setTitle("");
+    }
+  }, [selectedReso]);
 
   const logBackIn = useCallback(async () => {
     if (!currentUser) {
@@ -97,10 +106,18 @@ const Page = () => {
       const res = await fetch(endpoint);
       const data = await res.json();
       setFetchedResos(data);
+      
+      // If there's a selected resolution, set its title
+      if (selectedReso) {
+        const updatedSelectedReso = data.find((reso: Reso) => reso.resoID === selectedReso.resoID);
+        if (updatedSelectedReso) {
+          setTitle(updatedSelectedReso.title || "");
+        }
+      }
     };
 
     fetchResos();
-  }, [currentUser]);
+  }, [currentUser, selectedReso]);
 
   const postReso = async () => {
     const updatedUser = await logBackIn();
@@ -136,6 +153,11 @@ const Page = () => {
 
     const content = editorRef.current.getJSON();
 
+    if (!title.trim()) {
+      toast.error("Please enter a resolution title");
+      return;
+    }
+
     const delegateUser = updatedUser as Delegate;
     const ownResos = fetchedResos.filter(
       (reso) => reso.delegateID === delegateUser.delegateID
@@ -165,6 +187,7 @@ const Page = () => {
         committeeID,
         content,
         isNew: !selectedReso,
+        title,
       }),
     });
 
@@ -182,6 +205,8 @@ const Page = () => {
       !fetchedResos.some((r) => r.resoID === newReso.resoID)
     ) {
       setFetchedResos((prev) => [...prev, newReso]);
+      // Clear the title field for new resolutions
+      setTitle("");
     }
   };
 
@@ -296,7 +321,7 @@ const Page = () => {
   return (
     <ParticipantRoute>
       <div className="min-h-screen w-full bg-black flex flex-col overflow-hidden">
-        <CustomNav activeLink="resolutions" />
+        <CustomNav activeLink="resolutions" role={userRole} />
         <main className="flex-1 flex flex-col items-center justify-start px-2 py-4 md:py-6 overflow-y-auto">
           <div className="flex items-center justify-center gap-4 mb-4 md:mb-6">
             <h1 className="text-3xl md:text-5xl font-extrabold text-white text-center tracking-tight drop-shadow-lg">
@@ -327,13 +352,16 @@ const Page = () => {
                             : "border-gray-700 bg-gray-900/80 hover:scale-[1.02] hover:border-blue-400/80 hover:bg-gray-800/80"
                         }
                       `}
-                          onClick={() => setSelectedReso(reso)}
+                          onClick={() => {
+                            setSelectedReso(reso);
+                            setTitle(reso.title || "");
+                          }}
                         >
                           <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-600/80 text-white font-bold shadow">
                             {idx + 1}
                           </span>
                           <span className="text-sm md:text-base flex-1">
-                            Resolution #{idx + 1}
+                            {reso.title ? reso.title : `Resolution #${idx + 1}`}
                           </span>
                           <span className="text-blue-400 text-lg">&gt;</span>
                         </button>
@@ -379,6 +407,15 @@ const Page = () => {
             </div>
 
             <section className="flex-1 flex flex-col bg-black/90 text-white border border-gray-800 rounded-lg shadow-lg p-2 md:p-4 max-h-[500px] md:max-h-[600px] overflow-auto relative z-0">
+              <div className="mb-3">
+                <textarea
+                  placeholder="Resolution Title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full px-4 py-2 text-white bg-gray-900/90 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  rows={1}
+                />
+              </div>
               <div className="flex-1 overflow-auto">
                 {" "}
                 <SimpleEditor

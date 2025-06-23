@@ -114,6 +114,7 @@ export interface Admin {
 
 export interface Reso {
   resoID: string;
+  title:string;
   delegateID: string;
   committeeID: string;
   content: Object;

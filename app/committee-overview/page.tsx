@@ -13,9 +13,12 @@ import {
   committeeData,
 } from '../../components/ui/committeeComponents'
 
+import { HomeIcon } from '@heroicons/react/24/outline';
+
 import { useSession } from '../context/sessionContext';
 import {CustomNav} from '../../components/ui/customnav';
 import { useMobile } from '../../hooks/use-mobile';
+import Home from '../home/page';
 
 const Page = () => {
   const [selectedCommittee, setSelectedCommittee] = useState<string | null>(null);
@@ -95,16 +98,11 @@ const Page = () => {
   };
 
   return (
-    <div className='min-h-screen text-center p-2 bg-black text-white'>
+    <div className='min-h-screen text-center p-2 text-white bg-black'>
       <CustomNav 
       role={
-        currentUser 
-        ? ('delegateID' in currentUser 
-          ? "delegate" 
-          : ('chairID' in currentUser 
-            ? "chair" 
-            : "admin"))
-        : undefined
+        currentUser && 'delegateID' in currentUser ?
+        "delegate" : "chair"
       } 
       />
       <div ref={topRef} className="scroll-mt-16" />
@@ -146,9 +144,7 @@ const Page = () => {
             <Link href="/home" className='cursor-pointer transition-all hover:scale-105 hover:text-blue-400'>
               <div className='flex flex-col items-center'>
                 <div className='w-[80px] cursor-pointer h-[80px] md:w-[100px] md:h-[100px] flex items-center justify-center mb-2'>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7m-14 0l2 2m0 0l7 7 7-7m-14 0l2-2" />
-                  </svg>
+                  <HomeIcon className='w-8 h-8 md:w-10 md:h-10 text-white' />
                 </div>
                 <h2 className='text-sm md:text-base font-bold'>Back to Home</h2>
               </div>
@@ -256,13 +252,13 @@ const Page = () => {
       )}
       
       <div ref={committeeDetailsRef} className={`scroll-mt-16 ${isMobile ? 'mt-4' : 'mt-8'} ${selectedCommittee ? "min-h-screen" : ""}`}>
-      {selectedCommittee && (
-        <div>
-          <div className={`committee-details-container ${isMobile ? 'px-2' : 'px-8'}`}>
-            {selectedCommittee && renderCommitteeComponent()}
+        {selectedCommittee && (
+          <div>
+            <div className={`committee-details-container ${isMobile ? 'px-2' : 'px-8'}`}>
+              {selectedCommittee && renderCommitteeComponent()}
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
     </div>
   );

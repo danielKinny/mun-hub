@@ -27,7 +27,7 @@ export async function GET(url: Request) {
 }
 
 export async function POST(request: Request) {
-    const { resoID, delegateID, committeeID, content } = await request.json();
+    const { resoID, delegateID, committeeID, content, title } = await request.json();
 
     const {data : userPerms, error: userPermsError} = await supabase
         .from('Delegate')
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
         }
         const { error } = await supabase
             .from('Resos')
-            .update({content})
+            .update({content, title})
             .eq('resoID', resoID)
         if (error) {
             console.error('Error updating resolution:', error);
@@ -77,7 +77,8 @@ export async function POST(request: Request) {
         resoID: highestResoID,
         delegateID,
         committeeID,
-        content
+        content,
+        title
     }
 
     const { error } = await supabase.
