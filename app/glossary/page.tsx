@@ -29,7 +29,7 @@ const Page = () => {
           offset={0}
           speed={0.5}
           style={{
-            backgroundImage: "url(/images/UN.jpg)",
+            backgroundImage: "url(/images/UN10.jpg)",
             backgroundSize: "cover",
           }}
         />
