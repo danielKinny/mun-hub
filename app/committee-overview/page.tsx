@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import {
   HSC,
   IACA,
@@ -21,6 +22,7 @@ const Page = () => {
   const [imagesLoaded, setImagesLoaded] = useState<{[key: string]: boolean}>({});
   const {user : currentUser} = useSession();
   const committeeDetailsRef = useRef<HTMLDivElement>(null);
+  const topRef = useRef<HTMLDivElement>(null);
   const isMobile = useMobile();
 
   useEffect(() => {
@@ -53,6 +55,17 @@ const Page = () => {
     }
   }, [selectedCommittee]);
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+    
+    setTimeout(() => {
+      setSelectedCommittee(null);
+    }, 300);
+  };
+
   const handleImageLoad = (committeeName: string) => {
     setImagesLoaded(prev => ({
       ...prev,
@@ -80,23 +93,6 @@ const Page = () => {
         return null;
     }
   };
-  const calculatePosition = (index: number, totalItems: number, radius: number) => {
-    if (isMobile) {
-      const verticalSpacing = 180;
-      const startingOffset = 250;
-      
-      return { 
-        x: 0, 
-        y: (index * verticalSpacing) + startingOffset
-      };
-    }
-
-    const angle = (index / totalItems) * 2 * Math.PI - Math.PI / 2;
-    const x = Math.cos(angle) * radius;
-    const y = Math.sin(angle) * radius;
-    
-    return { x, y };
-  };
 
   return (
     <div className='min-h-screen text-center p-2 bg-black text-white'>
@@ -111,6 +107,7 @@ const Page = () => {
         : undefined
       } 
       />
+      <div ref={topRef} className="scroll-mt-16" />
       {isMobile ? (
         <div className='flex flex-col items-center pt-6 pb-20'>
           <h1 className='mb-8 md:mb-12'>
@@ -145,64 +142,125 @@ const Page = () => {
                 </div>
               </div>
             ))}
+            
+            <Link href="/home" className='cursor-pointer transition-all hover:scale-105 hover:text-blue-400'>
+              <div className='flex flex-col items-center'>
+                <div className='w-[80px] cursor-pointer h-[80px] md:w-[100px] md:h-[100px] flex items-center justify-center mb-2'>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7m-14 0l2 2m0 0l7 7 7-7m-14 0l2-2" />
+                  </svg>
+                </div>
+                <h2 className='text-sm md:text-base font-bold'>Back to Home</h2>
+              </div>
+            </Link>
           </div>
         </div>
       ) : (
         <div className='flex items-center justify-center min-h-screen py-10'>
-          <div className='relative w-full max-w-[700px] aspect-square'>
-            <div className='absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full px-4'>
-              <h1>
-                <span className='text-4xl md:text-5xl lg:text-7xl font-extrabold'>COMMITTEES</span><br/>
-                <span className='text-lg md:text-xl lg:text-2xl'>Click on a Logo to explore</span>
-              </h1>
-            </div>
-            {committeeData.map((committee, index) => {
-              const safeRadius = Math.min(window.innerWidth * 0.3, 300);
-              
-              const { x, y } = calculatePosition(
-                index, 
-                committeeData.length, 
-                safeRadius
-              );
-              
-              return (
-                <div
-                  key={index}
-                  className='absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all hover:scale-110 hover:text-blue-400'
-                  style={{
-                    left: `calc(50% + ${x}px)`,
-                    top: `calc(50% + ${y}px)`,
-                  }}
-                  onClick={() => setSelectedCommittee(committee.name)}
-                >
-                  <div className='flex flex-col items-center'>
-                    <div className='w-[80px] h-[80px] md:w-[100px] md:h-[100px] flex items-center justify-center'>
-                      <Image
-                        src={`/committee-resources/${committee.name}/${committee.logo}`}
-                        alt={`${committee.name} Logo`}
-                        title={`${committee.fullname} Logo`}
-                        width={80}
-                        height={80}
-                        className='object-contain max-w-full max-h-full'
-                        onLoad={() => handleImageLoad(committee.name)}
-                        style={{ 
-                          opacity: imagesLoaded[committee.name] ? 1 : 0,
-                          transition: 'opacity 0.3s ease-in-out'
-                        }}
-                      />
+          <div className='relative w-full max-w-4xl mx-auto'>
+            <div className='grid grid-cols-3 gap-8'>
+              {committeeData.map((committee, index) => {
+                if (index === 4) {
+                  return (
+                    <React.Fragment key="title">
+                      <div className='flex flex-col items-center justify-center'>
+                        <h1 className='mb-0'>
+                          <span className='text-4xl md:text-5xl lg:text-6xl font-extrabold block'>COMMITTEES</span>
+                          <span className='text-base md:text-lg block mt-2'>Click on a Logo to explore</span>
+                        </h1>
+                      </div>
+                      
+                      <div
+                        key={index}
+                        className='cursor-pointer transition-all hover:scale-110 hover:text-blue-400'
+                        onClick={() => setSelectedCommittee(committee.name)}
+                      >
+                        <div className='flex flex-col items-center justify-center h-full p-4'>
+                          <div className='w-[100px] h-[100px] md:w-[120px] md:h-[120px] flex items-center justify-center mb-3'>
+                            <Image
+                              src={`/committee-resources/${committee.name}/${committee.logo}`}
+                              alt={`${committee.name} Logo`}
+                              title={`${committee.fullname} Logo`}
+                              width={100}
+                              height={100}
+                              className='object-contain max-w-full max-h-full'
+                              onLoad={() => handleImageLoad(committee.name)}
+                              style={{ 
+                                opacity: imagesLoaded[committee.name] ? 1 : 0,
+                                transition: 'opacity 0.3s ease-in-out'
+                              }}
+                            />
+                          </div>
+                          <h2 className='text-base md:text-lg lg:text-xl font-bold'>{committee.name}</h2>
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  );
+                }
+                
+
+                return (
+                  <div
+                    key={index}
+                    className='cursor-pointer transition-all hover:scale-110 hover:text-blue-400'
+                    onClick={() => setSelectedCommittee(committee.name)}
+                  >
+                    <div className='flex flex-col items-center justify-center h-full p-4'>
+                      <div className='w-[100px] h-[100px] md:w-[120px] md:h-[120px] flex items-center justify-center mb-3'>
+                        <Image
+                          src={`/committee-resources/${committee.name}/${committee.logo}`}
+                          alt={`${committee.name} Logo`}
+                          title={`${committee.fullname} Logo`}
+                          width={100}
+                          height={100}
+                          className='object-contain max-w-full max-h-full'
+                          onLoad={() => handleImageLoad(committee.name)}
+                          style={{ 
+                            opacity: imagesLoaded[committee.name] ? 1 : 0,
+                            transition: 'opacity 0.3s ease-in-out'
+                          }}
+                        />
+                      </div>
+                      <h2 className='text-base md:text-lg lg:text-xl font-bold'>{committee.name}</h2>
                     </div>
-                    <h2 className='text-sm md:text-base lg:text-lg font-bold'>{committee.name}</h2>
                   </div>
+                );
+              })}
+              
+              <Link href="/home" className='cursor-pointer transition-all hover:scale-110 hover:text-blue-400'>
+                <div className='flex flex-col items-center justify-center h-full p-4'>
+                  <div className='w-[100px] h-[100px] md:w-[120px] md:h-[120px] flex items-center justify-center mb-3'>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7m-14 0l2 2m0 0l7 7 7-7m-14 0l2-2" />
+                    </svg>
+                  </div>
+                  <h2 className='text-base md:text-lg lg:text-xl font-bold'>Back to Home</h2>
                 </div>
-              );
-            })}
+              </Link>
+            </div>
           </div>
         </div>
       )}
+      {selectedCommittee && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-10">
+          <button 
+            onClick={scrollToTop}
+            className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 shadow-lg transition-all hover:scale-110"
+            aria-label="Back to top"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+            </svg>
+          </button>
+        </div>
+      )}
+      
       <div ref={committeeDetailsRef} className={`scroll-mt-16 ${isMobile ? 'mt-4' : 'mt-8'} ${selectedCommittee ? "min-h-screen" : ""}`}>
       {selectedCommittee && (
-        <div className={`committee-details-container ${isMobile ? 'px-2' : 'px-8'}`}>
-          {selectedCommittee && renderCommitteeComponent()}
+        <div>
+          <div className={`committee-details-container ${isMobile ? 'px-2' : 'px-8'}`}>
+            {selectedCommittee && renderCommitteeComponent()}
+          </div>
         </div>
       )}
       </div>
