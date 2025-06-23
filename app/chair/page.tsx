@@ -56,7 +56,6 @@ const DelegateItem = memo(({
 ));
 
 DelegateItem.displayName = 'DelegateItem';
-const MemoizedNav = memo(CustomNav);
 
 const Page = () => {
     const { user: currentUser } = useSession();

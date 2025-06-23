@@ -6,7 +6,6 @@ import {
   HomeModernIcon,
   DocumentIcon,
   GlobeAltIcon,
-  NewspaperIcon,
   BookOpenIcon,
   BoltIcon,
   PencilSquareIcon,
