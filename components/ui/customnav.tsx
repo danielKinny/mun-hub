@@ -108,11 +108,6 @@ const CustomNavComponent = ({ activeLink, className, role = 'delegate' }: Custom
                   <BookOpenIcon className="w-5 h-5 mr-1" /> MUN Glossary
                 </Link>
               </li>
-              <li className={`inline-block click-effect ${activeLink === 'global-affairs' ? 'bg-white text-black' : 'hover:bg-white hover:text-black'} p-2 rounded-lg w-full md:w-auto`}>
-                <Link href="/global-affairs" className="flex items-center text-lg md:text-xl cursor-pointer" onClick={handleNavClick}>
-                  <NewspaperIcon className="w-5 h-5 mr-1" /> Global Affairs
-                </Link>
-              </li>
               <li className={`inline-block click-effect ${activeLink === 'resolutions' ? 'bg-white text-black' : 'hover:bg-white hover:text-black'} p-2 rounded-lg w-full md:w-auto`}>
                 <Link href="/resolutions" className="flex items-center text-lg md:text-xl cursor-pointer" onClick={handleNavClick}>
                   <PencilSquareIcon className="w-5 h-5 mr-1" /> Resolutions

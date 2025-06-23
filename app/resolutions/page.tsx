@@ -136,7 +136,11 @@ const Page = () => {
 
     const content = editorRef.current.getJSON();
 
-    if (fetchedResos.length >= 1 && !selectedReso) {
+    const delegateUser = updatedUser as Delegate;
+    const ownResos = fetchedResos.filter(
+      (reso) => reso.delegateID === delegateUser.delegateID
+    );
+    if (ownResos.length >= 1 && !selectedReso) {
       toast.error("You can only post one resolution as a delegate.");
       return;
     }
@@ -165,7 +169,7 @@ const Page = () => {
     });
 
     if (!res.ok) {
-      console.error("Failed to post resolution");
+      toast.error("Failed to post resolution");
       return;
     }
     const newReso = await res.json();

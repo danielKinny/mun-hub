@@ -232,7 +232,7 @@ const Page = () => {
   return (
     <ChairRoute>
         <div className='min-h-screen bg-black text-white'>
-            <MemoizedNav />
+            <CustomNav role={"chair"} />
             <div className='text-center p-3 sm:p-4'>
                 <h1 className='text-3xl sm:text-4xl font-bold'>Delegates Permissions</h1>
                 <p className='text-base sm:text-lg mt-2'>Manage permissions for delegates in your committee</p>

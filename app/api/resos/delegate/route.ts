@@ -39,11 +39,10 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Failed to fetch user permissions' }, { status: 500 });
     }
 
-    if (!(userPerms.resoPerms["update:reso"].includes(resoID))){
-        return NextResponse.json({ error: 'You do not have permission to update resolutions' }, { status: 403 });
-    }
-
     if (resoID !== "-1"){
+        if ( !(userPerms.resoPerms["update:reso"].includes(resoID))){
+            return NextResponse.json({ error: 'You do not have permission to update this resolution' }, { status: 403 });
+        }
         const { error } = await supabase
             .from('Resos')
             .update({content})
@@ -53,6 +52,10 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Failed to update resolution' }, { status: 500 });
         }
         return NextResponse.json({ message: 'Resolution updated successfully' }, { status: 200 });
+    }
+
+    if ( !(userPerms.resoPerms["update:ownreso"]) ){
+        return NextResponse.json({ error: 'You do not have permission to create your own resolution' }, { status: 403 });
     }
 
     const { data : existingResos, error : resoError } = await supabase
