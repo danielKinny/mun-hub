@@ -32,7 +32,7 @@ const Page = () => {
   return (
     <ProtectedRoute>
         <CustomNav role={role ? role : "delegate"} activeLink="live-updates" />
-        <div className="min-h-screen text-white pb-8">
+        <div className="min-h-screen text-white pb-8 bg-black">
             <h1 className="text-4xl md:text-6xl font-bold text-center p-4">Live Updates</h1>
 
             <ul className="space-y-8 p-2 md:p-4 mx-2 md:mx-8">
