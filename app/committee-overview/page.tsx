@@ -32,17 +32,17 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
-    if (isMobile) {
-      const handleResize = () => {
-        if (window.innerWidth < 768) {
-          document.body.style.minHeight = `${window.innerHeight}px`;
-        }
-      };
-      window.addEventListener('resize', handleResize);
-      handleResize();  
-      return () => window.removeEventListener('resize', handleResize);
-    }
-  }, [isMobile]);
+    const handleResize = () => {
+      document.body.style.minHeight = `${window.innerHeight}px`;
+    };
+    
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     if (selectedCommittee && committeeDetailsRef.current) {
@@ -82,14 +82,15 @@ const Page = () => {
   };
   const calculatePosition = (index: number, totalItems: number, radius: number) => {
     if (isMobile) {
-      const verticalSpacing = 220;
-      const startingOffset = 300;
+      const verticalSpacing = 180;
+      const startingOffset = 250;
+      
       return { 
         x: 0, 
         y: (index * verticalSpacing) + startingOffset
       };
     }
-    
+
     const angle = (index / totalItems) * 2 * Math.PI - Math.PI / 2;
     const x = Math.cos(angle) * radius;
     const y = Math.sin(angle) * radius;
@@ -112,26 +113,26 @@ const Page = () => {
       />
       {isMobile ? (
         <div className='flex flex-col items-center pt-6 pb-20'>
-          <h1 className='mb-12'>
-            <span className='text-4xl font-extrabold block mb-2'>COMMITTEES</span>
-            <span className='text-lg block'>Click on a Logo to explore</span>
+          <h1 className='mb-8 md:mb-12'>
+            <span className='text-3xl md:text-4xl font-extrabold block mb-2'>COMMITTEES</span>
+            <span className='text-base md:text-lg block'>Click on a Logo to explore</span>
           </h1>
           
-          <div className='flex flex-col items-center space-y-16'>
+          <div className='w-full max-w-md mx-auto grid grid-cols-1 gap-12 pb-12'>
             {committeeData.map((committee, index) => (
               <div
                 key={index}
-                className='cursor-pointer transition-all hover:scale-110 hover:text-blue-400'
+                className='cursor-pointer transition-all hover:scale-105 hover:text-blue-400'
                 onClick={() => setSelectedCommittee(committee.name)}
               >
                 <div className='flex flex-col items-center'>
-                  <div className='w-[120px] h-[120px] flex items-center justify-center mb-2'>
+                  <div className='w-[80px] h-[80px] md:w-[100px] md:h-[100px] flex items-center justify-center mb-2'>
                     <Image
                       src={`/committee-resources/${committee.name}/${committee.logo}`}
                       alt={`${committee.name} Logo`}
                       title={`${committee.fullname} Logo`}
-                      width={120}
-                      height={120}
+                      width={80}
+                      height={80}
                       className='object-contain max-w-full max-h-full'
                       onLoad={() => handleImageLoad(committee.name)}
                       style={{
@@ -140,27 +141,28 @@ const Page = () => {
                       }}
                     />
                   </div>
-                  <h2 className='text-lg font-bold'>{committee.name}</h2>
+                  <h2 className='text-sm md:text-base font-bold'>{committee.name}</h2>
                 </div>
               </div>
             ))}
           </div>
         </div>
       ) : (
-        <div className='flex items-center justify-center min-h-screen'>
-          <div className='relative w-[700px] h-[700px]'>
-            <div className='absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10'>
+        <div className='flex items-center justify-center min-h-screen py-10'>
+          <div className='relative w-full max-w-[700px] aspect-square'>
+            <div className='absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full px-4'>
               <h1>
-                <span className='text-7xl font-extrabold'>COMMITTEES</span><br/>
-                <span className='text-2xl'>Click on a Logo to explore</span>
+                <span className='text-4xl md:text-5xl lg:text-7xl font-extrabold'>COMMITTEES</span><br/>
+                <span className='text-lg md:text-xl lg:text-2xl'>Click on a Logo to explore</span>
               </h1>
             </div>
             {committeeData.map((committee, index) => {
-              const radius = 325; 
+              const safeRadius = Math.min(window.innerWidth * 0.3, 300);
+              
               const { x, y } = calculatePosition(
                 index, 
                 committeeData.length, 
-                radius
+                safeRadius
               );
               
               return (
@@ -174,13 +176,13 @@ const Page = () => {
                   onClick={() => setSelectedCommittee(committee.name)}
                 >
                   <div className='flex flex-col items-center'>
-                    <div className='w-[160px] h-[160px] flex items-center justify-center'>
+                    <div className='w-[80px] h-[80px] md:w-[100px] md:h-[100px] flex items-center justify-center'>
                       <Image
                         src={`/committee-resources/${committee.name}/${committee.logo}`}
                         alt={`${committee.name} Logo`}
                         title={`${committee.fullname} Logo`}
-                        width={160}
-                        height={160}
+                        width={80}
+                        height={80}
                         className='object-contain max-w-full max-h-full'
                         onLoad={() => handleImageLoad(committee.name)}
                         style={{ 
@@ -189,7 +191,7 @@ const Page = () => {
                         }}
                       />
                     </div>
-                    <h2 className='text-xl font-bold'>{committee.name}</h2>
+                    <h2 className='text-sm md:text-base lg:text-lg font-bold'>{committee.name}</h2>
                   </div>
                 </div>
               );
@@ -197,7 +199,7 @@ const Page = () => {
           </div>
         </div>
       )}
-      <div ref={committeeDetailsRef} className={`scroll-mt-16 ${isMobile ? 'mt-4' : 'mt-8'} min-h-screen`}>
+      <div ref={committeeDetailsRef} className={`scroll-mt-16 ${isMobile ? 'mt-4' : 'mt-8'} ${selectedCommittee ? "min-h-screen" : ""}`}>
       {selectedCommittee && (
         <div className={`committee-details-container ${isMobile ? 'px-2' : 'px-8'}`}>
           {selectedCommittee && renderCommitteeComponent()}
