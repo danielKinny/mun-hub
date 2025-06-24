@@ -49,7 +49,7 @@ const Page = () => {
             <h1 className="text-4xl md:text-6xl font-bold text-center p-4">Live Updates</h1>
 
             <ul className="space-y-8 p-2 md:p-4 mx-2 md:mx-8">
-                {updates.map((update, index) => (
+                { updates ? (updates.map((update, index) => (
                     <li key={update.updateID} 
                         className={`group outline outline-gray-800 p-3 md:p-4 w-full h-auto md:h-[30rem] rounded-lg shadow-md flex flex-col ${isMobile ? '' : index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} cursor-pointer transform transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-xl hover:outline-gray-600`}>
                         <div className={`w-full md:w-1/2 px-2 md:px-4 text-center ${isMobile ? 'mb-4' : ''}`}>
@@ -77,7 +77,12 @@ const Page = () => {
                             )}
                         </div>
                     </li>
-                ))}
+                ))):
+                (
+                    <div>
+                        <p className="text-center text-gray-400">No updates available at the moment.</p>
+                    </div>
+                )}
             </ul>
             
         </div>
