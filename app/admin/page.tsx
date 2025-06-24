@@ -44,40 +44,21 @@ const Page = () => {
         }
 
         try {
-            const timestamp = new Date().getTime();
-            const fileExtension = selectedFile.name.split('.').pop();
-            const safeFileName = `update_${timestamp}.${fileExtension}`;
-            
-            const imageFilePath = `/images/updates/${safeFileName}`;
-            
-            const { error: dbError } = await supabase
-                .from('Updates')
-                .insert({
-                    updateID: `update_${timestamp}`,
-                    title: title,
-                    content: content,
-                    time: new Date().toISOString(),
-                    href: imageFilePath,
-                })
-                .select();
-                
-            if (dbError) {
-                throw new Error(dbError.message);
-            }
-
             const formData = new FormData();
             formData.append('file', selectedFile);
-            formData.append('filename', safeFileName);
-            
-            const uploadResponse = await fetch('/api/upload-image', {
+            formData.append('title', title);
+            formData.append('content', content);
+            const response = await fetch('/api/upload-image', {
                 method: 'POST',
                 body: formData,
             });
             
-            if (!uploadResponse.ok) {
-                const errorData = await uploadResponse.json();
-                throw new Error(errorData.message || 'Failed to upload image');
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.error || 'Failed to create update');
             }
+            
             setTitle("");
             setContent("");
             setSelectedFile(null);

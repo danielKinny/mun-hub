@@ -15,14 +15,27 @@ const Page = () => {
     
     useEffect( () => {
         const fetchUpdates = async () => {
-            const res = await fetch('/api/updates');
-            const data = await res.json();
-            if (res.ok) {
-                setUpdates(data);
-                console.log(data);
-            }
-            else {
-                console.error("Failed to fetch updates:", data);
+            try {
+                const res = await fetch('/api/updates');
+                const data = await res.json();
+                if (res.ok) {
+                    console.log("Successfully fetched updates:", data);
+                    
+                    data.forEach((update: Update) => {
+                        if (update.href) {
+                            console.log(`Update ${update.updateID} has image URL: ${update.href}`);
+                        } else {
+                            console.warn(`Update ${update.updateID} has no image URL`);
+                        }
+                    });
+                    
+                    setUpdates(data);
+                }
+                else {
+                    console.error("Failed to fetch updates:", data);
+                }
+            } catch (error) {
+                console.error("Error fetching updates:", error);
             }
         }
 
@@ -45,13 +58,23 @@ const Page = () => {
                             <p className="text-base md:text-lg">{update.content}</p>
                         </div>
                         <div className='w-full md:w-1/2 flex justify-center'>
-                            <Image
-                                src={update.href}
-                                alt="Update Image"
-                                width={500}
-                                height={700}
-                                className="rounded-lg object-cover shadow-md transition-all duration-300 group-hover:scale-105 max-h-[300px] md:max-h-[500px] w-auto"
-                            />
+                            {update.href ? (
+                                <Image
+                                    src={update.href}
+                                    alt="Update Image"
+                                    width={500}
+                                    height={700}
+                                    className="rounded-lg object-cover shadow-md transition-all duration-300 max-h-[300px] md:max-h-[500px] w-auto"
+                                    onError={(e) => {
+                                        console.error("Error loading image:", update.href);
+                                        e.currentTarget.src = "/images/placeholder.jpg";
+                                    }}
+                                />
+                            ) : (
+                                <div className="flex items-center justify-center bg-gray-800 rounded-lg w-full h-[300px]">
+                                    <p className="text-gray-400">No image available</p>
+                                </div>
+                            )}
                         </div>
                     </li>
                 ))}
