@@ -40,6 +40,7 @@ export async function POST(request: Request) {
   let speechID = body.speechData.speechID
 
 
+
   //marks the start of speech creation logic if it is a new speech
 
   if (speechID === "-1"){
@@ -195,7 +196,7 @@ export async function GET(request: Request) {
     if (speechesDataError) {
       throw speechesDataError;
     }
-    
+  
     const { data: allTags, error: tagsError } = await supabase
       .from("Speech-Tags")
       .select("speechID, tag")

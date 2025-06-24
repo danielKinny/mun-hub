@@ -196,6 +196,16 @@ const Page = () => {
       return;
     }
     
+    if (heading.length > 72) {
+      toast.error("Title cannot exceed 72 characters");
+      return;
+    }
+    
+    if (content.length > 7000) {
+      toast.error("Content cannot exceed 7000 characters");
+      return;
+    }
+    
     const speechData: Speech = {
       title: heading,
       speechID: selectedSpeech ? selectedSpeech?.speechID : "-1",
@@ -439,24 +449,35 @@ const Page = () => {
               </div>
             </div>
           )}
-          <textarea
-            className={`block ${isMobile ? 'w-full' : 'w-8/9'} outline rounded-2xl ${isMobile ? 'mx-0' : 'mx-8'} p-4 bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300 animate-fadein-up`}
-            placeholder="Write your title here..."
-            onChange={(e) => {
-              setHeading(e.target.value);
-            }}
-            style={{ resize: "none" }}
-            value={heading}
-          ></textarea>
-          <textarea
-            className={`outline ${isMobile ? 'w-full' : 'w-8/9'} rounded-2xl ${isMobile ? 'mx-0' : 'mx-8'} p-4 ${isMobile ? 'h-64' : 'h-187'} bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300 animate-fadein-up`}
-            placeholder="Write your speech here..."
-            onChange={(e) => {
-              setContent(e.target.value);
-            }}
-            value={content}
-            style={{ resize: "none" }}
-          ></textarea>
+          <div className="relative">
+            <textarea
+              className={`block ${isMobile ? 'w-full' : 'w-8/9'} outline rounded-2xl ${isMobile ? 'mx-0' : 'mx-8'} p-4 bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300 animate-fadein-up`}
+              placeholder="Write your title here..."
+              onChange={(e) => {
+                setHeading(e.target.value);
+              }}
+              style={{ resize: "none" }}
+              value={heading}
+            ></textarea>
+            <div className={`text-right text-gray-400 text-sm pr-6 pt-1 ${isMobile ? 'mr-0' : 'mr-8'}`}>
+              {heading.length} characters / 72 characters
+            </div>
+          </div>
+          
+          <div className="relative">
+            <textarea
+              className={`outline ${isMobile ? 'w-full' : 'w-8/9'} rounded-2xl ${isMobile ? 'mx-0' : 'mx-8'} p-4 ${isMobile ? 'h-64' : 'h-187'} bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300 animate-fadein-up`}
+              placeholder="Write your speech here..."
+              onChange={(e) => {
+                setContent(e.target.value);
+              }}
+              value={content}
+              style={{ resize: "none" }}
+            ></textarea>
+            <div className={`text-right text-gray-400 text-sm pr-6 pt-1 ${isMobile ? 'mr-0' : 'mr-12'}`}>
+              {content.length} characters / 7000 characters
+            </div>
+          </div>
         </div>
       </div>
       {showCountryOverlay && countries && (

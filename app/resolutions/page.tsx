@@ -107,7 +107,6 @@ const Page = () => {
       const data = await res.json();
       setFetchedResos(data);
       
-      // If there's a selected resolution, set its title
       if (selectedReso) {
         const updatedSelectedReso = data.find((reso: Reso) => reso.resoID === selectedReso.resoID);
         if (updatedSelectedReso) {
@@ -127,6 +126,11 @@ const Page = () => {
 
     if (!editorRef.current) {
       toast.error("Editor not initialized");
+      return;
+    }
+
+    if (editorRef.current.getText().length === 0) {
+      toast.error("Resolution length invalid");
       return;
     }
 
@@ -205,7 +209,6 @@ const Page = () => {
       !fetchedResos.some((r) => r.resoID === newReso.resoID)
     ) {
       setFetchedResos((prev) => [...prev, newReso]);
-      // Clear the title field for new resolutions
       setTitle("");
     }
   };
