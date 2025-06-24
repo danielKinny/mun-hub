@@ -170,7 +170,7 @@ export default function Home() {
           <p>
             <EnvelopeIcon className="w-6 h-6 mr-2 inline-block" />
             Contact us:
-            <a href="https://youtu.be/dQw4w9WgXcQ" className="hover:text-blue-300/80 transition-colors duration-300">
+            <a href="mailto:danielkinny0214@gmail.com" className="hover:text-blue-300/80 transition-colors duration-300">
               {" "}
               danielkinny0214@gmail.com
             </a>

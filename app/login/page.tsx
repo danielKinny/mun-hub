@@ -107,7 +107,6 @@ const Login = () => {
 
 
         login(enrichedUser);
-        console.log(enrichedUser);
         router.push("/home");
 
       } else {
