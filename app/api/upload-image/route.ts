@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const { data: uploadData, error: uploadError } = await supabaseAdmin
+    const { error: uploadError } = await supabaseAdmin
       .storage
       .from('live-updates')
       .upload(`update-images/${safeFileName}`, buffer, {

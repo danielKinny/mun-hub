@@ -2,7 +2,6 @@
 import React from 'react'
 import {AdminRoute} from '@/components/protectedroute'
 import { CustomNav } from '@/components/ui/customnav'
-import supabase from '@/lib/supabase'
 import {toast} from 'sonner'
 import { useSession } from '../context/sessionContext'
 import Image from 'next/image'
