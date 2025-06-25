@@ -17,7 +17,7 @@ export default function TypeWriter() {
     "Your one stop hub for ideas",
     "Your one stop hub for interaction",
     "Your one stop hub for news",
-    "Are yodu still reading this?",
+    "Are you still reading this?",
   ], []);
 
   const returnIndex = useCallback((index: number) => index % words.length, [words.length]);
