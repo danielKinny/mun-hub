@@ -6,7 +6,6 @@ import { Editor } from "@tiptap/react";
 import { SimpleEditor } from "../../components/tiptap-templates/simple/simple-editor";
 import { ParticipantRoute } from "@/components/protectedroute";
 import { toast } from "sonner";
-import { CustomNav } from "@/components/ui/customnav";
 import role from "@/lib/roles";
 import supabase from "@/lib/supabase";
 // this page assumes that delegates can only post 1 reso, might be changed later
@@ -286,7 +285,6 @@ const Page = () => {
     if (!delegateUser.resoPerms["view:ownreso"]) {
       return (
         <div className="text-white bg-black min-h-screen text-center">
-          <CustomNav role={userRole} />
           <div className="mt-10">
             {currentUser && "delegateID" in currentUser && (
               <>
@@ -324,7 +322,6 @@ const Page = () => {
   return (
     <ParticipantRoute>
       <div className="min-h-screen w-full bg-black flex flex-col overflow-hidden">
-        <CustomNav activeLink="resolutions" role={userRole} />
         <main className="flex-1 flex flex-col items-center justify-start px-2 py-4 md:py-6 overflow-y-auto">
           <div className="flex items-center justify-center gap-4 mb-4 md:mb-6">
             <h1 className="text-3xl md:text-5xl font-extrabold text-white text-center tracking-tight drop-shadow-lg">

@@ -1,7 +1,6 @@
 "use client";
 import React, {useEffect, useState, useMemo, memo, useCallback} from 'react'
 import { ChairRoute } from '@/components/protectedroute'
-import { CustomNav } from '@/components/ui/customnav'
 import { useSession } from '@/app/context/sessionContext'
 import { useMobile } from '@/hooks/use-mobile'
 import { Chair } from '@/db/types'
@@ -231,7 +230,6 @@ const Page = () => {
   return (
     <ChairRoute>
         <div className='min-h-screen bg-black text-white'>
-            <CustomNav role={"chair"} />
             <div className='text-center p-3 sm:p-4'>
                 <h1 className='text-3xl sm:text-4xl font-bold'>Delegates Permissions</h1>
                 <p className='text-base sm:text-lg mt-2'>Manage permissions for delegates in your committee</p>

@@ -3,6 +3,7 @@ import "./globals.css";
 import { SessionProvider } from "./context/sessionContext";
 import { Toaster } from "sonner";
 import { Poppins } from "next/font/google";
+import AppWrapper from "@/components/AppWrapper";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -39,9 +40,9 @@ export default function RootLayout({
       <body className={`bg-black antialiased ${poppins.className}`}>
         {/* entire thingy is wrapped with session provider */}
         <SessionProvider>
-          <main>
+          <AppWrapper>
             {children}
-          </main>
+          </AppWrapper>
           <Toaster />
         </SessionProvider>
       </body>

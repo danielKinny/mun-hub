@@ -1,7 +1,6 @@
 "use client";
 import React, { useRef } from "react";
 
-import { CustomNav } from "@/components/ui/customnav";
 import {ProtectedRoute} from "@/components/protectedroute";
 import { useMobile } from "@/hooks/use-mobile";
 
@@ -23,7 +22,6 @@ const Page = () => {
 
   return (
     <ProtectedRoute>
-      <CustomNav />
       <Parallax pages={4} ref={parallaxRef}>
         <ParallaxLayer
           offset={0}

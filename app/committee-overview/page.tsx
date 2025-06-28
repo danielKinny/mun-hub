@@ -16,7 +16,6 @@ import {
 import { HomeIcon } from '@heroicons/react/24/outline';
 
 import { useSession } from '../context/sessionContext';
-import {CustomNav} from '../../components/ui/customnav';
 import { useMobile } from '../../hooks/use-mobile';
 
 const Page = () => {
@@ -98,12 +97,6 @@ const Page = () => {
 
   return (
     <div className='min-h-screen text-center p-2 text-white bg-black'>
-      <CustomNav 
-      role={
-        currentUser && 'delegateID' in currentUser ?
-        "delegate" : "chair"
-      } 
-      />
       <div ref={topRef} className="scroll-mt-16" />
       {isMobile ? (
         <div className='flex flex-col items-center pt-6 pb-20'>

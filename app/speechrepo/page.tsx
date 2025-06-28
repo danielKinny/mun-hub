@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { useEffect, useCallback, useState } from "react";
-import { CustomNav } from "@/components/ui/customnav";
 import { Speech } from "@/db/types";
 import { ParticipantRoute } from "@/components/protectedroute";
 import { toast } from "sonner";
@@ -115,7 +114,6 @@ const Page = () => {
   if (!userRole.isParticipant) {
     return (
       <ParticipantRoute>
-        <CustomNav />
         <div className="text-white text-center p-8">Only delegates or chairs can access this page.</div>
       </ParticipantRoute>
     );
@@ -123,7 +121,6 @@ const Page = () => {
   
   return (
     <ParticipantRoute>
-      <CustomNav />
       <div
         className={`${isMobile ? 'flex flex-col' : 'flex'} text-white p-4 min-h-screen relative overflow-hidden animate-fadein`}
         style={{
@@ -179,7 +176,7 @@ const Page = () => {
         <div className={`${isMobile ? 'w-full' : 'w-full'} space-y-2 p-4 animate-slidein-up`}>
           <div className={`${isMobile ? 'w-full flex-col mx-0' : 'w-8/9 mx-8'} pb-2 flex ${isMobile ? 'space-y-3' : 'items-center'}`}>
             <p className={`text-4xl font-bold ${isMobile ? 'mx-0 text-center' : 'mx-4'} bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 drop-shadow-lg animate-text-pop`}>
-              {userRole.getUserName()} Speech Repo
+              {userRole.getUserName()}&apos;s Speech Repository
             </p>
             <div className={`flex ${isMobile ? 'w-full justify-center flex-wrap gap-2' : 'space-x-4 ml-auto'}`}>
               <button

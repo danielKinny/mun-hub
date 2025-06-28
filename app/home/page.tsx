@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useSession } from "../context/sessionContext";
 import Image from "next/image";
-import { CustomNav } from "@/components/ui/customnav";
 import {ProtectedRoute} from "@/components/protectedroute";
 import { Announcement } from "@/db/types";
 import {
@@ -16,7 +15,6 @@ import {
 export default function Home() {
   const { user: currentUser, logout } = useSession();
   const [announcements, setAnnouncements] = React.useState<Announcement[]>([]);
-  const role =  currentUser && ('delegateID' in currentUser ? 'delegate' : 'chairID' in currentUser ? 'chair' : 'admin');
 
   const fetchAnnouncements = useCallback(async () => {
     const res = await fetch("/api/announcements");
@@ -50,7 +48,7 @@ export default function Home() {
           >
             MUN Hub - Welcome{" "}
             {currentUser?.firstname}
-            { role==="delegate" && currentUser && 'country' in currentUser && " " + currentUser.country.flag}
+            { currentUser && 'delegateID' in currentUser && 'country' in currentUser && " " + currentUser.country.flag}
           </motion.h1>
 
             <motion.h2
@@ -72,9 +70,6 @@ export default function Home() {
 
         <main className="flex-grow w-full max-w-6xl mx-auto px-4">
           {/* dis is da beginning of da page content ya feel me */}
-          <section className="w-full block mb-8">
-            <CustomNav role={role ? role : 'delegate'} />
-          </section>
           <section className="w-full block mb-8">
             <div className="flex flex-col lg:grid lg:grid-cols-12 lg:gap-6">
               <section className="w-full text-white mb-4 p-2 flex flex-wrap lg:col-span-8">

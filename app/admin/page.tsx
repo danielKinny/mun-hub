@@ -1,7 +1,6 @@
 "use client";
 import React from 'react'
 import {AdminRoute} from '@/components/protectedroute'
-import { CustomNav } from '@/components/ui/customnav'
 import {toast} from 'sonner'
 import { useSession } from '../context/sessionContext'
 import Image from 'next/image'
@@ -11,7 +10,6 @@ const Page = () => {
     const [title, setTitle] = React.useState<string>("");
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
     const { user: currentUser } = useSession();
-    const role = currentUser && ('delegateID' in currentUser ? 'delegate' : 'chairID' in currentUser ? 'chair' : 'admin')
 
     const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setContent(e.target.value);
@@ -73,7 +71,6 @@ const Page = () => {
 
   return (
     <AdminRoute>
-      <CustomNav role={role ? role : 'delegate'} activeLink="admin" />
       <div className="flex flex-col items-center justify-center min-h-screen text-white p-4 sm:p-6 md:p-8">
         <div className="flex flex-col md:flex-row flex-wrap items-start justify-center gap-6 w-full max-w-4xl animate-slidein-up" style={{animationDelay: '0.1s'}}>
           <div className='text-white flex flex-col animate-fadein w-full md:w-1/3' style={{animationDelay: '0.2s'}}>

@@ -1,6 +1,5 @@
 "use client";
 import React, {useEffect} from 'react'
-import {CustomNav} from '@/components/ui/customnav'
 import { Update } from '@/db/types'
 import Image from 'next/image'
 import { useSession } from '../context/sessionContext'
@@ -10,7 +9,6 @@ import { useMobile } from '@/hooks/use-mobile'
 const Page = () => {
     const {user: currentUser}= useSession();
     const [updates, setUpdates] = React.useState<Update[]>([]);
-    const role =  currentUser && ('delegateID' in currentUser ? 'delegate' : 'chairID' in currentUser ? 'chair' : 'admin');
     const isMobile = useMobile();
     
     useEffect( () => {
@@ -44,7 +42,6 @@ const Page = () => {
 
   return (
     <ProtectedRoute>
-        <CustomNav role={role ? role : "delegate"} activeLink="live-updates" />
         <div className="min-h-screen text-white pb-8 bg-black">
             <h1 className="text-4xl md:text-6xl font-bold text-center p-4">Live Updates</h1>
 
