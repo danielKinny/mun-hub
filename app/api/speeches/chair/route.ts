@@ -62,18 +62,17 @@ export async function POST(request: Request) {
   //gonna insert tags now
   //no need to check for existing tags cos this is assumed to be a new speech
 
-  if(body.tags && body.tags.length > 0 ) {
-    for (const tag of body.tags) {
-      const { error: tagError } = await supabase
-        .from("Speech-Tags")
-        .insert({ speechID, tag });
+  if(body.speechData.tags && body.speechData.tags.length > 0 ) {
+    const tagRows = body.speechData.tags.map((tag: string) => ({ speechID, tag }));
+    const { error: tagError } = await supabase
+      .from("Speech-Tags")
+      .insert(tagRows);
 
-      if (tagError) {
-        return new NextResponse(
-          JSON.stringify({ message: `Error inserting tag: ${tagError.message}` }),
-          { status: 500, headers: { "Content-Type": "application/json" } }
-        );
-      }
+    if (tagError) {
+      return new NextResponse(
+        JSON.stringify({ message: `Error inserting tags: ${tagError.message}` }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
     }
   }
 
@@ -99,7 +98,7 @@ export async function POST(request: Request) {
     );
   }
   // Update tags
-  if (body.tags && body.tags.length > 0) {
+  if (body.speechData.tags) {
     const { error: deleteTagsError } = await supabase
       .from("Speech-Tags")
       .delete()
@@ -111,15 +110,15 @@ export async function POST(request: Request) {
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
-
-    for (const tag of body.tags) {
+    if (body.speechData.tags.length > 0) {
+      const tagRows = body.speechData.tags.map((tag: string) => ({ speechID, tag }));
       const { error: tagInsertError } = await supabase
         .from("Speech-Tags")
-        .insert({ speechID, tag });
+        .insert(tagRows);
 
       if (tagInsertError) {
         return new NextResponse(
-          JSON.stringify({ message: `Error inserting tag: ${tagInsertError.message}` }),
+          JSON.stringify({ message: `Error inserting tags: ${tagInsertError.message}` }),
           { status: 500, headers: { "Content-Type": "application/json" } }
         );
       }

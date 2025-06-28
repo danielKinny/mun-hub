@@ -1,15 +1,20 @@
 "use client";
 import React from "react";
-import { useEffect, useMemo, useCallback, useState } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { CustomNav } from "@/components/ui/customnav";
-import { useSession } from "../context/sessionContext";
-import { Speech, UserType, Delegate, Chair } from "@/db/types";
+import { Speech } from "@/db/types";
 import { ParticipantRoute } from "@/components/protectedroute";
 import { toast } from "sonner";
 import CountryOverlay from "@/components/ui/countryoverlay";
 import UnsavedChangesModal from "@/components/ui/unsavedchangesmodal";
 import DeleteConfirmModal from "@/components/ui/deleteconfirmmodal";
 import { useMobile } from "@/hooks/use-mobile";
+import { useUserRole } from "@/hooks/use-user-role";
+import { useSpeechAPI } from "@/hooks/use-speech-api";
+import { useSpeechForm } from "@/hooks/use-speech-form";
+import { useCountries } from "@/hooks/use-countries";
+import { useSpeechSearch } from "@/hooks/use-speech-search";
+import { useModalManager } from "@/hooks/use-modal-manager";
 import {
   ArchiveBoxXMarkIcon,
   PlusCircleIcon,
@@ -17,257 +22,81 @@ import {
   MagnifyingGlassCircleIcon,
   TagIcon,
 } from "@heroicons/react/24/outline";
-import role from "@/lib/roles";
-
-type Country = { countryID: string; flag: string; name: string };
-
-type DelegateUser = UserType & Delegate;
-type ChairUser = UserType & Chair;
 
 const Page = () => {
-  const { user: currentUser } = useSession();
   const isMobile = useMobile();
-  const userRole = role(currentUser);
-  const [countries, setCountries] = useState<Country[] | null>(null);
-  const [speechTags, setSpeechTags] = useState<string[]>([]);
-  const [speechList, setSpeechList] = useState<Speech[]>([]);
-  const [heading, setHeading] = useState<string>("");
-  const [content, setContent] = useState<string>("");
   const [selectedSpeech, setSelectedSpeech] = useState<Speech | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [showCountryOverlay, setShowCountryOverlay] = useState(false);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [showUnsavedChangesModal, setShowUnsavedChangesModal] = useState(false);
-  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
-  const [pendingSpeechAction, setPendingSpeechAction] = useState<{
-    type: "new" | "select";
-    speech?: Speech;
-  } | null>(null);
-
-  const isDelegateUser = userRole === "delegate" && currentUser !== null;
-  const isChairUser = userRole === "chair" && currentUser !== null;
-
-  const fetchSpeeches = useCallback(async () => {
-    let response;
-    if (isDelegateUser && currentUser) {
-      response = await fetch(`/api/speeches/delegate?delegateID=${(currentUser as DelegateUser).delegateID}`);
-    } else if (isChairUser && currentUser) {
-      response = await fetch(`/api/speeches/chair?chairID=${(currentUser as ChairUser).chairID}`);
-    } else {
-      return;
-    }
-    const data = await response.json();
-    setSpeechList(data.speeches || []);
-  }, [currentUser, isDelegateUser, isChairUser]);
-
-  const fetchCountries = useCallback(async () => {
-    let committeeID;
-    if (isDelegateUser && currentUser && (currentUser as DelegateUser).committee) {
-      committeeID = (currentUser as DelegateUser).committee.committeeID;
-    } else if (isChairUser && currentUser && (currentUser as ChairUser).committee) {
-      committeeID = (currentUser as ChairUser).committee.committeeID;
-    } else {
-      setCountries([]);
-      return;
-    }
-    try {
-      const response = await fetch(`/api/countries?committeeID=${committeeID}`);
-      if (response.ok) {
-        const data = await response.json();
-        setCountries([...data]);
-      } else {
-        setCountries([]);
-      }
-    } catch {
-      setCountries([]);
-    }
-  }, [currentUser, isDelegateUser, isChairUser]);
-
-  const searchEngine = useCallback(
-    (query: string) => {
-      if (!query) {
-        return speechList;
-      }
-
-      //clean the query for comparison
-      const lowerCaseQuery = query.toLowerCase().trim();
-
-      // hashset to store all country IDs that match the query
-      const matchingCountryIDs = new Set(
-        countries?.filter((country) =>
-          country.name.toLowerCase().includes(lowerCaseQuery)
-        ).map((country) => country.countryID)
-      );
-
-      return speechList.filter((speech) => {
-        if (speech.title.toLowerCase().includes(lowerCaseQuery)) {
-          return true;
-        }
-        if (matchingCountryIDs.size === 0) {
-          return false;
-        }
-
-        return speech.tags?.some((tag) => matchingCountryIDs.has(tag)) || false;
-      });
-    },
-    [speechList, countries]
+  
+  const userRole = useUserRole();
+  const { countries, getCountryFlag, searchCountries } = useCountries(userRole.getCommitteeID());
+  const speechAPI = useSpeechAPI({
+    userID: userRole.getUserID(),
+    isDelegateUser: userRole.isDelegateUser,
+    isChairUser: userRole.isChairUser,
+    getApiEndpoint: userRole.getApiEndpoint,
+    getApiParams: userRole.getApiParams,
+  });
+  
+  const speechForm = useSpeechForm(selectedSpeech);
+  const { searchQuery, setSearchQuery, filteredSpeeches } = useSpeechSearch(
+    speechAPI.speechList,
+    searchCountries
   );
+  const modals = useModalManager();
 
-  const toggleCountrySelection = useCallback((countryID: string) => {
-    setSpeechTags((prev) =>
-      prev.includes(countryID)
-        ? prev.filter((id) => id !== countryID)
-        : [...prev, countryID]
-    );
-  }, []);
-
-  const closeCountryOverlay = useCallback(() => {
-    setShowCountryOverlay(false);
-  }, []);
+  useEffect(() => {
+    speechAPI.fetchSpeeches();
+  }, [speechAPI.fetchSpeeches]);
 
   const handleSpeechSwitch = useCallback((newSpeech: Speech | null) => {
-    if (hasUnsavedChanges) {
-      setPendingSpeechAction({
+    if (speechForm.hasUnsavedChanges) {
+      modals.openUnsavedChangesModal({
         type: newSpeech ? "select" : "new",
         speech: newSpeech || undefined,
       });
-      setShowUnsavedChangesModal(true);
     } else {
-      if (newSpeech) {
-        setSelectedSpeech(newSpeech);
-        setHeading(newSpeech.title);
-        setContent(newSpeech.content);
-        setSpeechTags(newSpeech.tags || []);
-      } else {
-        setSelectedSpeech(null);
-        setHeading("");
-        setContent("");
-        setSpeechTags([]);
-      }
+      setSelectedSpeech(newSpeech);
     }
-  }, [hasUnsavedChanges]);
+  }, [speechForm.hasUnsavedChanges, modals.openUnsavedChangesModal]);
 
   const confirmDiscardChanges = useCallback(() => {
-    if (pendingSpeechAction?.type === "select" && pendingSpeechAction.speech) {
-      const speech = pendingSpeechAction.speech;
-      setSelectedSpeech(speech);
-      setHeading(speech.title);
-      setContent(speech.content);
-      setSpeechTags(speech.tags || []);
+    const action = modals.confirmUnsavedChanges();
+    if (action?.type === "select" && action.speech) {
+      setSelectedSpeech(action.speech);
     } else {
       setSelectedSpeech(null);
-      setHeading("");
-      setContent("");
-      setSpeechTags([]);
     }
-    
-    setHasUnsavedChanges(false);
-    setShowUnsavedChangesModal(false);
-    setPendingSpeechAction(null);
-  }, [pendingSpeechAction]);
+    speechForm.setHasUnsavedChanges(false);
+  }, [modals.confirmUnsavedChanges, speechForm.setHasUnsavedChanges]);
 
-  const cancelSpeechSwitch = useCallback(() => {
-    const modal = document.getElementById('unsavedChangesModal');
-    const modalContent = document.getElementById('unsavedChangesModalContent');
-    
-    if (modal && modalContent) {
-      modalContent.classList.remove('animate-slidein-up');
-      modalContent.classList.add('opacity-0', 'translate-y-10', 'transition-all', 'duration-300');
-      modal.classList.add('opacity-0', 'transition-opacity', 'duration-300');
-      
-      setTimeout(() => {
-        setShowUnsavedChangesModal(false);
-        setPendingSpeechAction(null);
-      }, 300);
-    } else {
-      setShowUnsavedChangesModal(false);
-      setPendingSpeechAction(null);
-    }
-  }, []);
-
-  const addSpeech = useCallback(async () => {
-    if (!isDelegateUser && !isChairUser) {
+  const handleSaveSpeech = useCallback(async () => {
+    if (!userRole.isParticipant) {
       toast.error("Only delegates or chairs can add speeches");
       return;
     }
 
-    if (!heading.trim() || !content.trim()) {
-      toast.error("Title and content cannot be empty");
+    const validationError = speechForm.validateForm();
+    if (validationError) {
+      toast.error(validationError);
       return;
     }
     
-    if (heading.length > 72) {
-      toast.error("Title cannot exceed 72 characters");
-      return;
+    const speechData = speechForm.createSpeechData(userRole.getUserID());
+    const savedSpeech = await speechAPI.saveSpeech(speechData, speechForm.isUpdate);
+    
+    if (savedSpeech) {
+      setSelectedSpeech(savedSpeech);
+      speechForm.setHasUnsavedChanges(false);
     }
-    
-    if (content.length > 7000) {
-      toast.error("Content cannot exceed 7000 characters");
-      return;
-    }
-    
-    const speechData: Speech = {
-      title: heading,
-      speechID: selectedSpeech ? selectedSpeech?.speechID : "-1",
-      content: content,
-      date: new Date().toISOString(),
-      tags: speechTags,
-      delegateID: isDelegateUser && currentUser ? (currentUser as DelegateUser).delegateID : "",
-    };
-    
-    const endpoint = isDelegateUser ? "/api/speeches/delegate" : "/api/speeches/chair";
-    const idKey = isDelegateUser ? "delegateID" : "chairID";
-    const idValue = isDelegateUser && currentUser 
-      ? (currentUser as DelegateUser).delegateID 
-      : isChairUser && currentUser 
-        ? (currentUser as ChairUser).chairID 
-        : "";
-        
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        speechData,
-        [idKey]: idValue,
-      }),
-    });
-    
-    const result = await response.json();
-    
-    if (response.ok) {
-      toast.success(
-        `Speech ${selectedSpeech ? "updated" : "added"} successfully`
-      );
-      if (selectedSpeech) {
-        setSpeechList((prev) =>
-          prev.map((speech) =>
-            speech.speechID === selectedSpeech.speechID ? { ...speechData, speechID: selectedSpeech.speechID } : speech
-          )
-        );
-      } else {
-        const newSpeech = { ...speechData, speechID: result.speechID };
-        setSpeechList((prev) => [newSpeech, ...prev]);
-      }
-      setHeading("");
-      setContent("");
-      setSpeechTags([]);
-      setHasUnsavedChanges(false);
-    }
-  }, [currentUser, heading, content, selectedSpeech, speechTags, isDelegateUser, isChairUser]);
+  }, [userRole, speechForm, speechAPI.saveSpeech]);
 
   const handleDeleteClick = useCallback(() => {
     if (!selectedSpeech?.speechID) {
       toast.error("No speech selected to delete");
       return;
     }
-    setShowDeleteConfirmModal(true);
-  }, [selectedSpeech]);
-
-  const cancelSpeechDelete = useCallback(() => {
-    setShowDeleteConfirmModal(false);
-  }, []);
+    modals.openDeleteConfirm();
+  }, [selectedSpeech, modals.openDeleteConfirm]);
 
   const confirmSpeechDelete = useCallback(async () => {
     if (!selectedSpeech?.speechID) {
@@ -275,56 +104,15 @@ const Page = () => {
       return;
     }
 
-    const speechID = selectedSpeech.speechID;
-    //reusing the delete route no matter the role because logic is unaffected
-    const response = await fetch("/api/speeches/delegate", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ speechID }),
-    });
-    await response.json();
-    if (response.ok) {
-      setContent("");
-      setHeading("");
-      setSpeechTags([]);
+    const success = await speechAPI.deleteSpeech(selectedSpeech.speechID);
+    if (success) {
       setSelectedSpeech(null);
-      setHasUnsavedChanges(false);
-      setShowDeleteConfirmModal(false);
-      toast.success("Speech deleted successfully");
-      setSpeechList((prev) =>
-        prev.filter((speech) => speech.speechID !== speechID)
-      );
+      speechForm.resetForm();
+      modals.closeDeleteConfirm();
     }
-  }, [selectedSpeech]);
+  }, [selectedSpeech, speechAPI.deleteSpeech, speechForm.resetForm, modals.closeDeleteConfirm]);
 
-  useEffect(() => {
-    fetchSpeeches();
-  }, [fetchSpeeches]);
-
-  useEffect(() => {
-    fetchCountries();
-  }, [fetchCountries]);
-
-  useEffect(() => {
-    if (!selectedSpeech) {
-      setHasUnsavedChanges(heading !== "" || content !== "" || speechTags.length > 0);
-    } else {
-      const titleChanged = heading !== selectedSpeech.title;
-      const contentChanged = content !== selectedSpeech.content;
-      const tagsChanged = JSON.stringify(speechTags) !== JSON.stringify(selectedSpeech.tags || []);
-      
-      setHasUnsavedChanges(titleChanged || contentChanged || tagsChanged);
-    }
-  }, [heading, content, speechTags, selectedSpeech]);
-
-  const filteredSpeeches = useMemo(
-    () => searchEngine(searchQuery),
-    [searchEngine, searchQuery]
-  );
-
-  if (userRole !== "delegate" && userRole !== "chair") {
+  if (!userRole.isParticipant) {
     return (
       <ParticipantRoute>
         <CustomNav />
@@ -337,10 +125,12 @@ const Page = () => {
     <ParticipantRoute>
       <CustomNav />
       <div
-        className={`${isMobile ? 'flex flex-col' : 'flex'} text-white p-4 bg-gradient-to-b from-black to-gray-950 min-h-screen relative overflow-hidden animate-fadein`}
+        className={`${isMobile ? 'flex flex-col' : 'flex'} text-white p-4 min-h-screen relative overflow-hidden animate-fadein`}
         style={{
-          backgroundImage:
-            "radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)",
+          background: `
+            radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.05) 40%, transparent 70%),
+            linear-gradient(135deg, #000000 0%, #111827 50%, #000000 100%)
+          `,
         }}
       >
         <ul className={`outline ${isMobile ? 'w-full mb-4' : 'w-1/4'} rounded-2xl p-4 bg-gradient-to-b from-gray-900 to-gray-950 shadow-xl border border-gray-800 ${isMobile ? 'animate-slidein-down' : 'animate-slidein-left'}`}>
@@ -353,23 +143,22 @@ const Page = () => {
               className="outline w-full rounded-2xl p-2 mb-4 bg-gray-800 border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
             />
             <div>
-              <MagnifyingGlassCircleIcon className="w-10 h-10 text-white animate-bounce-slow" />
+              <MagnifyingGlassCircleIcon className="w-10 h-12 text-white" />
             </div>
           </div>
           <div className="space-y-2">
-            {speechList && filteredSpeeches.length > 0 ? (
+            {speechAPI.speechList && filteredSpeeches.length > 0 ? (
               filteredSpeeches.map((speech, idx) => (
                 <li
                   key={speech.speechID}
-                  className={`outline rounded-2xl p-4 mb-2 cursor-pointer backdrop-blur-sm transition-all duration-300 border border-gray-700 hover:border-blue-500 animate-fadein-up delay-[${idx * 50}ms] ` +
+                  className={`outline rounded-2xl p-4 mb-2 backdrop-blur-sm border border-gray-700 animate-fadein-up delay-[${idx * 50}ms] group hover-interactive ` +
                     (selectedSpeech?.speechID === speech.speechID
-                      ? "bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg shadow-blue-500/30 scale-[1.03]"
-                      : "hover:bg-gray-700/70 bg-gray-800/50 hover:scale-105")}
+                      ? "bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg shadow-blue-500/30 scale-[1.03] border-blue-400"
+                      : "bg-gray-800/50 hover:bg-gradient-to-r hover:from-gray-700/80 hover:to-gray-600/80 hover:border-blue-400")}
                   onClick={() => handleSpeechSwitch(speech)}
-                  style={{ transition: 'transform 0.2s, box-shadow 0.2s' }}
                 >
-                  <h2 className="text-lg font-bold animate-text-pop">{speech.title}</h2>
-                  <p className="text-gray-300">
+                  <h2 className="text-lg font-bold animate-text-pop group-hover:text-blue-300 transition-colors duration-300">{speech.title}</h2>
+                  <p className="text-gray-300 group-hover:text-gray-200 transition-colors duration-300">
                     {speech.content.length > 18
                       ? speech.content.slice(0, 16) + "..."
                       : speech.content}
@@ -390,8 +179,7 @@ const Page = () => {
         <div className={`${isMobile ? 'w-full' : 'w-full'} space-y-2 p-4 animate-slidein-up`}>
           <div className={`${isMobile ? 'w-full flex-col mx-0' : 'w-8/9 mx-8'} pb-2 flex ${isMobile ? 'space-y-3' : 'items-center'}`}>
             <p className={`text-4xl font-bold ${isMobile ? 'mx-0 text-center' : 'mx-4'} bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 drop-shadow-lg animate-text-pop`}>
-              {isDelegateUser && currentUser ? (currentUser as DelegateUser).firstname : 
-               isChairUser && currentUser ? (currentUser as ChairUser).firstname : ""} Speech Repo
+              {userRole.getUserName()} Speech Repo
             </p>
             <div className={`flex ${isMobile ? 'w-full justify-center flex-wrap gap-2' : 'space-x-4 ml-auto'}`}>
               <button
@@ -402,18 +190,16 @@ const Page = () => {
                 <DocumentPlusIcon className="w-6 h-6 inline-block" />
               </button>
               <button
-                onClick={() => setShowCountryOverlay(true)}
+                onClick={modals.openCountryOverlay}
                 className="bg-purple-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-purple-600 active:scale-95 focus:scale-105 animate-btn-pop"
               >
                 <p className="inline-block">Tags</p>
                 <TagIcon className="h-6 w-6 inline-block" />
               </button>
               <button
-                onClick={() => {
-                  addSpeech();
-                }}
+                onClick={handleSaveSpeech}
                 className="bg-blue-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-blue-600 active:scale-95 focus:scale-105 animate-btn-pop"
-                disabled={userRole !== "delegate" && userRole !== "chair"}
+                disabled={!userRole.isParticipant}
               >
                 <p className="inline-block">
                   {selectedSpeech ? "Update" : "Add"}
@@ -423,27 +209,24 @@ const Page = () => {
               <button
                 onClick={handleDeleteClick}
                 className="bg-red-500 cursor-pointer text-white rounded-2xl p-2 shadow-md flex items-center space-x-1 transition-all duration-200 hover:bg-red-600 active:scale-95 focus:scale-105 animate-btn-pop"
-                disabled={userRole !== "delegate" && userRole !== "chair"}
+                disabled={!userRole.isParticipant}
               >
                 <p className="inline-block">Delete</p>
                 <ArchiveBoxXMarkIcon className="h-6 w-6 inline-block" />
               </button>
             </div>
           </div>
-          {speechTags.length > 0 && (
+          {speechForm.speechTags.length > 0 && (
             <div className={`${isMobile ? '' : 'space-x-2'} mb-2 ${isMobile ? 'mx-0' : 'mx-12'} p-2 animate-fadein`}>
               <p className={`text-lg text-gray-300 ${isMobile ? 'block' : 'inline-block'} mb-2`}>Tags:</p>
               <div className={`${isMobile ? 'flex flex-wrap gap-2' : 'space-x-2 inline-block'}`}>
-                {speechTags.map((tag, idx) => (
+                {speechForm.speechTags.map((tag, idx) => (
                   <span
                     key={tag}
                     className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-full text-xl shadow-lg shadow-blue-500/20 inline-flex items-center justify-center"
                     style={{ animationDelay: `${idx * 80}ms` }}
                   >
-                    {
-                      countries?.find((country) => country.countryID === tag)
-                        ?.flag
-                    }
+                    {getCountryFlag(tag)}
                   </span>
                 ))}
               </div>
@@ -451,53 +234,49 @@ const Page = () => {
           )}
           <div className="relative">
             <textarea
-              className={`block ${isMobile ? 'w-full' : 'w-8/9'} outline rounded-2xl ${isMobile ? 'mx-0' : 'mx-8'} p-4 bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300 animate-fadein-up`}
+              className={`block ${isMobile ? 'w-full' : 'w-8/9'} outline rounded-2xl ${isMobile ? 'mx-0' : 'mx-8'} p-4 bg-gray-800/50 border border-gray-700 focus:border-blue-500 animate-fadein-up hover-interactive-large`}
               placeholder="Write your title here..."
-              onChange={(e) => {
-                setHeading(e.target.value);
-              }}
+              onChange={(e) => speechForm.setHeading(e.target.value)}
               style={{ resize: "none" }}
-              value={heading}
+              value={speechForm.heading}
             ></textarea>
             <div className={`text-right text-gray-400 text-sm pr-6 pt-1 ${isMobile ? 'mr-0' : 'mr-8'}`}>
-              {heading.length} characters / 72 characters
+              {speechForm.heading.length} characters / 72 characters
             </div>
           </div>
           
           <div className="relative">
             <textarea
-              className={`outline ${isMobile ? 'w-full' : 'w-8/9'} rounded-2xl ${isMobile ? 'mx-0' : 'mx-8'} p-4 ${isMobile ? 'h-64' : 'h-187'} bg-gray-800/50 border border-gray-700 focus:border-blue-500 transition-all duration-300 animate-fadein-up`}
+              className={`outline ${isMobile ? 'w-full' : 'w-8/9'} rounded-2xl ${isMobile ? 'mx-0' : 'mx-8'} p-4 ${isMobile ? 'h-64' : 'h-187'} bg-gray-800/50 border border-gray-700 focus:border-blue-500 animate-fadein-up hover-interactive-large`}
               placeholder="Write your speech here..."
-              onChange={(e) => {
-                setContent(e.target.value);
-              }}
-              value={content}
+              onChange={(e) => speechForm.setContent(e.target.value)}
+              value={speechForm.content}
               style={{ resize: "none" }}
             ></textarea>
             <div className={`text-right text-gray-400 text-sm pr-6 pt-1 ${isMobile ? 'mr-0' : 'mr-12'}`}>
-              {content.length} characters / 7000 characters
+              {speechForm.content.length} characters / 7000 characters
             </div>
           </div>
         </div>
       </div>
-      {showCountryOverlay && countries && (
+      {modals.showCountryOverlay && countries && (
         <CountryOverlay
           countries={countries}
-          speechTags={speechTags}
-          toggleCountrySelection={toggleCountrySelection}
-          closeCountryOverlay={closeCountryOverlay}
+          speechTags={speechForm.speechTags}
+          toggleCountrySelection={speechForm.toggleTag}
+          closeCountryOverlay={modals.closeCountryOverlay}
         />
       )}
-      {showUnsavedChangesModal && (
+      {modals.showUnsavedChangesModal && (
         <UnsavedChangesModal
-          onCancel={cancelSpeechSwitch}
+          onCancel={modals.closeUnsavedChangesModal}
           onDiscard={confirmDiscardChanges}
         />
       )}
-      {showDeleteConfirmModal && (
+      {modals.showDeleteConfirmModal && (
         <DeleteConfirmModal
           speechTitle={selectedSpeech?.title}
-          onCancel={cancelSpeechDelete}
+          onCancel={modals.closeDeleteConfirm}
           onDelete={confirmSpeechDelete}
         />
       )}

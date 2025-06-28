@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     }
 
     if (resoID !== "-1"){
-        if ( !(userPerms.resoPerms["update:reso"].includes(resoID))){
+        if ( !(userPerms.resoPerms["update:reso"].includes(resoID)) && !(userPerms.resoPerms["update:ownreso"])){
             return NextResponse.json({ error: 'You do not have permission to update this resolution' }, { status: 403 });
         }
         const { error } = await supabase
