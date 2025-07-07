@@ -2,14 +2,12 @@
 import React from 'react'
 import {AdminRoute} from '@/components/protectedroute'
 import {toast} from 'sonner'
-import { useSession } from '../context/sessionContext'
 import Image from 'next/image'
 
 const Page = () => {
     const [content, setContent] = React.useState<string>("");
     const [title, setTitle] = React.useState<string>("");
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-    const { user: currentUser } = useSession();
 
     const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setContent(e.target.value);

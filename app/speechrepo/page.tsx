@@ -45,7 +45,7 @@ const Page = () => {
 
   useEffect(() => {
     speechAPI.fetchSpeeches();
-  }, [speechAPI.fetchSpeeches]);
+  }, [speechAPI]);
 
   const handleSpeechSwitch = useCallback((newSpeech: Speech | null) => {
     if (speechForm.hasUnsavedChanges) {
@@ -56,7 +56,7 @@ const Page = () => {
     } else {
       setSelectedSpeech(newSpeech);
     }
-  }, [speechForm.hasUnsavedChanges, modals.openUnsavedChangesModal]);
+  }, [speechForm.hasUnsavedChanges, modals]);
 
   const confirmDiscardChanges = useCallback(() => {
     const action = modals.confirmUnsavedChanges();
@@ -66,7 +66,7 @@ const Page = () => {
       setSelectedSpeech(null);
     }
     speechForm.setHasUnsavedChanges(false);
-  }, [modals.confirmUnsavedChanges, speechForm.setHasUnsavedChanges]);
+  }, [modals, speechForm]);
 
   const handleSaveSpeech = useCallback(async () => {
     if (!userRole.isParticipant) {
@@ -87,7 +87,7 @@ const Page = () => {
       setSelectedSpeech(savedSpeech);
       speechForm.setHasUnsavedChanges(false);
     }
-  }, [userRole, speechForm, speechAPI.saveSpeech]);
+  }, [userRole, speechForm, speechAPI]);
 
   const handleDeleteClick = useCallback(() => {
     if (!selectedSpeech?.speechID) {
@@ -95,7 +95,7 @@ const Page = () => {
       return;
     }
     modals.openDeleteConfirm();
-  }, [selectedSpeech, modals.openDeleteConfirm]);
+  }, [selectedSpeech, modals]);
 
   const confirmSpeechDelete = useCallback(async () => {
     if (!selectedSpeech?.speechID) {
@@ -109,7 +109,7 @@ const Page = () => {
       speechForm.resetForm();
       modals.closeDeleteConfirm();
     }
-  }, [selectedSpeech, speechAPI.deleteSpeech, speechForm.resetForm, modals.closeDeleteConfirm]);
+  }, [selectedSpeech, speechAPI, speechForm, modals]);
 
   if (!userRole.isParticipant) {
     return (

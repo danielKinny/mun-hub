@@ -14,14 +14,11 @@ import {
 } from '../../components/ui/committeeComponents'
 
 import { HomeIcon } from '@heroicons/react/24/outline';
-
-import { useSession } from '../context/sessionContext';
 import { useMobile } from '../../hooks/use-mobile';
 
 const Page = () => {
   const [selectedCommittee, setSelectedCommittee] = useState<string | null>(null);
   const [imagesLoaded, setImagesLoaded] = useState<{[key: string]: boolean}>({});
-  const {user : currentUser} = useSession();
   const committeeDetailsRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
   const isMobile = useMobile();
